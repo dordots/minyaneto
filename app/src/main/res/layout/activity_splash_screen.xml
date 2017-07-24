@@ -6,4 +6,18 @@
     android:layout_height="match_parent"
     tools:context="com.app.minyaneto_android.SplashScreen">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="right">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="bottom"
+            app:srcCompat="@drawable/logo" />
+
+    </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>
