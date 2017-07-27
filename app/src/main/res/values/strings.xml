@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Minyaneto-android</string>
+    <string name="action_bar_open">Open</string>
+    <string name="action_bar_close">Close</string>
+    <string name="sidebar_home">ראשי</string>
+    <string name="sidebar_settings">הגדרות</string>
+    <string name="sidebar_search">חיפוש</string>
+    <string name="sidebar_addMinyan">הוסף מניין</string>
+    <string name="sidebar_about">על סטארט-אח</string>
+    <string name="actionbar_refresh_location">רענן מיקום</string>
 </resources>

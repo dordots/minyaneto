@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/sidebar_home"
+        android:icon="@drawable/ic_sidebar_home"
+        android:title="@string/sidebar_home"
+        app:showAsAction="ifRoom"
+        />
+    <item
+        android:id="@+id/sidebar_settings"
+        android:icon="@drawable/ic_sidebar_settings"
+        android:title="@string/sidebar_settings"
+        app:showAsAction="ifRoom"
+        />
+    <item
+        android:id="@+id/sidebar_serach"
+        android:icon="@drawable/ic_sidebar_search"
+        android:title="@string/sidebar_search"
+        app:showAsAction="ifRoom"
+        />
+    <item
+        android:id="@+id/sidebar_addMinyan"
+        android:icon="@drawable/ic_sidebar_add_minyan"
+        android:title="@string/sidebar_addMinyan"
+        app:showAsAction="ifRoom"
+
+        />
+    <item
+        android:id="@+id/sidebar_about"
+        android:icon="@drawable/ic_sidebar_about"
+        android:title="@string/sidebar_about"
+        app:showAsAction="ifRoom"
+        />
+</menu>
