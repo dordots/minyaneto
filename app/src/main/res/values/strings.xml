@@ -8,4 +8,5 @@
     <string name="sidebar_addMinyan">הוסף מניין</string>
     <string name="sidebar_about">על סטארט-אח</string>
     <string name="actionbar_refresh_location">רענן מיקום</string>
+    <string name="title_activity_maps">Map</string>
 </resources>
