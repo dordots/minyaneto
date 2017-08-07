@@ -189,13 +189,15 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
     private void findCurrentLocation(){
         TrackLocation location = new TrackLocation(getContext());
         if (location.canGetLocation()) {
-           LatLng mLocation = new LatLng(location.getLatitude(),location.getLongitude());
-            // Move the camera instantly to Sydney with a zoom of 15.
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLocation, 12));
-            // Zoom in, animating the camera.
-            mMap.animateCamera(CameraUpdateFactory.zoomIn());
-            // Zoom out to zoom level 10, animating with a duration of 2 seconds.
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(12), 2000, null);
+            LatLng mLocation = new LatLng(location.getLatitude(),location.getLongitude());
+
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(mLocation)      // Sets the center of the map to Mountain View
+                    .zoom(12)                   // Sets the zoom
+                    .bearing(90)                // Sets the orientation of the camera to east
+                    .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                    .build();                   // Creates a CameraPosition from the builder
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
             mMap.addMarker(new MarkerOptions().position(mLocation));
             enableMyLocationIcon(true);
