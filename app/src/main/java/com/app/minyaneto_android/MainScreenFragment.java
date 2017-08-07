@@ -2,11 +2,13 @@ package com.app.minyaneto_android;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -33,6 +35,10 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+
+import java.util.Timer;
+import java.util.TimerTask;
+
 import static android.content.Context.LOCATION_SERVICE;
 
 
@@ -47,6 +53,7 @@ import static android.content.Context.LOCATION_SERVICE;
 public class MainScreenFragment extends Fragment implements OnMapReadyCallback, OnRequestPermissionsResultCallback
 {
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private static final int PERMISSIONS_REQUEST_RESOLUTION_REQUIRED = 123;
 
     private OnMapInteractionListener mListener;
     private GoogleMap mMap;
@@ -102,7 +109,6 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
 
         PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
         result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-            @NonNull
             @Override
             public void onResult(LocationSettingsResult result) {
                 final Status status = result.getStatus();
@@ -116,7 +122,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
                         try {
                             // Show the dialog by calling startResolutionForResult(), and check the result
                             // in onActivityResult().
-                            status.startResolutionForResult(getActivity(), 1);
+                            status.startResolutionForResult(getActivity(), PERMISSIONS_REQUEST_RESOLUTION_REQUIRED);
                         } catch (IntentSender.SendIntentException e) {
 //                            Log.i(TAG, "PendingIntent unable to execute request.");
                         }
@@ -127,6 +133,34 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
                 }
             }
         });
+    }
+    Handler handler=new Handler();
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==PERMISSIONS_REQUEST_RESOLUTION_REQUIRED){
+           new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    Runnable runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            handler.post(new Runnable() { // This thread runs in the UI
+                                @Override
+                                public void run() {
+                                    findCurrentLocation();
+                                }
+                            });
+                        }
+                    };
+                    new Thread(runnable).start();
+                }
+            }, 3000);
+
+            TrackLocation location = new TrackLocation(getContext());
+
+
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     /**
@@ -155,10 +189,9 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
     private void findCurrentLocation(){
         TrackLocation location = new TrackLocation(getContext());
         if (location.canGetLocation()) {
-            LatLng mLocation = new LatLng(location.getLatitude(),location.getLongitude());
-
+           LatLng mLocation = new LatLng(location.getLatitude(),location.getLongitude());
             // Move the camera instantly to Sydney with a zoom of 15.
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLocation, 15));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLocation, 12));
             // Zoom in, animating the camera.
             mMap.animateCamera(CameraUpdateFactory.zoomIn());
             // Zoom out to zoom level 10, animating with a duration of 2 seconds.

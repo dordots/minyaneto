@@ -1,4 +1,5 @@
 package com.app.minyaneto_android;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
@@ -112,9 +113,17 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         }
 
-
         return true;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        for (Fragment fragment : liveFragments) {
+              fragment.onActivityResult(requestCode, resultCode, data);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
