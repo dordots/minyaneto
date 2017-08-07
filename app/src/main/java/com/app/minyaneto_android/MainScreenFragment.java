@@ -22,6 +22,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -202,7 +203,9 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
             mMap.addMarker(new MarkerOptions().position(mLocation));
             enableMyLocationIcon(true);
         }
+
     }
+
 
     private void enableMyLocationIcon(boolean requestIfNotGranted) {
         if (mMap == null)
@@ -269,6 +272,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
         super.onDetach();
         mListener = null;
     }
+
 
     /**
      * This interface must be implemented by activities that contain this
