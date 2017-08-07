@@ -29,6 +29,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -101,6 +102,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
 
         PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
         result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @NonNull
             @Override
             public void onResult(LocationSettingsResult result) {
                 final Status status = result.getStatus();
@@ -136,15 +138,35 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
+        /* LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         enableMyLocationIcon(true);
+        */
+        findCurrentLocation();
+    }
+
+    private void findCurrentLocation(){
+        TrackLocation location = new TrackLocation(getContext());
+        if (location.canGetLocation()) {
+            LatLng mLocation = new LatLng(location.getLatitude(),location.getLongitude());
+
+            // Move the camera instantly to Sydney with a zoom of 15.
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLocation, 15));
+            // Zoom in, animating the camera.
+            mMap.animateCamera(CameraUpdateFactory.zoomIn());
+            // Zoom out to zoom level 10, animating with a duration of 2 seconds.
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(12), 2000, null);
+
+            mMap.addMarker(new MarkerOptions().position(mLocation));
+            enableMyLocationIcon(true);
+        }
     }
 
     private void enableMyLocationIcon(boolean requestIfNotGranted) {
