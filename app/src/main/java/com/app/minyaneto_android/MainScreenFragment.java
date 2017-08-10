@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,15 +15,19 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.app.minyaneto_android.entities.Synagogue;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -32,11 +37,16 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -51,8 +61,7 @@ import static android.content.Context.LOCATION_SERVICE;
  * Use the {@link MainScreenFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MainScreenFragment extends Fragment implements OnMapReadyCallback, OnRequestPermissionsResultCallback
-{
+public class MainScreenFragment extends Fragment implements OnMapReadyCallback, OnRequestPermissionsResultCallback, GoogleMap.OnMarkerClickListener {
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final int PERMISSIONS_REQUEST_RESOLUTION_REQUIRED = 123;
 
@@ -60,10 +69,12 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
     private GoogleMap mMap;
     private static MainScreenFragment _instance;
 
+    private FusedLocationProviderClient mFusedLocationClient;
+    private RecyclerView mRecyclerView;
+
     public MainScreenFragment() {
         // Required empty public constructor
     }
-
 
     // TODO: Rename and change types and number of parameters
     public static MainScreenFragment newInstance() {
@@ -76,6 +87,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
     }
 
     @Override
@@ -83,6 +95,10 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
         super.onViewCreated(view, savedInstanceState);
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.main_map);
         mapFragment.getMapAsync(this);
+
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler);
+        mRecyclerView.setHasFixedSize(true);
+
         handleLocationSetting();
     }
 
@@ -135,31 +151,11 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
             }
         });
     }
-    Handler handler=new Handler();
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==PERMISSIONS_REQUEST_RESOLUTION_REQUIRED){
-           new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    Runnable runnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            handler.post(new Runnable() { // This thread runs in the UI
-                                @Override
-                                public void run() {
-                                    findCurrentLocation();
-                                }
-                            });
-                        }
-                    };
-                    new Thread(runnable).start();
-                }
-            }, 3000);
-
-            TrackLocation location = new TrackLocation(getContext());
-
-
+        if (requestCode == PERMISSIONS_REQUEST_RESOLUTION_REQUIRED) {
+            findFirstLocation();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -177,6 +173,9 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setOnMarkerClickListener(this);
+        findFirstLocation();
+
 
         // Add a marker in Sydney and move the camera
         /* LatLng sydney = new LatLng(-34, 151);
@@ -184,28 +183,105 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         enableMyLocationIcon(true);
         */
-        findCurrentLocation();
     }
 
-    private void findCurrentLocation(){
-        TrackLocation location = new TrackLocation(getContext());
-        if (location.canGetLocation()) {
-            LatLng mLocation = new LatLng(location.getLatitude(),location.getLongitude());
-
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(mLocation)      // Sets the center of the map to Mountain View
-                    .zoom(12)                   // Sets the zoom
-                    .bearing(90)                // Sets the orientation of the camera to east
-                    .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                    .build();                   // Creates a CameraPosition from the builder
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-            mMap.addMarker(new MarkerOptions().position(mLocation));
-            enableMyLocationIcon(true);
+    private void findFirstLocation() {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
         }
+        mFusedLocationClient.getLastLocation()
+                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            updateCurrentLocation(location);
+                            // ...
+                        } else {
+                            new Timer().schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    findFirstLocation();
+                                }
+                            }, 1000);
+                        }
+                    }
+                });
 
     }
 
+    private void updateCurrentLocation(Location location) {
+        if(location==null)  return;
+        LatLng mLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(mLocation)      // Sets the center of the map to Mountain View
+                .zoom(15)                   // Sets the zoom
+                .bearing(90)                // Sets the orientation of the camera to east
+                .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                .build();                   // Creates a CameraPosition from the builder
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        enableMyLocationIcon(true);
+        updateSynagogues(mLocation);
+    }
+
+    private void updateSynagogues(LatLng location){
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+        final List<Synagogue> synagogues = new ArrayList<>();
+        synagogues.add(new Synagogue("אהל משה", new LatLng(location.latitude+0.001,location.longitude-0.001), 1));
+        synagogues.add(new Synagogue("בית מנחם",  new LatLng(location.latitude+0.001,location.longitude+0.001), 1));
+        synagogues.add(new Synagogue("אהל רבקה",  new LatLng(location.latitude-0.001,location.longitude-0.001),1));
+        synagogues.add(new Synagogue("זלצר", new LatLng(location.latitude+0.0015,location.longitude+0.00181), 1));
+        synagogues.add(new Synagogue("אהל שרה", new LatLng(location.latitude-0.00124,location.longitude-0.0021), 1));
+        synagogues.add(new Synagogue("אהל לאה ורחל", new LatLng(location.latitude+0.0037,location.longitude+0.00281),1));
+        synagogues.add(new Synagogue("כרם התימנים", new LatLng(location.latitude+0.0041,location.longitude-0.001), 1));
+        synagogues.add(new Synagogue("מיימון", new LatLng(location.latitude-0.0015,location.longitude+0.005), 1));
+
+        for(Synagogue s : synagogues){
+            mMap.addMarker(new MarkerOptions()
+                    .position(s.getLocation())
+                    .title(s.getName())
+                    .snippet(s.toString())
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+        }
+        final SynagogueAdapter adapter = new SynagogueAdapter(synagogues);
+        adapter.setMyClickListener(new SynagogueAdapter.SynagogueClickListener() {
+            @Override
+            public void onItemClick(int position, View v) {
+                if (position == -1) return;
+                Synagogue Synagogue = synagogues.get(position);
+                Toast.makeText(getActivity(), Synagogue.getName(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onItemLongClick(int position, View v) {
+               /* try {
+                    if (position == -1) return;
+                    synagogues.remove(position);
+                    adapter.notifyItemRemoved(position);
+                } catch (Exception ex) {
+                    Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+                */
+            }
+        });
+        mRecyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        marker.showInfoWindow();
+        return false;
+    }
 
     private void enableMyLocationIcon(boolean requestIfNotGranted) {
         if (mMap == null)
@@ -272,7 +348,6 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
         super.onDetach();
         mListener = null;
     }
-
 
     /**
      * This interface must be implemented by activities that contain this

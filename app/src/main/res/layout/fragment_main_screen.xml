@@ -18,13 +18,20 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
-        <TextView
+       <!-- <TextView
             android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="רשימת מניינים תבוא כאן" />
+            android:text="רשימת מניינים תבוא כאן" />-->
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:id="@+id/recycler"/>
 
 
     </LinearLayout>
