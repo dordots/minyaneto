@@ -1,6 +1,7 @@
 package com.app.minyaneto_android;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.app.minyaneto_android.entities.Minyan;
 import com.app.minyaneto_android.entities.Synagogue;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -46,6 +48,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -72,6 +76,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
     private FusedLocationProviderClient mFusedLocationClient;
     private RecyclerView mRecyclerView;
 
+
     public MainScreenFragment() {
         // Required empty public constructor
     }
@@ -88,6 +93,16 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
+        if(getActivity() instanceof MainActivity) {
+            final OnMapReadyCallback currentOnMapReadyCallback = this;
+            ((MainActivity) getActivity()).setRefreshClickListener(new MainActivity.RefreshMapDataClickListener() {
+                @Override
+                public void onClickRefreshIcon() {
+                    SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.main_map);
+                    mapFragment.getMapAsync(currentOnMapReadyCallback);
+                }
+            });
+        }
     }
 
     @Override
@@ -155,7 +170,10 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PERMISSIONS_REQUEST_RESOLUTION_REQUIRED) {
-            findFirstLocation();
+            //findFirstLocation();
+            SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.main_map);
+            mapFragment.getMapAsync(this);
+
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -172,6 +190,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+       // mMap=null;
         mMap = googleMap;
         mMap.setOnMarkerClickListener(this);
         findFirstLocation();
@@ -218,7 +237,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
     }
 
     private void updateCurrentLocation(Location location) {
-        if(location==null)  return;
+        if (location == null) return;
         LatLng mLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -232,28 +251,79 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
         updateSynagogues(mLocation);
     }
 
-    private void updateSynagogues(LatLng location){
+    private void updateSynagogues(final LatLng location) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         final List<Synagogue> synagogues = new ArrayList<>();
-        synagogues.add(new Synagogue("אהל משה", new LatLng(location.latitude+0.001,location.longitude-0.001), 1));
-        synagogues.add(new Synagogue("בית מנחם",  new LatLng(location.latitude+0.001,location.longitude+0.001), 1));
-        synagogues.add(new Synagogue("אהל רבקה",  new LatLng(location.latitude-0.001,location.longitude-0.001),1));
-        synagogues.add(new Synagogue("זלצר", new LatLng(location.latitude+0.0015,location.longitude+0.00181), 1));
-        synagogues.add(new Synagogue("אהל שרה", new LatLng(location.latitude-0.00124,location.longitude-0.0021), 1));
-        synagogues.add(new Synagogue("אהל לאה ורחל", new LatLng(location.latitude+0.0037,location.longitude+0.00281),1));
-        synagogues.add(new Synagogue("כרם התימנים", new LatLng(location.latitude+0.0041,location.longitude-0.001), 1));
-        synagogues.add(new Synagogue("מיימון", new LatLng(location.latitude-0.0015,location.longitude+0.005), 1));
 
-        for(Synagogue s : synagogues){
+        Synagogue s = new Synagogue("ירושלים קרית משה", "לפנות במסדרון שמאלה ולעלות במדרגות לקומה 1", "אהל משה", new LatLng(location.latitude + 0.001, location.longitude - 0.001), "ספרד", false, true, true, true);
+        ArrayList<Minyan> minyens = new ArrayList<>();
+        minyens.add(new Minyan("mincha", "sunday", "12:00", true));
+        s.setMyMinyans(minyens);
+        synagogues.add(s);
+
+        s = new Synagogue("ירושלים רמות", "לעלות בכניסה ג לקומה 2", "בית מנחם", new LatLng(location.latitude + 0.001, location.longitude + 0.001), "עדות המזרח", false, true, false, true);
+        minyens = new ArrayList<>();
+        minyens.add(new Minyan("mincha", "sunday", "12:05", true));
+        s.setMyMinyans(minyens);
+        synagogues.add(s);
+
+        s = new Synagogue("ירושלים גבעת שאול", "כניסה ב", "אהל רבקה", new LatLng(location.latitude - 0.001, location.longitude - 0.001), "חב'ד", true, true, false, false);
+        minyens = new ArrayList<>();
+        minyens.add(new Minyan("mincha", "sunday", "13:05", true));
+        s.setMyMinyans(minyens);
+        synagogues.add(s);
+
+        s = new Synagogue("ירושלים גבעת שאול", "לפנות במסדרון שמאלה ולעלות במדרגות לקומה 1", "אהל שרה", new LatLng(location.latitude - 0.00124, location.longitude - 0.0021), "אשכנז", false, true, true, false);
+        minyens = new ArrayList<>();
+        minyens.add(new Minyan("mincha", "sunday", "12:05", true));
+        s.setMyMinyans(minyens);
+        synagogues.add(s);
+
+        s = new Synagogue("ירושלים בית הכרם", "לעלות בכניסה ג לקומה 2", "אהל לאה ורחל", new LatLng(location.latitude + 0.0037, location.longitude + 0.00281), "עדות המזרח", true, false, true, true);
+        minyens = new ArrayList<>();
+        minyens.add(new Minyan("mincha", "sunday", "13:35", true));
+        s.setMyMinyans(minyens);
+        synagogues.add(s);
+
+        s = new Synagogue("ירושלים רמות", "כניסה ב", "כרם התימנים", new LatLng(location.latitude + 0.0041, location.longitude - 0.001), "ספרד", true, false, false, true);
+        minyens = new ArrayList<>();
+        minyens.add(new Minyan("mincha", "sunday", "12:30", true));
+        s.setMyMinyans(minyens);
+        synagogues.add(s);
+
+        s = new Synagogue("ירושלים קרית משה", "לרדת 2 קומות", "מיימון", new LatLng(location.latitude - 0.0015, location.longitude + 0.005), "תימני", false, true, false, true);
+        minyens = new ArrayList<>();
+        minyens.add(new Minyan("mincha", "sunday", "12:55", true));
+        s.setMyMinyans(minyens);
+        synagogues.add(s);
+
+        s = new Synagogue("ירושלים בית הדפוס", "לפנות במסדרון שמאלה ולעלות במדרגות לקומה 1", "אהל שרה", new LatLng(location.latitude - 0.00124, location.longitude - 0.0021), "אשכנז", false, true, true, false);
+        minyens = new ArrayList<>();
+        minyens.add(new Minyan("mincha", "sunday", "14:05", true));
+        s.setMyMinyans(minyens);
+        synagogues.add(s);
+
+        mMap.clear();
+        for (Synagogue sy : synagogues) {
             mMap.addMarker(new MarkerOptions()
-                    .position(s.getLocation())
-                    .title(s.getName())
-                    .snippet(s.toString())
+                    .position(sy.getGeo())
+                    .title(sy.getName())
+                    .snippet(sy.getAddress()+" "+sy.getNosach()+" "+sy.isSefer_tora()+" "+sy.isClasses()+" "+sy.isParking()+" "+sy.isWheelchair_accessible())
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
         }
-        final SynagogueAdapter adapter = new SynagogueAdapter(synagogues);
+        mMap.setInfoWindowAdapter(new SynagogueInfoWindowAdapter(getContext()));
+        Collections.sort(synagogues, new Comparator<Synagogue>(){
+            public int compare(Synagogue o1, Synagogue o2){
+                double dis1= calculateDistance(o1.getGeo(),location);
+                double dis2= calculateDistance(o2.getGeo(),location);
+                if(dis1== dis2)
+                    return 0;
+                return dis1 < dis2 ? -1 : 1;
+            }
+        });
+        final SynagogueAdapter adapter = new SynagogueAdapter(synagogues, location);
         adapter.setMyClickListener(new SynagogueAdapter.SynagogueClickListener() {
             @Override
             public void onItemClick(int position, View v) {
@@ -275,6 +345,20 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
             }
         });
         mRecyclerView.setAdapter(adapter);
+    }
+
+
+    private long calculateDistance(LatLng location1,LatLng location2) {
+
+        double dLat = Math.toRadians(location1.latitude - location2.latitude);
+        double dLon = Math.toRadians(location1.longitude - location2.longitude);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(location2.latitude))
+                * Math.cos(Math.toRadians(location1.latitude)) * Math.sin(dLon / 2)
+                * Math.sin(dLon / 2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        long distanceInMeters = Math.round(6371000 * c);
+        return distanceInMeters;
     }
 
     @Override

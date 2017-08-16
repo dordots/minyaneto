@@ -24,6 +24,18 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener,SettingsFragment.OnFragmentInteractionListener {
 
     private ArrayList<Fragment> liveFragments = new ArrayList<>();
+    private  boolean showRefreshButton=true;
+
+    private RefreshMapDataClickListener myRefreshMapDataClickListener;
+
+    public interface RefreshMapDataClickListener {
+        void onClickRefreshIcon();
+    }
+
+    public void setRefreshClickListener(RefreshMapDataClickListener listener) {
+        this.myRefreshMapDataClickListener = listener;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +79,11 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        if(id==R.id.actionbar_refresh) {
+            if (myRefreshMapDataClickListener != null) {
+                myRefreshMapDataClickListener.onClickRefreshIcon();
+            }
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -100,17 +116,38 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-
+        //showRefreshButton=false;
+        /*switch (id){
+            case R.id.sidebar_home:showRefreshButton=true;
+                changeFragment(MainScreenFragment.newInstance());
+                break;
+            case R.id.sidebar_settings:
+                changeFragment(SettingsFragment.newInstance("Hello", "World"));
+                break;
+            case R.id.sidebar_addMinyan:
+                break;
+            case
+        }*/
         if (id == R.id.sidebar_home) {
+            if (!showRefreshButton) {
+                showRefreshButton=true;
+                invalidateOptionsMenu();
+            }
             changeFragment(MainScreenFragment.newInstance());
-        } else if (id == R.id.sidebar_settings) {
-            changeFragment(SettingsFragment.newInstance("Hello", "World"));
-        } else if (id == R.id.sidebar_addMinyan) {
+        } else {
+            if (showRefreshButton) {
+                showRefreshButton=false;
+                invalidateOptionsMenu();
+            }
+            if (id == R.id.sidebar_settings) {
+                changeFragment(SettingsFragment.newInstance("Hello", "World"));
+            } else if (id == R.id.sidebar_addMinyan) {
 
-        } else if (id == R.id.sidebar_serach) {
+            } else if (id == R.id.sidebar_serach) {
 
-        } else if (id == R.id.sidebar_about) {
+            } else if (id == R.id.sidebar_about) {
 
+            }
         }
 
         return true;
@@ -129,6 +166,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.action_bar_menu, menu);
+        menu.findItem(R.id.actionbar_refresh).setVisible(showRefreshButton);
         return true;
     }
 
