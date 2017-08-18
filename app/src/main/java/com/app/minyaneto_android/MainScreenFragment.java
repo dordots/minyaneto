@@ -76,6 +76,8 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
     private FusedLocationProviderClient mFusedLocationClient;
     private RecyclerView mRecyclerView;
 
+    private List<Synagogue> synagogues;
+
 
     public MainScreenFragment() {
         // Required empty public constructor
@@ -93,7 +95,8 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
-        if(getActivity() instanceof MainActivity) {
+        synagogues = new ArrayList<>();
+        if (getActivity() instanceof MainActivity) {
             final OnMapReadyCallback currentOnMapReadyCallback = this;
             ((MainActivity) getActivity()).setRefreshClickListener(new MainActivity.RefreshMapDataClickListener() {
                 @Override
@@ -102,6 +105,23 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
                     mapFragment.getMapAsync(currentOnMapReadyCallback);
                 }
             });
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        checkPermissions();
+    }
+
+    public void checkPermissions() {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat
+                    .requestPermissions(getActivity(), new String[]
+                            {Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+
+            return;
         }
     }
 
@@ -118,6 +138,10 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
     }
 
     private void handleLocationSetting() {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         LocationManager service = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
         boolean enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
@@ -170,10 +194,14 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PERMISSIONS_REQUEST_RESOLUTION_REQUIRED) {
-            //findFirstLocation();
-            SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.main_map);
-            mapFragment.getMapAsync(this);
-
+            if (resultCode != 0) {
+                SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.main_map);
+                mapFragment.getMapAsync(this);
+            } else {
+                LatLng myLoc = new LatLng(31.7780628, 35.2353691);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLoc, 15));
+                updateCurrentLocation(myLoc);
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -187,14 +215,30 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+    private double lastZoom = -1;
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-       // mMap=null;
         mMap = googleMap;
         mMap.setOnMarkerClickListener(this);
-        findFirstLocation();
+        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                CameraPosition cameraPosition = mMap.getCameraPosition();
+                if (cameraPosition.zoom <13.0) {
+                    mMap.clear();
+                } else {
+                    if(Math.floor(cameraPosition.zoom)<=Math.floor(lastZoom)) {
+                        return;
+                    }
+                    updateMarkers();
+                }
+                lastZoom=cameraPosition.zoom;
 
+            }
+        });
+        findFirstLocation();
 
         // Add a marker in Sydney and move the camera
         /* LatLng sydney = new LatLng(-34, 151);
@@ -206,13 +250,6 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
 
     private void findFirstLocation() {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
         mFusedLocationClient.getLastLocation()
@@ -221,8 +258,8 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
                     public void onSuccess(Location location) {
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
-                            updateCurrentLocation(location);
-                            // ...
+                            LatLng myLoc = new LatLng(location.getLatitude(), location.getLongitude());
+                            updateCurrentLocation(myLoc);
                         } else {
                             new Timer().schedule(new TimerTask() {
                                 @Override
@@ -236,10 +273,8 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
 
     }
 
-    private void updateCurrentLocation(Location location) {
-        if (location == null) return;
-        LatLng mLocation = new LatLng(location.getLatitude(), location.getLongitude());
-
+    private void updateCurrentLocation(LatLng mLocation) {
+        if (mLocation == null) return;
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(mLocation)      // Sets the center of the map to Mountain View
                 .zoom(15)                   // Sets the zoom
@@ -255,7 +290,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
-        final List<Synagogue> synagogues = new ArrayList<>();
+        synagogues.clear();
 
         Synagogue s = new Synagogue("ירושלים קרית משה", "לפנות במסדרון שמאלה ולעלות במדרגות לקומה 1", "אהל משה", new LatLng(location.latitude + 0.001, location.longitude - 0.001), "ספרד", false, true, true, true);
         ArrayList<Minyan> minyens = new ArrayList<>();
@@ -305,20 +340,13 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
         s.setMyMinyans(minyens);
         synagogues.add(s);
 
-        mMap.clear();
-        for (Synagogue sy : synagogues) {
-            mMap.addMarker(new MarkerOptions()
-                    .position(sy.getGeo())
-                    .title(sy.getName())
-                    .snippet(sy.getAddress()+" "+sy.getNosach()+" "+sy.isSefer_tora()+" "+sy.isClasses()+" "+sy.isParking()+" "+sy.isWheelchair_accessible())
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-        }
+        updateMarkers();
         mMap.setInfoWindowAdapter(new SynagogueInfoWindowAdapter(getContext()));
-        Collections.sort(synagogues, new Comparator<Synagogue>(){
-            public int compare(Synagogue o1, Synagogue o2){
-                double dis1= calculateDistance(o1.getGeo(),location);
-                double dis2= calculateDistance(o2.getGeo(),location);
-                if(dis1== dis2)
+        Collections.sort(synagogues, new Comparator<Synagogue>() {
+            public int compare(Synagogue o1, Synagogue o2) {
+                double dis1 = calculateDistance(o1.getGeo(), location);
+                double dis2 = calculateDistance(o2.getGeo(), location);
+                if (dis1 == dis2)
                     return 0;
                 return dis1 < dis2 ? -1 : 1;
             }
@@ -347,8 +375,18 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
         mRecyclerView.setAdapter(adapter);
     }
 
+    public void updateMarkers() {
+        mMap.clear();
+        for (Synagogue sy : synagogues) {
+            mMap.addMarker(new MarkerOptions()
+                    .position(sy.getGeo())
+                    .title(sy.getName())
+                    .snippet(sy.getAddress() + ":" + sy.getNosach() + ":" + sy.isSefer_tora() + ":" + sy.isClasses() + ":" + sy.isParking() + ":" + sy.isWheelchair_accessible())
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+        }
+    }
 
-    private long calculateDistance(LatLng location1,LatLng location2) {
+    private long calculateDistance(LatLng location1, LatLng location2) {
 
         double dLat = Math.toRadians(location1.latitude - location2.latitude);
         double dLon = Math.toRadians(location1.longitude - location2.longitude);
@@ -379,6 +417,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
                         PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
             } else {
                 // Message that the functionality won't work until the location permission achieved.
+
             }
             mMap.setMyLocationEnabled(false);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -395,7 +434,8 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
             case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    enableMyLocationIcon(false);
+                    //enableMyLocationIcon(false);
+                    handleLocationSetting();
                 }
                 return;
             }

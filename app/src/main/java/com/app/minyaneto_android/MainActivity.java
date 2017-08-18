@@ -1,8 +1,11 @@
 package com.app.minyaneto_android;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -21,7 +24,8 @@ import android.view.View;
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener,SettingsFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity
+        implements OnNavigationItemSelectedListener,SettingsFragment.OnFragmentInteractionListener, ActivityCompat.OnRequestPermissionsResultCallback {
 
     private ArrayList<Fragment> liveFragments = new ArrayList<>();
     private  boolean showRefreshButton=true;
@@ -133,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 showRefreshButton=true;
                 invalidateOptionsMenu();
             }
+            MainScreenFragment.newInstance().checkPermissions();
             changeFragment(MainScreenFragment.newInstance());
         } else {
             if (showRefreshButton) {
@@ -151,6 +156,15 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         }
 
         return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        for (Fragment fragment : liveFragments) {
+            fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override

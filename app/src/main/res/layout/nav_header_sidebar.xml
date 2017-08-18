@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:layout_gravity="start"
-        android:text="@string/app_name_hebrew"
+        android:text="@string/app_name"
         android:textSize="20dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 

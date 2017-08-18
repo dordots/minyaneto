@@ -1,13 +1,12 @@
 <resources>
     <string name="app_name">Minyaneto-android</string>
-    <string name="app_name_hebrew">מניינטו</string>
     <string name="side_bar_info">הן אל כביר לא ימאס בתפילת רבים</string>
-    <string name="sidebar_home">ראשי</string>
-    <string name="sidebar_settings">הגדרות</string>
-    <string name="sidebar_search">חיפוש</string>
-    <string name="sidebar_addMinyan">הוסף מניין</string>
-    <string name="sidebar_about">על סטארט-אח</string>
-    <string name="actionbar_refresh_location">רענן מיקום</string>
+    <string name="sidebar_home">home</string>
+    <string name="sidebar_settings">setting</string>
+    <string name="sidebar_search">search</string>
+    <string name="sidebar_addMinyan">add a minyan</string>
+    <string name="sidebar_about">about startach</string>
+    <string name="actionbar_refresh_location">refresh location</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_sidebar">Sidebar</string>
 
@@ -18,4 +17,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sefer_tora">ספר תורה</string>
+    <string name="lessons">שיעורים</string>
+    <string name="parking">חניה</string>
+    <string name="accessible">גישה לנכים</string>
 </resources>

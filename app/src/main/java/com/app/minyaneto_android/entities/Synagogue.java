@@ -10,6 +10,7 @@ public class Synagogue {
     private String comments;
     private String name;
     private String nosach;
+    private double distanceFromLocation;
     private LatLng geo;
     private boolean classes;
     private boolean parking;
@@ -118,6 +119,14 @@ public class Synagogue {
 
     public void setMyMinyans(ArrayList<Minyan> myMinyans) {
         this.myMinyans = myMinyans;
+    }
+
+    public double getDistanceFromLocation() {
+        return distanceFromLocation;
+    }
+
+    public void setDistanceFromLocation(double distanceFromLocation) {
+        this.distanceFromLocation = distanceFromLocation;
     }
 
 
