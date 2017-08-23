@@ -3,6 +3,8 @@ package com.app.minyaneto_android;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Date;
+import java.util.TimeZone;
+
 
 /**
  * add matay??
@@ -11,11 +13,29 @@ import java.util.Date;
 public class DailyTimes {
     private LatLng place;
     private Date day;
-
+    TimeZone timeZone;
     DailyTimes(LatLng p, Date d)
+    {
+        place=p;
+        day=d;
+        if (null == d)
+        {
+            day = new Date(); //initialized to now
+        }
+        timeZone = TimeZone.getDefault();
+
+    }
+
+    Date GetSunrise(int minute_offset)
     {
 
     }
+
+    Date GetSunset(int minnute_offset)
+    {
+
+    }
+
 }
 /*
 import net.sourceforge.zmanim.*;
