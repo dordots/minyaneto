@@ -1,7 +1,6 @@
 package com.app.minyaneto_android;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -10,7 +9,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -25,6 +23,7 @@ import android.widget.Toast;
 
 import com.app.minyaneto_android.entities.Minyan;
 import com.app.minyaneto_android.entities.Synagogue;
+import com.app.minyaneto_android.entities.Time;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -62,7 +61,7 @@ import static android.content.Context.LOCATION_SERVICE;
  * Activities that contain this fragment must implement the
  * {@link MainScreenFragment.OnMapInteractionListener} interface
  * to handle interaction events.
- * Use the {@link MainScreenFragment#newInstance} factory method to
+ * Use the {@link MainScreenFragment#theInstance} factory method to
  * create an instance of this fragment.
  */
 public class MainScreenFragment extends Fragment implements OnMapReadyCallback, OnRequestPermissionsResultCallback, GoogleMap.OnMarkerClickListener {
@@ -78,13 +77,12 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
 
     private List<Synagogue> synagogues;
 
-
     public MainScreenFragment() {
         // Required empty public constructor
     }
 
     // TODO: Rename and change types and number of parameters
-    public static MainScreenFragment newInstance() {
+    public static MainScreenFragment theInstance() {
         if (_instance == null) {
             _instance = new MainScreenFragment();
         }
@@ -221,61 +219,49 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setOnMarkerClickListener(this);
+        lastZoom = -1;
+
         mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
 
             @Override
             public void onCameraIdle() {
-
-            }
-        });
-        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
-            @Override
-            public void onCameraMove() {
                 CameraPosition cameraPosition = mMap.getCameraPosition();
-                if (cameraPosition.zoom <13.0) {
+                if (cameraPosition.zoom < 13.0) {
                     mMap.clear();
                 } else {
-                    if(Math.floor(cameraPosition.zoom)<=Math.floor(lastZoom)) {
+                    if (Math.floor(cameraPosition.zoom) <= Math.floor(lastZoom)) {
                         return;
                     }
                     updateMarkers();
                 }
-                lastZoom=cameraPosition.zoom;
-
+                lastZoom = cameraPosition.zoom;
             }
         });
-        findFirstLocation();
 
-        // Add a marker in Sydney and move the camera
-        /* LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        enableMyLocationIcon(true);
-        */
+        findFirstLocation();
     }
 
     private void findFirstLocation() {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        mFusedLocationClient.getLastLocation()
-                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            LatLng myLoc = new LatLng(location.getLatitude(), location.getLongitude());
-                            updateCurrentLocation(myLoc);
-                        } else {
-                            new Timer().schedule(new TimerTask() {
-                                @Override
-                                public void run() {
-                                    findFirstLocation();
-                                }
-                            }, 1000);
+        mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                // Got last known location. In some rare situations this can be null.
+                if (location != null) {
+                    LatLng myLoc = new LatLng(location.getLatitude(), location.getLongitude());
+                    updateCurrentLocation(myLoc);
+                } else {
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            findFirstLocation();
                         }
-                    }
-                });
+                    }, 1000);
+                }
+            }
+        });
 
     }
 
@@ -297,57 +283,56 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         synagogues.clear();
-
         Synagogue s = new Synagogue("ירושלים קרית משה", "לפנות במסדרון שמאלה ולעלות במדרגות לקומה 1", "אהל משה", new LatLng(location.latitude + 0.001, location.longitude - 0.001), "ספרד", false, true, true, true);
         ArrayList<Minyan> minyens = new ArrayList<>();
-        minyens.add(new Minyan("mincha", "sunday", "12:00", true));
+        minyens.add(new Minyan("mincha", new Time()));
         s.setMyMinyans(minyens);
         synagogues.add(s);
 
         s = new Synagogue("ירושלים רמות", "לעלות בכניסה ג לקומה 2", "בית מנחם", new LatLng(location.latitude + 0.001, location.longitude + 0.001), "עדות המזרח", false, true, false, true);
         minyens = new ArrayList<>();
-        minyens.add(new Minyan("mincha", "sunday", "12:05", true));
+        minyens.add(new Minyan("mincha", new Time()));
         s.setMyMinyans(minyens);
         synagogues.add(s);
 
         s = new Synagogue("ירושלים גבעת שאול", "כניסה ב", "אהל רבקה", new LatLng(location.latitude - 0.001, location.longitude - 0.001), "חב'ד", true, true, false, false);
         minyens = new ArrayList<>();
-        minyens.add(new Minyan("mincha", "sunday", "13:05", true));
+        minyens.add(new Minyan("mincha", new Time()));
         s.setMyMinyans(minyens);
         synagogues.add(s);
 
         s = new Synagogue("ירושלים גבעת שאול", "לפנות במסדרון שמאלה ולעלות במדרגות לקומה 1", "אהל שרה", new LatLng(location.latitude - 0.00124, location.longitude - 0.0021), "אשכנז", false, true, true, false);
         minyens = new ArrayList<>();
-        minyens.add(new Minyan("mincha", "sunday", "12:05", true));
+        minyens.add(new Minyan("mincha", new Time()));
         s.setMyMinyans(minyens);
         synagogues.add(s);
 
         s = new Synagogue("ירושלים בית הכרם", "לעלות בכניסה ג לקומה 2", "אהל לאה ורחל", new LatLng(location.latitude + 0.0037, location.longitude + 0.00281), "עדות המזרח", true, false, true, true);
         minyens = new ArrayList<>();
-        minyens.add(new Minyan("mincha", "sunday", "13:35", true));
+        minyens.add(new Minyan("mincha", new Time()));
         s.setMyMinyans(minyens);
         synagogues.add(s);
 
         s = new Synagogue("ירושלים רמות", "כניסה ב", "כרם התימנים", new LatLng(location.latitude + 0.0041, location.longitude - 0.001), "ספרד", true, false, false, true);
         minyens = new ArrayList<>();
-        minyens.add(new Minyan("mincha", "sunday", "12:30", true));
+        minyens.add(new Minyan("mincha", new Time()));
         s.setMyMinyans(minyens);
         synagogues.add(s);
 
         s = new Synagogue("ירושלים קרית משה", "לרדת 2 קומות", "מיימון", new LatLng(location.latitude - 0.0015, location.longitude + 0.005), "תימני", false, true, false, true);
         minyens = new ArrayList<>();
-        minyens.add(new Minyan("mincha", "sunday", "12:55", true));
+        minyens.add(new Minyan("mincha", new Time()));
         s.setMyMinyans(minyens);
         synagogues.add(s);
 
         s = new Synagogue("ירושלים בית הדפוס", "לפנות במסדרון שמאלה ולעלות במדרגות לקומה 1", "אהל שרה", new LatLng(location.latitude - 0.00124, location.longitude - 0.0021), "אשכנז", false, true, true, false);
         minyens = new ArrayList<>();
-        minyens.add(new Minyan("mincha", "sunday", "14:05", true));
+        minyens.add(new Minyan("mincha", new Time()));
         s.setMyMinyans(minyens);
         synagogues.add(s);
 
         updateMarkers();
-        mMap.setInfoWindowAdapter(new SynagogueInfoWindowAdapter(getContext()));
+       // mMap.setInfoWindowAdapter(new SynagogueInfoWindowAdapter(getContext()));
         Collections.sort(synagogues, new Comparator<Synagogue>() {
             public int compare(Synagogue o1, Synagogue o2) {
                 double dis1 = calculateDistance(o1.getGeo(), location);
@@ -386,8 +371,9 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
         for (Synagogue sy : synagogues) {
             mMap.addMarker(new MarkerOptions()
                     .position(sy.getGeo())
-                    .title(sy.getName())
-                    .snippet(sy.getAddress() + ":" + sy.getNosach() + ":" + sy.isSefer_tora() + ":" + sy.isClasses() + ":" + sy.isParking() + ":" + sy.isWheelchair_accessible())
+                    .title(sy.getName()+" - "+sy.getNosach())
+                    .snippet(sy.getAddress())
+                   // .snippet(sy.getAddress() + ":" + sy.getNosach() + ":" + sy.isSefer_tora() + ":" + sy.isClasses() + ":" + sy.isParking() + ":" + sy.isWheelchair_accessible())
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
         }
     }

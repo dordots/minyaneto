@@ -1,6 +1,5 @@
 package com.app.minyaneto_android;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -64,7 +63,7 @@ public class MainActivity extends AppCompatActivity
             supportActionBar.setHomeButtonEnabled(true);
         }
 
-        changeFragment(MainScreenFragment.newInstance());
+        changeFragment(MainScreenFragment.theInstance());
     }
 
     @Override
@@ -123,10 +122,10 @@ public class MainActivity extends AppCompatActivity
         //showRefreshButton=false;
         /*switch (id){
             case R.id.sidebar_home:showRefreshButton=true;
-                changeFragment(MainScreenFragment.newInstance());
+                changeFragment(MainScreenFragment.theInstance());
                 break;
             case R.id.sidebar_settings:
-                changeFragment(SettingsFragment.newInstance("Hello", "World"));
+                changeFragment(SettingsFragment.theInstance("Hello", "World"));
                 break;
             case R.id.sidebar_addMinyan:
                 break;
@@ -137,16 +136,17 @@ public class MainActivity extends AppCompatActivity
                 showRefreshButton=true;
                 invalidateOptionsMenu();
             }
-            MainScreenFragment.newInstance().checkPermissions();
-            changeFragment(MainScreenFragment.newInstance());
+            MainScreenFragment.theInstance().checkPermissions();
+            changeFragment(MainScreenFragment.theInstance());
         } else {
             if (showRefreshButton) {
                 showRefreshButton=false;
                 invalidateOptionsMenu();
             }
             if (id == R.id.sidebar_settings) {
-                changeFragment(SettingsFragment.newInstance("Hello", "World"));
-            } else if (id == R.id.sidebar_addMinyan) {
+                changeFragment(SettingsFragment.theInstance("Hello", "World"));
+            } else if (id == R.id.sidebar_addSynagogue) {
+                changeFragment(SynagogueDetailsFragment.theInstance());
 
             } else if (id == R.id.sidebar_serach) {
 

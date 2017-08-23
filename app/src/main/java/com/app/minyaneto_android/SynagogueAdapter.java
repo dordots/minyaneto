@@ -50,7 +50,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
         //holder.imageView.setImageResource(synagogue.getNosachResId());
         holder.nameTextView.setText(synagogue.getName());
         if(synagogue.getMyMinyans().size()>0)
-            holder.prayerTimeTextView.setText(synagogue.getMyMinyans().get(0).getTime());
+            holder.prayerTimeTextView.setText("time");
         holder.distanceSynagogueTextView.setText(calculateDistance(synagogue.getGeo())+" מ'");
     }
 

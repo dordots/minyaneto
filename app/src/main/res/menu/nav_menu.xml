@@ -17,9 +17,9 @@
             android:title="@string/sidebar_search"
             />
         <item
-            android:id="@+id/sidebar_addMinyan"
+            android:id="@+id/sidebar_addSynagogue"
             android:icon="@drawable/ic_sidebar_add_minyan"
-            android:title="@string/sidebar_addMinyan"
+            android:title="@string/sidebar_addSynagogue"
             />
         <item
             android:id="@+id/sidebar_about"

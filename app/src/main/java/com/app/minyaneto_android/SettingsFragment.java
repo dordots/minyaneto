@@ -14,7 +14,7 @@ import android.view.ViewGroup;
  * Activities that contain this fragment must implement the
  * {@link SettingsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link SettingsFragment#newInstance} factory method to
+ * Use the {@link SettingsFragment#theInstance} factory method to
  * create an instance of this fragment.
  */
 public class SettingsFragment extends Fragment {
@@ -44,7 +44,7 @@ public class SettingsFragment extends Fragment {
      * @return A new instance of fragment SettingsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SettingsFragment newInstance(String param1, String param2) {
+    public static SettingsFragment theInstance(String param1, String param2) {
 //        SettingsFragment fragment = new SettingsFragment();
 //        Bundle args = new Bundle();
 //        args.putString(ARG_PARAM1, param1);

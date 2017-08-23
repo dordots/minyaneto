@@ -4,7 +4,7 @@
     <string name="sidebar_home">home</string>
     <string name="sidebar_settings">setting</string>
     <string name="sidebar_search">search</string>
-    <string name="sidebar_addMinyan">add a minyan</string>
+    <string name="sidebar_addSynagogue">add a synagogue</string>
     <string name="sidebar_about">about startach</string>
     <string name="actionbar_refresh_location">refresh location</string>
     <string name="title_activity_maps">Map</string>
@@ -15,10 +15,25 @@
 
     <string name="action_settings">Settings</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="sefer_tora">ספר תורה</string>
-    <string name="lessons">שיעורים</string>
-    <string name="parking">חניה</string>
-    <string name="accessible">גישה לנכים</string>
+    <string name="sefer_tora">sefer tora</string>
+    <string name="lessons">lessons</string>
+    <string name="parking">parking</string>
+    <string name="accessible">accessible</string>
+    <string name="enter_name_synagogue">enter a name of synagogue</string>
+    <string name="enter_address_synagogue">enter the address</string>
+    <string name="choose_nosach_synagogue">choose nosach</string>
+    <string name="synagogoe_details_title">synagogue details</string>
+    <string name="add">add</string>
+    <string name="check_synagogue">אנא מלא את כל הפרטים.</string>
+    <string name="error">בית כנסת זה כבר קיים. לא ניתן להוסיפו שנית.</string>
+
+    <string-array name="nosachim">
+        <item>ספרד</item>
+        <item>אשכנז</item>
+        <item>עדות המזרח</item>
+        <item>תימני</item>
+        <item>חבד</item>
+        <item>כללי</item>
+    </string-array>
 </resources>
