@@ -1,4 +1,4 @@
-package com.app.minyaneto_android.fragments.main_screen_fragments;
+package com.app.minyaneto_android;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.entities.Synagogue;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -30,7 +29,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
 
     public SynagogueAdapter(List<Synagogue> synagogues, LatLng geo) {
         this.synagogues = synagogues;
-        this.geo = geo;
+        this.geo=geo;
     }
 
     @Override
@@ -40,7 +39,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
 
     @Override
     public SynagogueViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.minyan_cell_layout, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.minyan_cell_layout,parent,false);
         SynagogueViewHolder SynagogueViewHolder = new SynagogueViewHolder(v);
         return SynagogueViewHolder;
     }
@@ -50,9 +49,9 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
         Synagogue synagogue = synagogues.get(position);
         //holder.imageView.setImageResource(synagogue.getNosachResId());
         holder.nameTextView.setText(synagogue.getName());
-        if (synagogue.getMinyans().size() > 0)
-            holder.prayerTimeTextView.setText(synagogue.getMinyans().get(0).getTime());
-        holder.distanceSynagogueTextView.setText(calculateDistance(synagogue.getGeo()) + " מ'");
+        if(synagogue.getMyMinyans().size()>0)
+            holder.prayerTimeTextView.setText("time");
+        holder.distanceSynagogueTextView.setText(calculateDistance(synagogue.getGeo())+" מ'");
     }
 
     private long calculateDistance(LatLng location) {
@@ -78,20 +77,20 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
         public SynagogueViewHolder(View itemView) {
             super(itemView);
             //imageView = (ImageView)itemView.findViewById(R.id.synagogue_nosach);
-            nameTextView = (TextView) itemView.findViewById(R.id.synagogue_name);
-            prayerTimeTextView = (TextView) itemView.findViewById(R.id.prayer_time);
-            distanceSynagogueTextView = (TextView) itemView.findViewById(R.id.synagogue_distance);
+            nameTextView = (TextView)itemView.findViewById(R.id.synagogue_name);
+            prayerTimeTextView = (TextView)itemView.findViewById(R.id.prayer_time);
+            distanceSynagogueTextView=(TextView)itemView.findViewById(R.id.synagogue_distance);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    myClickListener.onItemClick(getAdapterPosition(), v);
+                    myClickListener.onItemClick(getAdapterPosition(),v);
                 }
             });
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    myClickListener.onItemLongClick(getAdapterPosition(), v);
+                    myClickListener.onItemLongClick(getAdapterPosition(),v);
                     return false;
                 }
             });

@@ -5,7 +5,7 @@
     <string name="sidebar_home">ראשי</string>
     <string name="sidebar_settings">הגדרות</string>
     <string name="sidebar_search">חיפוש</string>
-    <string name="sidebar_addMinyan">הוסף מניין</string>
+    <string name="sidebar_addSynagogue">הוסף בית כנסת</string>
     <string name="sidebar_about">על סטארט-אח</string>
     <string name="actionbar_refresh_location">רענן מיקום</string>
     <string name="title_activity_maps">Map</string>
@@ -22,4 +22,14 @@
     <string name="lessons">שיעורים</string>
     <string name="parking">חניה</string>
     <string name="accessible">גישה לנכים</string>
+    <string name="enter_name_synagogue">הכנס שם בית כנסת</string>
+    <string name="enter_address_synagogue">הכנס כתובת בית כנסת</string>
+    <string name="choose_nosach_synagogue">בחר נוסח</string>
+    <string name="synagogoe_details_title">פרטי בית כנסת</string>
+    <string name="add">הוסף</string>
+    <string name="check_synagogue">אנא מלא את כל הפרטים.</string>
+    <string name="error">בית כנסת זה כבר קיים. לא ניתן להוסיפו שנית.</string>
+
+
+
 </resources>
