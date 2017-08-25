@@ -16,7 +16,8 @@ public class Synagogue {
     private boolean parking;
     private boolean sefer_tora;
     private boolean wheelchair_accessible;
-    private ArrayList<Minyan> myMinyans;
+    private ArrayList<Minyan> minyans;
+    private boolean[] a;
 
     public Synagogue(String address, String comments, String name, LatLng geo, String nosach, boolean classes, boolean parking, boolean sefer_tora, boolean wheelchair_accessible) {
         this.address = address;
@@ -28,6 +29,7 @@ public class Synagogue {
         this.parking = parking;
         this.sefer_tora = sefer_tora;
         this.wheelchair_accessible = wheelchair_accessible;
+        this.minyans = new ArrayList<>();
     }
 
     public Synagogue() {
@@ -113,12 +115,12 @@ public class Synagogue {
         this.wheelchair_accessible = wheelchair_accessible;
     }
 
-    public ArrayList<Minyan> getMyMinyans() {
-        return myMinyans;
+    public ArrayList<Minyan> getMinyans() {
+        return minyans;
     }
 
-    public void setMyMinyans(ArrayList<Minyan> myMinyans) {
-        this.myMinyans = myMinyans;
+    public void setMinyans(ArrayList<Minyan> minyans) {
+        this.minyans = minyans;
     }
 
     public double getDistanceFromLocation() {
@@ -129,5 +131,10 @@ public class Synagogue {
         this.distanceFromLocation = distanceFromLocation;
     }
 
+    public boolean addMinyan(Minyan minyan) {
+        if (minyan == null)
+            return false;
 
+        return minyans.add(minyan);
+    }
 }

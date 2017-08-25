@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- asd-->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,7 +23,7 @@
             android:id="@+id/info_synagogue_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="תפילה"
+            android:text="@string/nosach_tfila"
             android:textSize="14dp"
             android:textStyle="bold" />
 

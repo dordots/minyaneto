@@ -1,16 +1,13 @@
-package com.app.minyaneto_android;
+package com.app.minyaneto_android.fragments.main_screen_fragments;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -23,8 +20,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.app.minyaneto_android.entities.Minyan;
+import com.app.minyaneto_android.acivities.MainActivity;
+import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.entities.Synagogue;
+import com.app.minyaneto_android.map.SynagogueInfoWindowAdapter;
+import com.app.minyaneto_android.utilities.SynagougeFictiveData;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -57,34 +57,25 @@ import java.util.TimerTask;
 import static android.content.Context.LOCATION_SERVICE;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MainScreenFragment.OnMapInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MainScreenFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MainScreenFragment extends Fragment implements OnMapReadyCallback, OnRequestPermissionsResultCallback, GoogleMap.OnMarkerClickListener {
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final int PERMISSIONS_REQUEST_RESOLUTION_REQUIRED = 123;
 
-    private OnMapInteractionListener mListener;
-    private GoogleMap mMap;
-    private static MainScreenFragment _instance;
-
-    private FusedLocationProviderClient mFusedLocationClient;
     private RecyclerView mRecyclerView;
-
     private List<Synagogue> synagogues;
 
+    private GoogleMap mMap;
 
-    public MainScreenFragment() {
-        // Required empty public constructor
-    }
+    private double lastZoom = -1;
+
+    private FusedLocationProviderClient mFusedLocationClient;
+
+    private static MainScreenFragment _instance;
+
+    public MainScreenFragment() {/*Required empty public constructor*/}
 
     // TODO: Rename and change types and number of parameters
-    public static MainScreenFragment newInstance() {
+    public static MainScreenFragment getInstance() {
         if (_instance == null) {
             _instance = new MainScreenFragment();
         }
@@ -109,20 +100,9 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        checkPermissions();
-    }
-
-    public void checkPermissions() {
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat
-                    .requestPermissions(getActivity(), new String[]
-                            {Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-
-            return;
-        }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_main_screen, container, false);
     }
 
     @Override
@@ -137,11 +117,91 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
         handleLocationSetting();
     }
 
-    private void handleLocationSetting() {
+    @Override
+    public void onStart() {
+        super.onStart();
+        checkPermissions(true);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PERMISSIONS_REQUEST_RESOLUTION_REQUIRED) {
+            if (resultCode != 0) {
+                SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.main_map);
+                mapFragment.getMapAsync(this);
+            } else {
+                LatLng myLoc = new LatLng(31.7780628, 35.2353691);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLoc, 15));
+                updateCurrentLocation(myLoc);
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mMap.setOnMarkerClickListener(this);
+
+        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                CameraPosition cameraPosition = mMap.getCameraPosition();
+                if (cameraPosition.zoom <13.0) {
+                    mMap.clear();
+                } else {
+                    if(Math.floor(cameraPosition.zoom)<=Math.floor(lastZoom)) {
+                        return;
+                    }
+                    updateMarkers();
+                }
+                lastZoom=cameraPosition.zoom;
+
+            }
+        });
+        findFirstLocation();
+
+        // TODO: Is this code needed?
+        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+
+            @Override
+            public void onCameraIdle() {
+
+            }
+        });
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //enableMyLocationIcon(false);
+                    handleLocationSetting();
+                }
+                return;
+            }
+        }
+    }
+
+    public boolean checkPermissions(boolean askIfNotGranted) {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            return;
+            if (askIfNotGranted)
+                ActivityCompat.requestPermissions(getActivity(), new String[]
+                                {Manifest.permission.ACCESS_FINE_LOCATION},
+                                PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+            return false;
         }
+        return true;
+    }
+
+    private void handleLocationSetting() {
+        if (!checkPermissions(false))
+            return;
+
         LocationManager service = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
         boolean enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
@@ -191,69 +251,6 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
         });
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PERMISSIONS_REQUEST_RESOLUTION_REQUIRED) {
-            if (resultCode != 0) {
-                SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.main_map);
-                mapFragment.getMapAsync(this);
-            } else {
-                LatLng myLoc = new LatLng(31.7780628, 35.2353691);
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLoc, 15));
-                updateCurrentLocation(myLoc);
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-    private double lastZoom = -1;
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.setOnMarkerClickListener(this);
-        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
-
-            @Override
-            public void onCameraIdle() {
-
-            }
-        });
-        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
-            @Override
-            public void onCameraMove() {
-                CameraPosition cameraPosition = mMap.getCameraPosition();
-                if (cameraPosition.zoom <13.0) {
-                    mMap.clear();
-                } else {
-                    if(Math.floor(cameraPosition.zoom)<=Math.floor(lastZoom)) {
-                        return;
-                    }
-                    updateMarkers();
-                }
-                lastZoom=cameraPosition.zoom;
-
-            }
-        });
-        findFirstLocation();
-
-        // Add a marker in Sydney and move the camera
-        /* LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        enableMyLocationIcon(true);
-        */
-    }
-
     private void findFirstLocation() {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -266,13 +263,6 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
                         if (location != null) {
                             LatLng myLoc = new LatLng(location.getLatitude(), location.getLongitude());
                             updateCurrentLocation(myLoc);
-                        } else {
-                            new Timer().schedule(new TimerTask() {
-                                @Override
-                                public void run() {
-                                    findFirstLocation();
-                                }
-                            }, 1000);
                         }
                     }
                 });
@@ -288,7 +278,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
                 .tilt(30)                   // Sets the tilt of the camera to 30 degrees
                 .build();                   // Creates a CameraPosition from the builder
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        enableMyLocationIcon(true);
+        enableMyLocationIcon();
         updateSynagogues(mLocation);
     }
 
@@ -296,55 +286,8 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
-        synagogues.clear();
 
-        Synagogue s = new Synagogue("ירושלים קרית משה", "לפנות במסדרון שמאלה ולעלות במדרגות לקומה 1", "אהל משה", new LatLng(location.latitude + 0.001, location.longitude - 0.001), "ספרד", false, true, true, true);
-        ArrayList<Minyan> minyens = new ArrayList<>();
-        minyens.add(new Minyan("mincha", "sunday", "12:00", true));
-        s.setMyMinyans(minyens);
-        synagogues.add(s);
-
-        s = new Synagogue("ירושלים רמות", "לעלות בכניסה ג לקומה 2", "בית מנחם", new LatLng(location.latitude + 0.001, location.longitude + 0.001), "עדות המזרח", false, true, false, true);
-        minyens = new ArrayList<>();
-        minyens.add(new Minyan("mincha", "sunday", "12:05", true));
-        s.setMyMinyans(minyens);
-        synagogues.add(s);
-
-        s = new Synagogue("ירושלים גבעת שאול", "כניסה ב", "אהל רבקה", new LatLng(location.latitude - 0.001, location.longitude - 0.001), "חב'ד", true, true, false, false);
-        minyens = new ArrayList<>();
-        minyens.add(new Minyan("mincha", "sunday", "13:05", true));
-        s.setMyMinyans(minyens);
-        synagogues.add(s);
-
-        s = new Synagogue("ירושלים גבעת שאול", "לפנות במסדרון שמאלה ולעלות במדרגות לקומה 1", "אהל שרה", new LatLng(location.latitude - 0.00124, location.longitude - 0.0021), "אשכנז", false, true, true, false);
-        minyens = new ArrayList<>();
-        minyens.add(new Minyan("mincha", "sunday", "12:05", true));
-        s.setMyMinyans(minyens);
-        synagogues.add(s);
-
-        s = new Synagogue("ירושלים בית הכרם", "לעלות בכניסה ג לקומה 2", "אהל לאה ורחל", new LatLng(location.latitude + 0.0037, location.longitude + 0.00281), "עדות המזרח", true, false, true, true);
-        minyens = new ArrayList<>();
-        minyens.add(new Minyan("mincha", "sunday", "13:35", true));
-        s.setMyMinyans(minyens);
-        synagogues.add(s);
-
-        s = new Synagogue("ירושלים רמות", "כניסה ב", "כרם התימנים", new LatLng(location.latitude + 0.0041, location.longitude - 0.001), "ספרד", true, false, false, true);
-        minyens = new ArrayList<>();
-        minyens.add(new Minyan("mincha", "sunday", "12:30", true));
-        s.setMyMinyans(minyens);
-        synagogues.add(s);
-
-        s = new Synagogue("ירושלים קרית משה", "לרדת 2 קומות", "מיימון", new LatLng(location.latitude - 0.0015, location.longitude + 0.005), "תימני", false, true, false, true);
-        minyens = new ArrayList<>();
-        minyens.add(new Minyan("mincha", "sunday", "12:55", true));
-        s.setMyMinyans(minyens);
-        synagogues.add(s);
-
-        s = new Synagogue("ירושלים בית הדפוס", "לפנות במסדרון שמאלה ולעלות במדרגות לקומה 1", "אהל שרה", new LatLng(location.latitude - 0.00124, location.longitude - 0.0021), "אשכנז", false, true, true, false);
-        minyens = new ArrayList<>();
-        minyens.add(new Minyan("mincha", "sunday", "14:05", true));
-        s.setMyMinyans(minyens);
-        synagogues.add(s);
+        synagogues = SynagougeFictiveData.getFictiveSynagouges(location);
 
         updateMarkers();
         mMap.setInfoWindowAdapter(new SynagogueInfoWindowAdapter(getContext()));
@@ -387,13 +330,17 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
             mMap.addMarker(new MarkerOptions()
                     .position(sy.getGeo())
                     .title(sy.getName())
-                    .snippet(sy.getAddress() + ":" + sy.getNosach() + ":" + sy.isSefer_tora() + ":" + sy.isClasses() + ":" + sy.isParking() + ":" + sy.isWheelchair_accessible())
+                    .snippet(sy.getAddress() + ":" +
+                             sy.getNosach() + ":" +
+                             sy.isSefer_tora() + ":" +
+                             sy.isClasses() + ":" +
+                             sy.isParking() + ":" +
+                             sy.isWheelchair_accessible())
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
         }
     }
 
     private long calculateDistance(LatLng location1, LatLng location2) {
-
         double dLat = Math.toRadians(location1.latitude - location2.latitude);
         double dLon = Math.toRadians(location1.longitude - location2.longitude);
         double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
@@ -411,85 +358,15 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
         return false;
     }
 
-    private void enableMyLocationIcon(boolean requestIfNotGranted) {
+    private void enableMyLocationIcon() {
         if (mMap == null)
             return;
-
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (requestIfNotGranted) {
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                        PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-            } else {
-                // Message that the functionality won't work until the location permission achieved.
-
-            }
-            mMap.setMyLocationEnabled(false);
-            mMap.getUiSettings().setMyLocationButtonEnabled(false);
-            return;
+        boolean permissionsStatus = checkPermissions(true);
+        try{
+            mMap.setMyLocationEnabled(permissionsStatus);
+            mMap.getUiSettings().setMyLocationButtonEnabled(permissionsStatus);
+        } catch(SecurityException ex){
+            // Location Permission did not granted.
         }
-
-        mMap.setMyLocationEnabled(true);
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //enableMyLocationIcon(false);
-                    handleLocationSetting();
-                }
-                return;
-            }
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main_screen, container, false);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnMapInteractionListener {
-
     }
 }

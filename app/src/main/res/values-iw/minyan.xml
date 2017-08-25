@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nosach_tfila">נוסח תפילה</string>
+    <string-array name="nosach">
+        <item>ספרדי</item>
+        <item>אשכנזי</item>
+        <item>תימני</item>
+        <item>חבד</item>
+        <item>לפי החזן</item>
+        <item>אחר</item>
+    </string-array>
+</resources>

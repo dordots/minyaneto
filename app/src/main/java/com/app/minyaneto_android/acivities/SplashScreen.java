@@ -1,4 +1,4 @@
-package com.app.minyaneto_android;
+package com.app.minyaneto_android.acivities;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -7,6 +7,9 @@ import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ProgressBar;
+
+import com.app.minyaneto_android.R;
+import com.app.minyaneto_android.acivities.MainActivity;
 
 public class SplashScreen extends AppCompatActivity {
 

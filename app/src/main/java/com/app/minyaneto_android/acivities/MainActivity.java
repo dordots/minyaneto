@@ -1,7 +1,5 @@
-package com.app.minyaneto_android;
+package com.app.minyaneto_android.acivities;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
@@ -21,25 +19,24 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.app.minyaneto_android.R;
+import com.app.minyaneto_android.fragments.main_screen_fragments.MainScreenFragment;
+import com.app.minyaneto_android.fragments.settings_fragments.SettingsFragment;
+
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity
-        implements OnNavigationItemSelectedListener,SettingsFragment.OnFragmentInteractionListener, ActivityCompat.OnRequestPermissionsResultCallback {
+public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener,
+                                                               ActivityCompat.OnRequestPermissionsResultCallback {
 
     private ArrayList<Fragment> liveFragments = new ArrayList<>();
-    private  boolean showRefreshButton=true;
+    private boolean showRefreshButton=true;
 
     private RefreshMapDataClickListener myRefreshMapDataClickListener;
 
     public interface RefreshMapDataClickListener {
         void onClickRefreshIcon();
     }
-
-    public void setRefreshClickListener(RefreshMapDataClickListener listener) {
-        this.myRefreshMapDataClickListener = listener;
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +61,9 @@ public class MainActivity extends AppCompatActivity
             supportActionBar.setHomeButtonEnabled(true);
         }
 
-        changeFragment(MainScreenFragment.newInstance());
+        changeFragment(MainScreenFragment.getInstance());
     }
+
 
     @Override
     public void onBackPressed() {
@@ -79,9 +77,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if(id==R.id.actionbar_refresh) {
             if (myRefreshMapDataClickListener != null) {
@@ -106,7 +101,6 @@ public class MainActivity extends AppCompatActivity
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
             drawer.closeDrawer(GravityCompat.START);
         }
-
     }
 
     private void hideOtherFragments(FragmentTransaction ft) {
@@ -115,30 +109,17 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-        //showRefreshButton=false;
-        /*switch (id){
-            case R.id.sidebar_home:showRefreshButton=true;
-                changeFragment(MainScreenFragment.newInstance());
-                break;
-            case R.id.sidebar_settings:
-                changeFragment(SettingsFragment.newInstance("Hello", "World"));
-                break;
-            case R.id.sidebar_addMinyan:
-                break;
-            case
-        }*/
         if (id == R.id.sidebar_home) {
             if (!showRefreshButton) {
                 showRefreshButton=true;
                 invalidateOptionsMenu();
             }
-            MainScreenFragment.newInstance().checkPermissions();
-            changeFragment(MainScreenFragment.newInstance());
+            MainScreenFragment.getInstance().checkPermissions(true);
+            changeFragment(MainScreenFragment.getInstance());
         } else {
             if (showRefreshButton) {
                 showRefreshButton=false;
@@ -158,9 +139,9 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
         for (Fragment fragment : liveFragments) {
             fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
@@ -175,7 +156,6 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -184,8 +164,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
+    public void setRefreshClickListener(RefreshMapDataClickListener listener) {
+        this.myRefreshMapDataClickListener = listener;
     }
 }

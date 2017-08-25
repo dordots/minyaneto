@@ -1,4 +1,4 @@
-package com.app.minyaneto_android;
+package com.app.minyaneto_android.fragments.settings_fragments;
 
 import android.content.Context;
 import android.net.Uri;
@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.app.minyaneto_android.R;
 
 
 /**
