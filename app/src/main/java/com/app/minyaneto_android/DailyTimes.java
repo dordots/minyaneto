@@ -5,6 +5,9 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.Date;
 import java.util.TimeZone;
 
+import net.sourceforge.zmanim.*;
+import net.sourceforge.zmanim.util.*;
+
 
 /**
  * add matay??
@@ -28,12 +31,16 @@ public class DailyTimes {
 
     Date GetSunrise(int minute_offset)
     {
+        GeoLocation location = new GeoLocation("test",place.latitude,place.longitude,0,timeZone);
+        ZmanimCalendar zc  = new ZmanimCalendar(location);
+        zc.getCalendar().setTime(day);
 
+        return zc.getSunrise();
     }
 
     Date GetSunset(int minnute_offset)
     {
-
+        return null;
     }
 
 }
