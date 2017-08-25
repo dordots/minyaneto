@@ -2,6 +2,7 @@ package com.app.minyaneto_android;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -10,13 +11,15 @@ import net.sourceforge.zmanim.util.*;
 
 
 /**
- * add matay??
+ * Class for get minyan times with offset from the daily times - sunrise, sunset, etc'
  */
 
 public class DailyTimes {
     private LatLng place;
     private Date day;
     TimeZone timeZone;
+
+
     DailyTimes(LatLng p, Date d)
     {
         place=p;
@@ -29,18 +32,28 @@ public class DailyTimes {
 
     }
 
-    Date GetSunrise(int minute_offset)
+    Date FromSunrise(int minute_offset)
     {
         GeoLocation location = new GeoLocation("test",place.latitude,place.longitude,0,timeZone);
         ZmanimCalendar zc  = new ZmanimCalendar(location);
         zc.getCalendar().setTime(day);
-
-        return zc.getSunrise();
+        Date sunrise = zc.getSunrise();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(sunrise);
+        cal.add(Calendar.MINUTE,minute_offset);
+        return cal.getTime();
     }
 
-    Date GetSunset(int minnute_offset)
+    Date FromSunset(int minute_offset)
     {
-        return null;
+        GeoLocation location = new GeoLocation("test",place.latitude,place.longitude,0,timeZone);
+        ZmanimCalendar zc  = new ZmanimCalendar(location);
+        zc.getCalendar().setTime(day);
+        Date sunrise = zc.getSunset();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(sunrise);
+        cal.add(Calendar.MINUTE,minute_offset);
+        return cal.getTime();
     }
 
 }
