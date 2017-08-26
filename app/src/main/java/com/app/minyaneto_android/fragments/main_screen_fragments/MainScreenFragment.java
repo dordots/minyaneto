@@ -1,6 +1,7 @@
 package com.app.minyaneto_android.fragments.main_screen_fragments;
 
 import android.Manifest;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -18,12 +19,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import com.app.minyaneto_android.SynagogueAdapter;
 import com.app.minyaneto_android.acivities.MainActivity;
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.entities.Synagogue;
+import com.app.minyaneto_android.fragments.synagogue_details_fragments.SynagogueDetailsFragment;
 import com.app.minyaneto_android.map.SynagogueInfoWindowAdapter;
+import com.app.minyaneto_android.models.Synagogue;
 import com.app.minyaneto_android.utilities.SynagougeFictiveData;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -51,8 +53,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -131,6 +131,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
                 mapFragment.getMapAsync(this);
             } else {
                 LatLng myLoc = new LatLng(31.7780628, 35.2353691);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLoc, 15));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLoc, 15));
                 updateCurrentLocation(myLoc);
             }
@@ -290,7 +291,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
         synagogues = SynagougeFictiveData.getFictiveSynagouges(location);
 
         updateMarkers();
-        mMap.setInfoWindowAdapter(new SynagogueInfoWindowAdapter(getContext()));
+        //mMap.setInfoWindowAdapter(new SynagogueInfoWindowAdapter(getContext()));
         Collections.sort(synagogues, new Comparator<Synagogue>() {
             public int compare(Synagogue o1, Synagogue o2) {
                 double dis1 = calculateDistance(o1.getGeo(), location);
@@ -303,10 +304,11 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
         final SynagogueAdapter adapter = new SynagogueAdapter(synagogues, location);
         adapter.setMyClickListener(new SynagogueAdapter.SynagogueClickListener() {
             @Override
-            public void onItemClick(int position, View v) {
+            public void onItemClick(int position) {
                 if (position == -1) return;
-                Synagogue Synagogue = synagogues.get(position);
-                Toast.makeText(getActivity(), Synagogue.getName(), Toast.LENGTH_SHORT).show();
+                Synagogue synagogue = synagogues.get(position);
+                android.support.v4.app.DialogFragment f= SynagogueDetailsFragment.newInstance(synagogue);
+                f.show(getFragmentManager(),"SynagogueDetailsFragment");
             }
 
             @Override
@@ -329,13 +331,13 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
         for (Synagogue sy : synagogues) {
             mMap.addMarker(new MarkerOptions()
                     .position(sy.getGeo())
-                    .title(sy.getName())
-                    .snippet(sy.getAddress() + ":" +
+                    .title(sy.getName()+" - "+sy.getNosach())
+                    .snippet(sy.getAddress() /*+ ":" +
                              sy.getNosach() + ":" +
                              sy.isSefer_tora() + ":" +
                              sy.isClasses() + ":" +
                              sy.isParking() + ":" +
-                             sy.isWheelchair_accessible())
+                             sy.isWheelchair_accessible()*/)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
         }
     }

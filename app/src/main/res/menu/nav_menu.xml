@@ -22,6 +22,11 @@
             android:title="@string/sidebar_addSynagogue"
             />
         <item
+            android:id="@+id/sidebar_addMinyan"
+            android:icon="@drawable/ic_sidebar_add_minyan"
+            android:title="@string/sidebar_addMinyan"
+            />
+        <item
             android:id="@+id/sidebar_about"
             android:icon="@drawable/ic_sidebar_about"
             android:title="@string/sidebar_about"

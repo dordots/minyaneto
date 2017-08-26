@@ -29,7 +29,8 @@
     <string name="add">הוסף</string>
     <string name="check_synagogue">אנא מלא את כל הפרטים.</string>
     <string name="error">בית כנסת זה כבר קיים. לא ניתן להוסיפו שנית.</string>
-
+    <string name="sidebar_addMinyan">הוסף מניין</string>
+    <string name="enter_comment_synagogue">enter a comments</string>
 
 
 </resources>

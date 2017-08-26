@@ -1,5 +1,6 @@
-package com.app.minyaneto_android.entities;
+package com.app.minyaneto_android.models;
 
+import com.app.minyaneto_android.models.Minyan;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;

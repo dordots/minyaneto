@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.app.minyaneto_android.entities.Synagogue;
+import com.app.minyaneto_android.models.Synagogue;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
     private SynagogueClickListener myClickListener;
 
     public interface SynagogueClickListener {
-        void onItemClick(int position, View v);
+        void onItemClick(int position);
         void onItemLongClick(int position, View v);
     }
 
@@ -49,7 +49,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
         Synagogue synagogue = synagogues.get(position);
         //holder.imageView.setImageResource(synagogue.getNosachResId());
         holder.nameTextView.setText(synagogue.getName());
-        if(synagogue.getMyMinyans().size()>0)
+        if(synagogue.getMinyans().size()>0)
             holder.prayerTimeTextView.setText("time");
         holder.distanceSynagogueTextView.setText(calculateDistance(synagogue.getGeo())+" מ'");
     }
@@ -83,7 +83,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    myClickListener.onItemClick(getAdapterPosition(),v);
+                    myClickListener.onItemClick(getAdapterPosition());
                 }
             });
 

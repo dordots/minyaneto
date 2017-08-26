@@ -1,5 +1,9 @@
 package com.app.minyaneto_android.models;
 
+import com.app.minyaneto_android.models.minyan.PrayDayType;
+import com.app.minyaneto_android.models.minyan.PrayType;
+import com.app.minyaneto_android.models.minyan.Time;
+
 /**
  * Created by User on 15/08/2017.
  */
