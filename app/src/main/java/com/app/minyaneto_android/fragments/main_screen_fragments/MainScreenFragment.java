@@ -1,7 +1,6 @@
 package com.app.minyaneto_android.fragments.main_screen_fragments;
 
 import android.Manifest;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -20,11 +19,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.app.minyaneto_android.SynagogueAdapter;
 import com.app.minyaneto_android.acivities.MainActivity;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.fragments.synagogue_details_fragments.SynagogueDetailsFragment;
-import com.app.minyaneto_android.map.SynagogueInfoWindowAdapter;
 import com.app.minyaneto_android.models.Synagogue;
 import com.app.minyaneto_android.utilities.SynagougeFictiveData;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -47,15 +44,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
-
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import static android.content.Context.LOCATION_SERVICE;
-
 
 public class MainScreenFragment extends Fragment implements OnMapReadyCallback, OnRequestPermissionsResultCallback, GoogleMap.OnMarkerClickListener {
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -74,7 +68,6 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
 
     public MainScreenFragment() {/*Required empty public constructor*/}
 
-    // TODO: Rename and change types and number of parameters
     public static MainScreenFragment getInstance() {
         if (_instance == null) {
             _instance = new MainScreenFragment();
@@ -161,16 +154,6 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
             }
         });
         findFirstLocation();
-
-        // TODO: Is this code needed?
-        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
-
-            @Override
-            public void onCameraIdle() {
-
-            }
-        });
-
     }
 
     @Override
@@ -307,7 +290,12 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
             public void onItemClick(int position) {
                 if (position == -1) return;
                 Synagogue synagogue = synagogues.get(position);
-                android.support.v4.app.DialogFragment f= SynagogueDetailsFragment.newInstance(synagogue);
+                android.support.v4.app.DialogFragment f= SynagogueDetailsFragment.newInstance(synagogue, new SynagogueDetailsFragment.WantCahngeFragmentListener() {
+                    @Override
+                    public void onWantCahngeFragment(Fragment fragment) {
+                        //TODO something
+                    }
+                });
                 f.show(getFragmentManager(),"SynagogueDetailsFragment");
             }
 

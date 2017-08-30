@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.app.minyaneto_android.R;
+import com.app.minyaneto_android.fragments.add_minyan_fragments.AddMinyanFragment;
 import com.app.minyaneto_android.fragments.add_synagogue_fragments.AddSynagogueFragment;
 import com.app.minyaneto_android.fragments.main_screen_fragments.MainScreenFragment;
 import com.app.minyaneto_android.fragments.settings_fragments.SettingsFragment;
@@ -41,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     public interface RefreshMapDataClickListener {
         void onClickRefreshIcon();
     }
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +72,12 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         AddSynagogueFragment.theInstance().setOnSeccessAdd(new AddSynagogueFragment.OnSeccessAdd() {
             @Override
             public void OnSeccess(Synagogue synagogue) {
-                changeFragment(SynagogueDetailsFragment.newInstance(synagogue));
+                changeFragment(SynagogueDetailsFragment.newInstance(synagogue, new SynagogueDetailsFragment.WantCahngeFragmentListener() {
+                    @Override
+                    public void onWantCahngeFragment(Fragment fragment) {
+                        changeFragment(fragment);
+                    }
+                }));
             }
         });
 
@@ -138,8 +147,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             }
             if (id == R.id.sidebar_settings) {
                 changeFragment(SettingsFragment.theInstance("Hello", "World"));
-            } else if (id == R.id.sidebar_addMinyan) {
-
             } else if (id == R.id.sidebar_addSynagogue) {
                 changeFragment(AddSynagogueFragment.theInstance());
 

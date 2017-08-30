@@ -34,6 +34,8 @@ public class Synagogue {
     }
 
     public Synagogue() {
+        this.minyans = new ArrayList<>();
+
     }
 
     public String getId() {

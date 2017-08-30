@@ -25,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.app.minyaneto_android.R;
+import com.app.minyaneto_android.models.Minyan;
 import com.app.minyaneto_android.models.Synagogue;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -71,8 +72,6 @@ public class AddSynagogueFragment extends Fragment implements OnMapReadyCallback
     public AddSynagogueFragment() {
         // Required empty public constructor
     }
-
-    private OnFragmentInteractionListener mListener;
 
     public static AddSynagogueFragment theInstance() {
         if (_instance == null) {
@@ -122,22 +121,29 @@ public class AddSynagogueFragment extends Fragment implements OnMapReadyCallback
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) return;
-                Geocoder mGeocoder = new Geocoder(getContext(), Locale.getDefault());
-                List<Address> myAddresses = null;
-                try {
-                    myAddresses = mGeocoder.getFromLocationName(actvAddressSynagogue.getText().toString(), 20);
-                    if (myAddresses.size() > 0) {
-                        mMap.clear();
-                        LatLng loc = new LatLng(myAddresses.get(0).getLatitude(), myAddresses.get(0).getLongitude());
-                        marker = mMap.addMarker(new MarkerOptions()
-                                .position(loc)
-                                .draggable(true)
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 15));
+                new Runnable(){
+
+                    @Override
+                    public void run() {
+                        Geocoder mGeocoder = new Geocoder(getContext(), Locale.getDefault());
+                        List<Address> myAddresses = null;
+                        try {
+                            myAddresses = mGeocoder.getFromLocationName(actvAddressSynagogue.getText().toString(), 20);
+                            if (myAddresses.size() > 0) {
+                                mMap.clear();
+                                LatLng loc = new LatLng(myAddresses.get(0).getLatitude(), myAddresses.get(0).getLongitude());
+                                marker = mMap.addMarker(new MarkerOptions()
+                                        .position(loc)
+                                        .draggable(true)
+                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 15));
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                }.run();
+
             }
         });
     }
@@ -158,10 +164,9 @@ public class AddSynagogueFragment extends Fragment implements OnMapReadyCallback
         s.setWheelchair_accessible(cbWheelchair_accessible.isChecked());
         if (marker != null)
             s.setGeo(marker.getPosition());
+        //TODO add synagogue to server
         if (onSeccessAdd != null)
             onSeccessAdd.OnSeccess(s);
-        Toast.makeText(getContext(), "good", Toast.LENGTH_SHORT).show();
-
     }
 
     @Override
@@ -196,45 +201,5 @@ public class AddSynagogueFragment extends Fragment implements OnMapReadyCallback
         });
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        /*
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-        */
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }

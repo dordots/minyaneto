@@ -1,4 +1,4 @@
-package com.app.minyaneto_android;
+package com.app.minyaneto_android.fragments.main_screen_fragments;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.models.Synagogue;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -39,7 +40,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
 
     @Override
     public SynagogueViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.minyan_cell_layout,parent,false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.tfila_cell_layout_main_screen,parent,false);
         SynagogueViewHolder SynagogueViewHolder = new SynagogueViewHolder(v);
         return SynagogueViewHolder;
     }
@@ -50,7 +51,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
         //holder.imageView.setImageResource(synagogue.getNosachResId());
         holder.nameTextView.setText(synagogue.getName());
         if(synagogue.getMinyans().size()>0)
-            holder.prayerTimeTextView.setText("time");
+            holder.prayerTimeTextView.setText(synagogue.getMinyans().get(0).getTime().getHour()+":"+synagogue.getMinyans().get(0).getTime().getMinutes());
         holder.distanceSynagogueTextView.setText(calculateDistance(synagogue.getGeo())+" מ'");
     }
 
