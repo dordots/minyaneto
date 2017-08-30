@@ -1,7 +1,6 @@
 package com.app.minyaneto_android;
 
 import android.content.Context;
-import android.database.DataSetObserver;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -16,10 +15,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
-import com.app.minyaneto_android.entities.Synagogue;
+import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;

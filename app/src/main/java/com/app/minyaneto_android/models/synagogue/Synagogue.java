@@ -1,5 +1,6 @@
-package com.app.minyaneto_android.entities;
+package com.app.minyaneto_android.models.synagogue;
 
+import com.app.minyaneto_android.models.minyan.Minyan;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.app.minyaneto_android.models;
+package com.app.minyaneto_android.models.minyan;
 
 /**
  * Created by User on 15/08/2017.

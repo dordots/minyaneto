@@ -19,10 +19,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import com.app.minyaneto_android.acivities.MainActivity;
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.entities.Synagogue;
+import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.app.minyaneto_android.map.SynagogueInfoWindowAdapter;
 import com.app.minyaneto_android.utilities.SynagougeFictiveData;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -51,8 +50,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static android.content.Context.LOCATION_SERVICE;
 
