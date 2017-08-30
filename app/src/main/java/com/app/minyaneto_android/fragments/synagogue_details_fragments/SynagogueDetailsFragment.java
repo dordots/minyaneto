@@ -85,8 +85,6 @@ public class SynagogueDetailsFragment extends DialogFragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerViewMinyans.setLayoutManager(linearLayoutManager);
-        btnAddMinyan.setVisibility(View.INVISIBLE);
-
         if (mSynagogue == null)
             return;
         tvNameSynagogue.setText(mSynagogue.getName());

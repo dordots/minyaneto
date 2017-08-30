@@ -18,11 +18,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.app.minyaneto_android.acivities.MainActivity;
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.fragments.synagogue_details_fragments.SynagogueDetailsFragment;
 import com.app.minyaneto_android.models.Synagogue;
 import com.app.minyaneto_android.utilities.SynagougeFictiveData;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -60,7 +58,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
     private List<Synagogue> synagogues;
 
     private GoogleMap mMap;
-    private List<Marker> markers;
+    private List<Marker> synagoguesMarkers;
 
     private double lastZoom = -1;
 
@@ -81,7 +79,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
-        markers=new ArrayList<>();
+        synagoguesMarkers =new ArrayList<>();
         synagogues = new ArrayList<>();
         if (getActivity() instanceof MainActivity) {
             final OnMapReadyCallback currentOnMapReadyCallback = this;
@@ -296,7 +294,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
                         .zoom(15)                   // Sets the zoom
                         .build();                   // Creates a CameraPosition from the builder
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                markers.get(position).showInfoWindow();
+                synagoguesMarkers.get(position).showInfoWindow();
             }
 
             @Override
@@ -316,7 +314,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
 
     public void updateMarkers() {
         mMap.clear();
-        markers=new ArrayList<>();
+        synagoguesMarkers =new ArrayList<>();
         for (Synagogue sy : synagogues) {
             Marker m=mMap.addMarker(new MarkerOptions()
                     .position(sy.getGeo())
@@ -328,7 +326,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
                              sy.isParking() + ":" +
                              sy.isWheelchair_accessible()*/)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-            markers.add(m);
+            synagoguesMarkers.add(m);
         }
     }
 

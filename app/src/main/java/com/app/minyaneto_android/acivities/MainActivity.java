@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 invalidateOptionsMenu();
             }
             if (id == R.id.sidebar_settings) {
-                changeFragment(SettingsFragment.theInstance("Hello", "World"));
+               // changeFragment(SettingsFragment.theInstance("Hello", "World"));
             } else if (id == R.id.sidebar_addSynagogue) {
                 changeFragment(AddSynagogueFragment.theInstance());
 
