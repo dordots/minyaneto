@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Nouns -->
+    <string name="nouns_the">ה-</string>
+    <string name="nouns_at">ב-</string>
+    <string name="nouns_minutes">דקות</string>
+    <string name="nouns_after">אחרי</string>
+    <string name="nouns_before">לפני</string>
+    <string name="nouns_pray">תפילת</string>
+    <plurals name="nouns_in_days">
+        <item quantity="one">ביום</item>
+        <item quantity="two">בימים</item>
+        <item quantity="many">בימים</item>
+    </plurals>
+
+    <!--Nosach Tfila -->
     <string name="nosach_tfila">נוסח תפילה</string>
+    <string name="nosach_tfila_am">עדות המזרח/ספרדי</string>
+    <string name="nosach_tfila_a">אשכנזי</string>
+    <string name="nosach_tfila_s">ספרד</string>
+    <string name="nosach_tfila_t">תימני</string>
+    <string name="nosach_tfila_ch">חבד</string>
+    <string name="nosach_tfila_byc">לפי החזן</string>
+    <string name="nosach_tfila_other">אחר</string>
     <string-array name="nosach">
         <item>ספרדי</item>
         <item>אשכנזי</item>
@@ -9,4 +30,26 @@
         <item>לפי החזן</item>
         <item>אחר</item>
     </string-array>
+
+    <!-- Pray Type -->
+    <string name="pray_type_morning">שחרית</string>
+    <string name="pray_type_after_noon">מנחה</string>
+    <string name="pray_type_evening">ערבית</string>
+
+    <!--Pray Day Type-->
+    <string name="pray_day_type_s">ראשון</string>
+    <string name="pray_day_type_m">שני</string>
+    <string name="pray_day_type_tu">שלישי</string>
+    <string name="pray_day_type_w">רביעי</string>
+    <string name="pray_day_type_th">חמישי</string>
+    <string name="pray_day_type_fr">שישי</string>
+    <string name="pray_day_type_sa">שבת</string>
+    <string name="pray_day_type_fa">צום</string>
+    <string name="pray_day_type_rh">ראש חודש</string>
+
+    <!-- Relative Time -->
+    <string name="relative_time_dawn">עלות השחר</string>
+    <string name="relative_time_sunrise">זריחה</string>
+    <string name="relative_time_sunset">שקיעה</string>
+    <string name="relative_time_stars_out">"צאת כוכבים"</string>
 </resources>

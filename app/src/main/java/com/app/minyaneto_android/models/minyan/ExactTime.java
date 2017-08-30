@@ -1,5 +1,9 @@
 package com.app.minyaneto_android.models.minyan;
 
+import com.app.minyaneto_android.R;
+import com.app.minyaneto_android.acivities.MainActivity;
+
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -37,10 +41,23 @@ public class ExactTime implements Time {
 
     @Override
     public Date toDate(WeekDay weekDay) {
+        return toCalendar(weekDay).getTime();
+    }
+
+    private Calendar toCalendar(WeekDay weekDay) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_WEEK, weekDay.ordinal());
         cal.set(Calendar.HOUR_OF_DAY, hour);
         cal.set(Calendar.MINUTE, minute);
-        return cal.getTime();
+        return cal;
+    }
+
+    @Override
+    public String toString() {
+        String nounAt =  MainActivity.resources.getString(R.string.nouns_at);
+        SimpleDateFormat format =
+                new SimpleDateFormat("HH:mm");
+        String time = format.format(toDate(WeekDay.FRIDAY));
+        return nounAt + " " + time;
     }
 }

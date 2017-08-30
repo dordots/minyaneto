@@ -1,5 +1,7 @@
 package com.app.minyaneto_android.acivities;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
@@ -29,6 +31,9 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener,
                                                                ActivityCompat.OnRequestPermissionsResultCallback {
 
+    // Statics members
+    public static Resources resources;
+
     private ArrayList<Fragment> liveFragments = new ArrayList<>();
     private boolean showRefreshButton=true;
 
@@ -43,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LOCALE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+        MainActivity.resources = getResources();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.sidebar_action);
         setSupportActionBar(toolbar);

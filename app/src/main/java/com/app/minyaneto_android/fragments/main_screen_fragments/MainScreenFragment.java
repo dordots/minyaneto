@@ -303,7 +303,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
             public void onItemClick(int position, View v) {
                 if (position == -1) return;
                 Synagogue Synagogue = synagogues.get(position);
-                Toast.makeText(getActivity(), Synagogue.getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), Synagogue.getMinyans().get(0).toString(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
