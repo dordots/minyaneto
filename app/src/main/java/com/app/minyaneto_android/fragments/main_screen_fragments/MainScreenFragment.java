@@ -18,6 +18,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.app.minyaneto_android.acivities.MainActivity;
 import com.app.minyaneto_android.R;
@@ -59,6 +60,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
     private List<Synagogue> synagogues;
 
     private GoogleMap mMap;
+    private List<Marker> markers;
 
     private double lastZoom = -1;
 
@@ -79,6 +81,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
+        markers=new ArrayList<>();
         synagogues = new ArrayList<>();
         if (getActivity() instanceof MainActivity) {
             final OnMapReadyCallback currentOnMapReadyCallback = this;
@@ -124,7 +127,6 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
                 mapFragment.getMapAsync(this);
             } else {
                 LatLng myLoc = new LatLng(31.7780628, 35.2353691);
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLoc, 15));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLoc, 15));
                 updateCurrentLocation(myLoc);
             }
@@ -250,7 +252,6 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
                         }
                     }
                 });
-
     }
 
     private void updateCurrentLocation(LatLng mLocation) {
@@ -273,7 +274,6 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
 
         synagogues = SynagougeFictiveData.getFictiveSynagouges(location);
 
-        updateMarkers();
         //mMap.setInfoWindowAdapter(new SynagogueInfoWindowAdapter(getContext()));
         Collections.sort(synagogues, new Comparator<Synagogue>() {
             public int compare(Synagogue o1, Synagogue o2) {
@@ -284,19 +284,19 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
                 return dis1 < dis2 ? -1 : 1;
             }
         });
+        updateMarkers();
+
         final SynagogueAdapter adapter = new SynagogueAdapter(synagogues, location);
         adapter.setMyClickListener(new SynagogueAdapter.SynagogueClickListener() {
             @Override
             public void onItemClick(int position) {
                 if (position == -1) return;
-                Synagogue synagogue = synagogues.get(position);
-                android.support.v4.app.DialogFragment f= SynagogueDetailsFragment.newInstance(synagogue, new SynagogueDetailsFragment.WantCahngeFragmentListener() {
-                    @Override
-                    public void onWantCahngeFragment(Fragment fragment) {
-                        //TODO something
-                    }
-                });
-                f.show(getFragmentManager(),"SynagogueDetailsFragment");
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(synagogues.get(position).getGeo())      // Sets the center of the map to Mountain View
+                        .zoom(15)                   // Sets the zoom
+                        .build();                   // Creates a CameraPosition from the builder
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                markers.get(position).showInfoWindow();
             }
 
             @Override
@@ -316,8 +316,9 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
 
     public void updateMarkers() {
         mMap.clear();
+        markers=new ArrayList<>();
         for (Synagogue sy : synagogues) {
-            mMap.addMarker(new MarkerOptions()
+            Marker m=mMap.addMarker(new MarkerOptions()
                     .position(sy.getGeo())
                     .title(sy.getName()+" - "+sy.getNosach())
                     .snippet(sy.getAddress() /*+ ":" +
@@ -327,6 +328,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
                              sy.isParking() + ":" +
                              sy.isWheelchair_accessible()*/)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+            markers.add(m);
         }
     }
 
@@ -345,6 +347,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public boolean onMarkerClick(Marker marker) {
         marker.showInfoWindow();
+
         return false;
     }
 

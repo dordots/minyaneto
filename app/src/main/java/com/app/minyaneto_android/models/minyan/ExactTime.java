@@ -19,6 +19,7 @@ public class ExactTime implements Time {
         this.hour = hour;
     }
 
+
     private void setMinute(int minute) {
         if (minute > 60 || minute < 0)
             return;

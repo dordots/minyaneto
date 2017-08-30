@@ -16,8 +16,8 @@ public class Minyan {
 
     public Minyan() {}
 
-    public Minyan(String id, PrayType prayType, Time time, PrayDayType prayDayType) {
-        this.id = id;
+    public Minyan(/*String id,*/ PrayType prayType, Time time, PrayDayType prayDayType) {
+      //  this.id = id;
         this.prayType = prayType;
         this.time = time;
         this.prayDayType = prayDayType;

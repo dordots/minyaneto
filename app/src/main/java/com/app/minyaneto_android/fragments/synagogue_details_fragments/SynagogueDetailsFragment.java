@@ -22,10 +22,10 @@ import com.app.minyaneto_android.models.Synagogue;
 
 public class SynagogueDetailsFragment extends DialogFragment {
     private static Synagogue mSynagogue;
-    private static  WantCahngeFragmentListener myWantCahngeFragmentListener;
-
+    private static WantCahngeFragmentListener myWantCahngeFragmentListener;
 
     private RecyclerView mRecyclerViewMinyans;
+
 
     TextView tvNameSynagogue;
     TextView tvAddressSynagogue;
@@ -35,9 +35,10 @@ public class SynagogueDetailsFragment extends DialogFragment {
     CheckBox cbSefer_tora;
     CheckBox cbWheelchair_accessible;
     CheckBox cbLessons;
+    Button btnAddMinyan;
 
 
-    public interface WantCahngeFragmentListener{
+    public interface WantCahngeFragmentListener {
         void onWantCahngeFragment(Fragment fragment);
     }
 
@@ -50,9 +51,8 @@ public class SynagogueDetailsFragment extends DialogFragment {
     public static SynagogueDetailsFragment newInstance(Synagogue synagogue,
                                                        WantCahngeFragmentListener mWantCahngeFragmentListener) {
         SynagogueDetailsFragment fragment = new SynagogueDetailsFragment();
-        Bundle args = new Bundle();
         mSynagogue = synagogue;
-        myWantCahngeFragmentListener=mWantCahngeFragmentListener;
+        myWantCahngeFragmentListener = mWantCahngeFragmentListener;
         return fragment;
     }
 
@@ -79,12 +79,15 @@ public class SynagogueDetailsFragment extends DialogFragment {
         cbSefer_tora = (CheckBox) view.findViewById(R.id.synagogoe_details_sefer_tora);
         cbWheelchair_accessible = (CheckBox) view.findViewById(R.id.synagogoe_details_accessible);
         cbLessons = (CheckBox) view.findViewById(R.id.synagogoe_details_lessons);
+        btnAddMinyan=(Button) view.findViewById(R.id.synagogoe_details_add_minyan);
         mRecyclerViewMinyans = (RecyclerView) view.findViewById(R.id.synagogoe_details_recycler_minyans);
         mRecyclerViewMinyans.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerViewMinyans.setLayoutManager(linearLayoutManager);
-        if(mSynagogue==null)
+        btnAddMinyan.setVisibility(View.INVISIBLE);
+
+        if (mSynagogue == null)
             return;
         tvNameSynagogue.setText(mSynagogue.getName());
         tvAddressSynagogue.setText(mSynagogue.getAddress());
@@ -95,14 +98,13 @@ public class SynagogueDetailsFragment extends DialogFragment {
         cbSefer_tora.setChecked(mSynagogue.isSefer_tora());
         cbWheelchair_accessible.setChecked(mSynagogue.isWheelchair_accessible());
         mRecyclerViewMinyans.setAdapter(new MinyanAdapter(mSynagogue.getMinyans()));
-        ((Button)view.findViewById(R.id.synagogoe_details_add_minyan)).setOnClickListener(new View.OnClickListener() {
+        btnAddMinyan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(myWantCahngeFragmentListener!=null)
+                if (myWantCahngeFragmentListener != null)
                     myWantCahngeFragmentListener.onWantCahngeFragment(AddMinyanFragment.newInstance());
             }
         });
-
     }
 
     @Override
