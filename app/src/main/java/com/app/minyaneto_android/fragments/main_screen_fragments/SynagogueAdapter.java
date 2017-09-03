@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.models.Synagogue;
+import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
@@ -21,7 +21,13 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
 
     public interface SynagogueClickListener {
         void onItemClick(int position);
+
+        void onGoToWazeClick(int position);
+
+        void onShowDetailsClick(int position);
+
         void onItemLongClick(int position, View v);
+
     }
 
     public void setMyClickListener(SynagogueClickListener listener) {
@@ -30,7 +36,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
 
     public SynagogueAdapter(List<Synagogue> synagogues, LatLng geo) {
         this.synagogues = synagogues;
-        this.geo=geo;
+        this.geo = geo;
     }
 
     @Override
@@ -40,7 +46,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
 
     @Override
     public SynagogueViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.tfila_cell_layout_main_screen,parent,false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.tfila_cell_layout_main_screen, parent, false);
         SynagogueViewHolder SynagogueViewHolder = new SynagogueViewHolder(v);
         return SynagogueViewHolder;
     }
@@ -50,9 +56,15 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
         Synagogue synagogue = synagogues.get(position);
         //holder.imageView.setImageResource(synagogue.getNosachResId());
         holder.nameTextView.setText(synagogue.getName());
-        if(synagogue.getMinyans().size()>0)
-            holder.prayerTimeTextView.setText(synagogue.getMinyans().get(0).getTime().getHour()+":"+synagogue.getMinyans().get(0).getTime().getMinutes());
-        holder.distanceSynagogueTextView.setText(calculateDistance(synagogue.getGeo())+" מ'");
+        if (synagogue.getMinyans().size() > 0)
+            holder.prayerTimeTextView.setText(calcTime(position));
+                     holder.distanceSynagogueTextView.setText(calculateDistance(synagogue.getGeo()) + " מ'");
+    }
+    private String calcTime(int position){
+        //TODO calculate real time
+        Synagogue synagogue = synagogues.get(position);
+        return synagogue.getMinyans().get(0).getTime().getHour() + ":" + synagogue.getMinyans().get(0).getTime().getMinutes();
+
     }
 
     private long calculateDistance(LatLng location) {
@@ -70,28 +82,46 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
 
     public class SynagogueViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imageView;
+        ImageView goWazeImageView;
+        ImageView showDetailsImageView;
         TextView nameTextView;
         TextView prayerTimeTextView;
         TextView distanceSynagogueTextView;
 
         public SynagogueViewHolder(View itemView) {
             super(itemView);
-            //imageView = (ImageView)itemView.findViewById(R.id.synagogue_nosach);
-            nameTextView = (TextView)itemView.findViewById(R.id.synagogue_name);
-            prayerTimeTextView = (TextView)itemView.findViewById(R.id.prayer_time);
-            distanceSynagogueTextView=(TextView)itemView.findViewById(R.id.synagogue_distance);
+            goWazeImageView = (ImageView) itemView.findViewById(R.id.go_waze);
+            showDetailsImageView = (ImageView) itemView.findViewById(R.id.synagogue_details);
+            nameTextView = (TextView) itemView.findViewById(R.id.synagogue_name);
+            prayerTimeTextView = (TextView) itemView.findViewById(R.id.prayer_time);
+            distanceSynagogueTextView = (TextView) itemView.findViewById(R.id.synagogue_distance);
+            goWazeImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (myClickListener != null)
+                        myClickListener.onGoToWazeClick(getAdapterPosition());
+                }
+            });
+            showDetailsImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (myClickListener != null)
+                        myClickListener.onShowDetailsClick(getAdapterPosition());
+                }
+            });
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    myClickListener.onItemClick(getAdapterPosition());
+                    if (myClickListener != null)
+                        myClickListener.onItemClick(getAdapterPosition());
                 }
             });
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    myClickListener.onItemLongClick(getAdapterPosition(),v);
+                    if (myClickListener != null)
+                        myClickListener.onItemLongClick(getAdapterPosition(), v);
                     return false;
                 }
             });

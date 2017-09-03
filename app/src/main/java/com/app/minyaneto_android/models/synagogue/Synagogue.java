@@ -1,6 +1,6 @@
-package com.app.minyaneto_android.models;
+package com.app.minyaneto_android.models.synagogue;
 
-import com.app.minyaneto_android.models.Minyan;
+import com.app.minyaneto_android.models.minyan.Minyan;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -18,7 +18,6 @@ public class Synagogue {
     private boolean sefer_tora;
     private boolean wheelchair_accessible;
     private ArrayList<Minyan> minyans;
-    private boolean[] a;
 
     public Synagogue(String address, String comments, String name, LatLng geo, String nosach, boolean classes, boolean parking, boolean sefer_tora, boolean wheelchair_accessible) {
         this.address = address;

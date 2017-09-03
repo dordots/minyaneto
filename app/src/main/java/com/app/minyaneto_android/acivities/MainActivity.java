@@ -1,5 +1,4 @@
 package com.app.minyaneto_android.acivities;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
@@ -22,8 +21,11 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.app.minyaneto_android.R;
+import com.app.minyaneto_android.fragments.add_synagogue_fragments.AddSynagogueFragment;
 import com.app.minyaneto_android.fragments.main_screen_fragments.MainScreenFragment;
 import com.app.minyaneto_android.fragments.settings_fragments.SettingsFragment;
+import com.app.minyaneto_android.fragments.synagogue_details_fragments.SynagogueDetailsFragment;
+import com.app.minyaneto_android.models.synagogue.Synagogue;
 
 import java.util.ArrayList;
 
@@ -66,7 +68,12 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         if (supportActionBar != null) {
             supportActionBar.setHomeButtonEnabled(true);
         }
-
+       MainScreenFragment.setChangeFragment(new MainScreenFragment.ChangeFragment() {
+           @Override
+           public void OnChangeFragment(Fragment fragment) {
+               changeFragment(fragment);
+           }
+       });
         changeFragment(MainScreenFragment.getInstance());
     }
 
@@ -77,6 +84,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+           // getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
             super.onBackPressed();
         }
     }
@@ -100,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 ft.show(fragment);
                 ft.commit();
             } else {
-                ft.add(R.id.views, fragment);
+                ft.add(R.id.views, fragment);//.addToBackStack(null);
                 ft.commit();
                 liveFragments.add(fragment);
             }
@@ -134,6 +143,18 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             if (id == R.id.sidebar_settings) {
                 changeFragment(SettingsFragment.getInstance("Hello", "World"));
             } else if (id == R.id.sidebar_addSynagogue) {
+                changeFragment(AddSynagogueFragment.getInstance(new AddSynagogueFragment.OnSeccessAdd() {
+                    @Override
+                    public void OnSeccess(Synagogue synagogue) {
+                        changeFragment(SynagogueDetailsFragment.newInstance(synagogue,
+                                new SynagogueDetailsFragment.WantCahngeFragmentListener() {
+                                    @Override
+                                    public void onWantToAddAMinyan(Fragment fragment) {
+                                        changeFragment(fragment);
+                                    }
+                                }));
+                    }
+                }));
 
             } else if (id == R.id.sidebar_serach) {
 

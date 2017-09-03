@@ -12,11 +12,6 @@ import java.util.Date;
 
 public class RelativeTime implements Time {
 
-    public RelativeTime(RelativeTimeType relativeTimeType, int offset) {
-        this.relativeTimeType = relativeTimeType;
-        this.offset = offset;
-    }
-
     private RelativeTimeType relativeTimeType;
     private int offset;
 

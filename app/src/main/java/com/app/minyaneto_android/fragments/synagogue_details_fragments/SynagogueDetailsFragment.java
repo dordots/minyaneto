@@ -15,9 +15,8 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.acivities.MainActivity;
 import com.app.minyaneto_android.fragments.add_minyan_fragments.AddMinyanFragment;
-import com.app.minyaneto_android.models.Synagogue;
+import com.app.minyaneto_android.models.synagogue.Synagogue;
 
 
 public class SynagogueDetailsFragment extends DialogFragment {
@@ -39,7 +38,7 @@ public class SynagogueDetailsFragment extends DialogFragment {
 
 
     public interface WantCahngeFragmentListener {
-        void onWantCahngeFragment(Fragment fragment);
+        void onWantToAddAMinyan(Fragment fragment);
     }
 
 
@@ -100,7 +99,7 @@ public class SynagogueDetailsFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (myWantCahngeFragmentListener != null)
-                    myWantCahngeFragmentListener.onWantCahngeFragment(AddMinyanFragment.newInstance());
+                    myWantCahngeFragmentListener.onWantToAddAMinyan(AddMinyanFragment.newInstance());
             }
         });
     }

@@ -25,8 +25,8 @@
     <string name="choose_nosach_synagogue">בחר נוסח</string>
     <string name="synagogoe_details_title">פרטי בית כנסת</string>
     <string name="add">הוסף</string>
-    <string name="check_synagogue">אנא מלא את כל הפרטים.</string>
-    <string name="error">בית כנסת זה כבר קיים. לא ניתן להוסיפו שנית.</string>
+    <string name="check">אנא מלא את כל הפרטים.</string>
+    <string name="error_synagogue">בית כנסת זה כבר קיים. לא ניתן להוסיפו שנית.</string>
     <string name="sidebar_addMinyan">הוסף מניין</string>
     <string name="enter_comment_synagogue">enter a comments</string>
     <string name="minyans_list">רשימת מניינים</string>

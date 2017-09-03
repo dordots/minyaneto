@@ -18,8 +18,7 @@ public class Minyan {
 
     public Minyan() {}
 
-    public Minyan(String id, PrayType prayType, Time time, PrayDayType ... prayDayType) {
-        this.id = id;
+    public Minyan(PrayType prayType, Time time, PrayDayType ... prayDayType) {
         this.prayType = prayType;
         this.time = time;
         this.prayDayTypeArray = new ArrayList<>();

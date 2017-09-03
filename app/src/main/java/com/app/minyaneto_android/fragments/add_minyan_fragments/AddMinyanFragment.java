@@ -14,15 +14,18 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.models.Minyan;
 import com.app.minyaneto_android.models.minyan.ExactTime;
+import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.minyan.PrayDayType;
 import com.app.minyaneto_android.models.minyan.PrayType;
 import com.app.minyaneto_android.models.minyan.RelativeTime;
 import com.app.minyaneto_android.models.minyan.RelativeTimeType;
 import com.app.minyaneto_android.models.minyan.Time;
+
+import java.util.ArrayList;
 
 public class AddMinyanFragment extends Fragment {
 
@@ -107,14 +110,51 @@ public class AddMinyanFragment extends Fragment {
     private void addMinyan() {
         Time time = null;
         if (inRelativeTimeMode) {
-            time = new RelativeTime((RelativeTimeType)spinnerRelativeTimeType.getSelectedItem() ,Integer.parseInt(etMinutes.getText().toString()));
+            if (etMinutes.getText().toString().equals("")) {
+                Toast.makeText(getContext(), getResources().getString(R.string.check), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            time = new RelativeTime((RelativeTimeType) spinnerRelativeTimeType.getSelectedItem(), Integer.parseInt(etMinutes.getText().toString()));
+        } else {
+            time = new ExactTime(timePicker.getHour(), timePicker.getMinute());
         }
-        else {
-            time= new ExactTime(timePicker.getHour(), timePicker.getMinute());
+        ArrayList<PrayDayType> days = new ArrayList<>();
+        if (cbEveryDay.isChecked()) {
+            days.add(PrayDayType.SUNDAY);
+
+        } else {
+            if (cbSunday.isChecked()) {
+                days.add(PrayDayType.SUNDAY);
+            }
+            if (cbMonday.isChecked()) {
+                days.add(PrayDayType.MONDAY);
+            }
+            if (cbTuesday.isChecked()) {
+                days.add(PrayDayType.TUESDAY);
+            }
+            if (cbWednesday.isChecked()) {
+                days.add(PrayDayType.WEDNESDAY);
+            }
+            if (cbThursday.isChecked()) {
+                days.add(PrayDayType.THURSDAY);
+            }
+            if (cbFriday.isChecked()) {
+                days.add(PrayDayType.FRIDAY);
+            }
+            if (cbSaterday.isChecked()) {
+                days.add(PrayDayType.SATURDAY);
+            }
         }
 
-        Minyan minyan=new Minyan((PrayType)spinnerPrayType.getSelectedItem(),time,PrayDayType.SUNDAY);
+        Minyan minyan = new Minyan();
+        minyan.setPrayType((PrayType) spinnerPrayType.getSelectedItem());
+        minyan.setTime(time);
+        minyan.setPrayDayTypeArray(days);
+
         //TODO add  mintan to server
+
+        //TODO return to back fragment
+        // getActivity().onBackPressed();
     }
 
     @Override

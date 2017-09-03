@@ -1,6 +1,5 @@
 package com.app.minyaneto_android.models.minyan;
 
-import android.content.res.Resources;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.acivities.MainActivity;
 
