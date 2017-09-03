@@ -1,6 +1,7 @@
 package com.app.minyaneto_android.acivities;
-
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
@@ -21,21 +22,20 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.fragments.add_minyan_fragments.AddMinyanFragment;
-import com.app.minyaneto_android.fragments.add_synagogue_fragments.AddSynagogueFragment;
 import com.app.minyaneto_android.fragments.main_screen_fragments.MainScreenFragment;
 import com.app.minyaneto_android.fragments.settings_fragments.SettingsFragment;
-import com.app.minyaneto_android.fragments.synagogue_details_fragments.SynagogueDetailsFragment;
-import com.app.minyaneto_android.models.Synagogue;
 
 import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener,
-        ActivityCompat.OnRequestPermissionsResultCallback {
+                                                               ActivityCompat.OnRequestPermissionsResultCallback {
+
+    // Statics members
+    public static Resources resources;
 
     private ArrayList<Fragment> liveFragments = new ArrayList<>();
-    private boolean showRefreshButton = true;
+    private boolean showRefreshButton=true;
 
     private RefreshMapDataClickListener myRefreshMapDataClickListener;
 
@@ -43,14 +43,12 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         void onClickRefreshIcon();
     }
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LOCALE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+        MainActivity.resources = getResources();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.sidebar_action);
         setSupportActionBar(toolbar);
@@ -69,18 +67,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             supportActionBar.setHomeButtonEnabled(true);
         }
 
-        AddSynagogueFragment.theInstance().setOnSeccessAdd(new AddSynagogueFragment.OnSeccessAdd() {
-            @Override
-            public void OnSeccess(Synagogue synagogue) {
-                changeFragment(SynagogueDetailsFragment.newInstance(synagogue, new SynagogueDetailsFragment.WantCahngeFragmentListener() {
-                    @Override
-                    public void onWantCahngeFragment(Fragment fragment) {
-                        changeFragment(fragment);
-                    }
-                }));
-            }
-        });
-
         changeFragment(MainScreenFragment.getInstance());
     }
 
@@ -98,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.actionbar_refresh) {
+        if(id==R.id.actionbar_refresh) {
             if (myRefreshMapDataClickListener != null) {
                 myRefreshMapDataClickListener.onClickRefreshIcon();
             }
@@ -110,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             hideOtherFragments(ft);
-            if (liveFragments.contains(fragment)) {
+            if (liveFragments.contains(fragment)){
                 ft.show(fragment);
                 ft.commit();
             } else {
@@ -135,20 +121,19 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         int id = item.getItemId();
         if (id == R.id.sidebar_home) {
             if (!showRefreshButton) {
-                showRefreshButton = true;
+                showRefreshButton=true;
                 invalidateOptionsMenu();
             }
             MainScreenFragment.getInstance().checkPermissions(true);
             changeFragment(MainScreenFragment.getInstance());
         } else {
             if (showRefreshButton) {
-                showRefreshButton = false;
+                showRefreshButton=false;
                 invalidateOptionsMenu();
             }
             if (id == R.id.sidebar_settings) {
-               // changeFragment(SettingsFragment.theInstance("Hello", "World"));
+                changeFragment(SettingsFragment.getInstance("Hello", "World"));
             } else if (id == R.id.sidebar_addSynagogue) {
-                changeFragment(AddSynagogueFragment.theInstance());
 
             } else if (id == R.id.sidebar_serach) {
 
@@ -172,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         for (Fragment fragment : liveFragments) {
-            fragment.onActivityResult(requestCode, resultCode, data);
+              fragment.onActivityResult(requestCode, resultCode, data);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

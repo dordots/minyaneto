@@ -16,7 +16,7 @@ import com.app.minyaneto_android.R;
  * Activities that contain this fragment must implement the
  * {@link SettingsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link SettingsFragment#theInstance} factory method to
+ * Use the {@link SettingsFragment#getInstance} factory method to
  * create an instance of this fragment.
  */
 public class SettingsFragment extends Fragment {
@@ -46,7 +46,7 @@ public class SettingsFragment extends Fragment {
      * @return A new instance of fragment SettingsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SettingsFragment theInstance(String param1, String param2) {
+    public static SettingsFragment getInstance(String param1, String param2) {
 //        SettingsFragment fragment = new SettingsFragment();
 //        Bundle args = new Bundle();
 //        args.putString(ARG_PARAM1, param1);

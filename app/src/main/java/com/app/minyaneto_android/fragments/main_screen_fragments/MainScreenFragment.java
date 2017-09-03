@@ -21,7 +21,8 @@ import android.view.ViewGroup;
 
 import com.app.minyaneto_android.acivities.MainActivity;
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.models.Synagogue;
+import com.app.minyaneto_android.models.synagogue.Synagogue;
+import com.app.minyaneto_android.map.SynagogueInfoWindowAdapter;
 import com.app.minyaneto_android.utilities.SynagougeFictiveData;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -43,12 +44,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static android.content.Context.LOCATION_SERVICE;
+
 
 public class MainScreenFragment extends Fragment implements OnMapReadyCallback, OnRequestPermissionsResultCallback, GoogleMap.OnMarkerClickListener {
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -68,6 +74,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
 
     public MainScreenFragment() {/*Required empty public constructor*/}
 
+    // TODO: Rename and change types and number of parameters
     public static MainScreenFragment getInstance() {
         if (_instance == null) {
             _instance = new MainScreenFragment();
@@ -154,6 +161,16 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
             }
         });
         findFirstLocation();
+
+        // TODO: Is this code needed?
+        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+
+            @Override
+            public void onCameraIdle() {
+
+            }
+        });
+
     }
 
     @Override
@@ -250,6 +267,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
                         }
                     }
                 });
+
     }
 
     private void updateCurrentLocation(LatLng mLocation) {

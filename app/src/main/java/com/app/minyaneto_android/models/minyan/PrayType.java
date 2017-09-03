@@ -1,23 +1,26 @@
 package com.app.minyaneto_android.models.minyan;
 
+import android.content.res.Resources;
+import com.app.minyaneto_android.R;
+import com.app.minyaneto_android.acivities.MainActivity;
+
 /**
  * Created by משה on 25/08/2017.
  */
 
 public enum PrayType {
-    MORNING,
-    AFTER_NOON,
-    EVENING;
+    MORNING(R.string.pray_type_morning),
+    AFTER_NOON(R.string.pray_type_after_noon),
+    EVENING(R.string.pray_type_evening);
 
-    String uiText;
-    PrayType(){}
-    PrayType(String uiText){
-        this.uiText = uiText;
+    private int stringId;
+
+    PrayType(int stringId){
+        this.stringId = stringId;
     }
-    String getUiText(){
-        return uiText;
-    }
-    void setUiText(String uiText){
-        this.uiText = uiText;
+
+    @Override
+    public String toString() {
+        return MainActivity.resources.getString(stringId);
     }
 }
