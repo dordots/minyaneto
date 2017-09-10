@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">Minyaneto-android</string>
     <string name="side_bar_info">הן אל כביר לא ימאס בתפילת רבים</string>
-    <string name="sidebar_home">home</string>
-    <string name="sidebar_settings">setting</string>
-    <string name="sidebar_search">search</string>
-    <string name="sidebar_addSynagogue">add a synagogue</string>
-    <string name="sidebar_about">about startach</string>
-    <string name="actionbar_refresh_location">refresh location</string>
+    <string name="sidebar_home">Home</string>
+    <string name="sidebar_settings">Setting</string>
+    <string name="sidebar_search">Search</string>
+    <string name="sidebar_addSynagogue">Add a synagogue</string>
+    <string name="sidebar_about">About Start-Ach</string>
+    <string name="actionbar_refresh_location">Refresh location</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_sidebar">Sidebar</string>
 
@@ -16,10 +16,10 @@
     <string name="action_settings">Settings</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="sefer_tora">sefer tora</string>
-    <string name="lessons">lessons</string>
-    <string name="parking">parking</string>
-    <string name="accessible">accessible</string>
+    <string name="sefer_tora">Sefer tora</string>
+    <string name="lessons">Lessons</string>
+    <string name="parking">Parking</string>
+    <string name="accessible">Accessible</string>
     <string name="enter_name_synagogue">enter a name of synagogue</string>
     <string name="enter_address_synagogue">enter the address</string>
     <string name="choose_nosach_synagogue">choose nosach</string>
