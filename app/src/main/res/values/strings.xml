@@ -1,13 +1,13 @@
 <resources>
-    <string name="app_name">Minyaneto-android</string>
+    <string name="app_name">אצֶנטֶר</string>
     <string name="side_bar_info">הן אל כביר לא ימאס בתפילת רבים</string>
-    <string name="sidebar_home">Home</string>
-    <string name="sidebar_settings">Setting</string>
-    <string name="sidebar_search">Search</string>
-    <string name="sidebar_addSynagogue">Add a synagogue</string>
-    <string name="sidebar_about">About Start-Ach</string>
-    <string name="actionbar_refresh_location">Refresh location</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="sidebar_home">בית</string>
+    <string name="sidebar_settings">הגדרות</string>
+    <string name="sidebar_search">חיפוש</string>
+    <string name="sidebar_addSynagogue">הוספת בית כנסת</string>
+    <string name="sidebar_about">על סטארט-אח</string>
+    <string name="actionbar_refresh_location">רענן מיקום</string>
+    <string name="title_activity_maps">מפה</string>
     <string name="title_activity_sidebar">Sidebar</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
