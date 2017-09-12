@@ -1,18 +1,21 @@
 package com.app.minyaneto_android.fragments.main_screen_fragments;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.google.android.gms.maps.model.LatLng;
 
-import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.SynagogueViewHolder> {
@@ -20,6 +23,9 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
     private List<Synagogue> synagogues;
     private LatLng geo;
     private SynagogueClickListener myClickListener;
+    private int idShowDetails;
+    private int idWazw;
+    private  int row_index=-1;
 
     public interface SynagogueClickListener {
         void onItemClick(int position);
@@ -36,9 +42,11 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
         this.myClickListener = listener;
     }
 
-    public SynagogueAdapter(List<Synagogue> synagogues, LatLng geo) {
+    public SynagogueAdapter(List<Synagogue> synagogues, LatLng geo,int idWazw,int idShowDetails) {
         this.synagogues = synagogues;
         this.geo = geo;
+        this.idWazw=idWazw;
+        this.idShowDetails=idShowDetails;
     }
 
     @Override
@@ -54,17 +62,23 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
     }
 
     @Override
-    public void onBindViewHolder(SynagogueViewHolder holder, int position) {
+    public void onBindViewHolder(SynagogueViewHolder holder, final int position) {
         Synagogue synagogue = synagogues.get(position);
         //holder.imageView.setImageResource(synagogue.getNosachResId());
+        holder.goWazeImageView.setImageResource(idWazw);
+        holder.showDetailsImageView.setImageResource(idShowDetails);
         holder.nameTextView.setText(synagogue.getName());
-
         if (synagogue.getMinyans().size() > 0) {
             //TODO real time from minyans
             holder.prayerTimeTextView.setText(calcTime(position));
             holder.prayTypeTextView.setText(synagogue.getMinyans().get(0).getPrayType().toString().charAt(0)+"");
         }
         holder.distanceSynagogueTextView.setText(calculateDistance(synagogue.getGeo()) + " מ'");
+
+        if(row_index==position)
+            holder.row_linearlayout.setBackgroundColor(Color.LTGRAY);
+        else
+            holder.row_linearlayout.setBackgroundColor(Color.WHITE);
     }
 
     private String calcTime(int position) {
@@ -96,6 +110,8 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
         TextView prayTypeTextView;
         TextView prayerTimeTextView;
         TextView distanceSynagogueTextView;
+        LinearLayout row_linearlayout;
+
 
         public SynagogueViewHolder(View itemView) {
             super(itemView);
@@ -105,6 +121,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
             prayTypeTextView = (TextView) itemView.findViewById(R.id.pray_type_minyan);
             prayerTimeTextView = (TextView) itemView.findViewById(R.id.prayer_time);
             distanceSynagogueTextView = (TextView) itemView.findViewById(R.id.synagogue_distance);
+            row_linearlayout=(LinearLayout)itemView.findViewById(R.id.row_linrLayout);
             goWazeImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -122,8 +139,10 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    row_index=getAdapterPosition();
                     if (myClickListener != null)
                         myClickListener.onItemClick(getAdapterPosition());
+                    notifyDataSetChanged();
                 }
             });
 

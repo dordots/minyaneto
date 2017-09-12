@@ -319,7 +319,9 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
         });
         updateMarkers();
 
-        final SynagogueAdapter adapter = new SynagogueAdapter(synagogues, location);
+        final SynagogueAdapter adapter = new SynagogueAdapter(synagogues, location,
+                R.drawable.ic_navigation_icon,
+                R.drawable.ic_more_info);
         adapter.setMyClickListener(new SynagogueAdapter.SynagogueClickListener() {
             @Override
             public void onItemClick(int position) {

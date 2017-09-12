@@ -22,7 +22,7 @@
     <string name="nosach_tfila_ch">חבד</string>
     <string name="nosach_tfila_byc">לפי החזן</string>
     <string name="nosach_tfila_other">אחר</string>
-    <string-array name="nosach">
+    <string-array name="nosachim">
         <item>ספרדי</item>
         <item>אשכנזי</item>
         <item>תימני</item>
