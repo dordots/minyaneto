@@ -1,58 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
 
-    app:contentPadding="2dp"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="wrap_content"
+    app:contentPadding="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/pray_type_minyan"
             android:layout_width="0dp"
-            android:layout_weight="4.66"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="name"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/synagogue_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/activity_vertical_margin"
-            android:layout_gravity="center_vertical"
-            android:id="@+id/synagogue_name"/>
+            android:layout_weight="3.47"
+            android:text="@string/name_synagogue" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_weight="2.61"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_gravity="center_vertical"
             android:id="@+id/prayer_time"
-            android:text="time" />
-        <TextView
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="2.91"
+            android:gravity="center"
+            android:text="@string/time_of_tfila" />
+
+        <TextView
+            android:id="@+id/synagogue_distance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_margin="5dp"
-            android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:id="@+id/synagogue_distance"
-
             />
 
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:id="@+id/synagogue_details"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_more_info"
-            android:id="@+id/synagogue_details"/>
+            android:src="@drawable/ic_more_info" />
 
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_navigation_icon"
+            android:id="@+id/go_waze"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="center"
-            android:id="@+id/go_waze"/>
+            android:src="@drawable/ic_navigation_icon" />
 
     </LinearLayout>
 </android.support.v7.widget.CardView>

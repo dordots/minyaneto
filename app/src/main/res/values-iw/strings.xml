@@ -46,6 +46,9 @@
     <string name="add_minyan_saterday">שבת</string>
     <string name="anter_time">הכנס זמן</string>
     <string name="add_minyan">הוסף מניין</string>
+    <string name="about_startach">סטארט-אח הינו ארגון חברתי התנדבותי בלה בלה בלה</string>
+    <string name="name_synagogue">שם בית כנסת</string>
+    <string name="time_of_tfila">שעה</string>
 
 
 </resources>

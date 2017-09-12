@@ -1,6 +1,8 @@
 package com.app.minyaneto_android.fragments.main_screen_fragments;
 
 import android.Manifest;
+import android.content.ClipData;
+import android.content.ClipDescription;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -16,9 +18,14 @@ import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.app.minyaneto_android.acivities.MainActivity;
 import com.app.minyaneto_android.R;
@@ -82,7 +89,10 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
 
     private static MainScreenFragment _instance;
 
+
+
     public MainScreenFragment() {/*Required empty public constructor*/}
+
 
     public static MainScreenFragment getInstance() {
         if (_instance == null) {
@@ -107,7 +117,6 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
                 }
             });
         }
-
     }
 
     @Override

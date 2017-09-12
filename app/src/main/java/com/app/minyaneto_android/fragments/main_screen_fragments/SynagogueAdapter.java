@@ -11,6 +11,8 @@ import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.SynagogueViewHolder> {
@@ -56,13 +58,19 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
         Synagogue synagogue = synagogues.get(position);
         //holder.imageView.setImageResource(synagogue.getNosachResId());
         holder.nameTextView.setText(synagogue.getName());
-        if (synagogue.getMinyans().size() > 0)
+
+        if (synagogue.getMinyans().size() > 0) {
+            //TODO real time from minyans
             holder.prayerTimeTextView.setText(calcTime(position));
-                     holder.distanceSynagogueTextView.setText(calculateDistance(synagogue.getGeo()) + " מ'");
+            holder.prayTypeTextView.setText(synagogue.getMinyans().get(0).getPrayType().toString().charAt(0)+"");
+        }
+        holder.distanceSynagogueTextView.setText(calculateDistance(synagogue.getGeo()) + " מ'");
     }
-    private String calcTime(int position){
+
+    private String calcTime(int position) {
         //TODO calculate real time
         Synagogue synagogue = synagogues.get(position);
+        //TODO return time in good format
         return synagogue.getMinyans().get(0).getTime().getHour() + ":" + synagogue.getMinyans().get(0).getTime().getMinutes();
 
     }
@@ -85,6 +93,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
         ImageView goWazeImageView;
         ImageView showDetailsImageView;
         TextView nameTextView;
+        TextView prayTypeTextView;
         TextView prayerTimeTextView;
         TextView distanceSynagogueTextView;
 
@@ -93,6 +102,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
             goWazeImageView = (ImageView) itemView.findViewById(R.id.go_waze);
             showDetailsImageView = (ImageView) itemView.findViewById(R.id.synagogue_details);
             nameTextView = (TextView) itemView.findViewById(R.id.synagogue_name);
+            prayTypeTextView = (TextView) itemView.findViewById(R.id.pray_type_minyan);
             prayerTimeTextView = (TextView) itemView.findViewById(R.id.prayer_time);
             distanceSynagogueTextView = (TextView) itemView.findViewById(R.id.synagogue_distance);
             goWazeImageView.setOnClickListener(new View.OnClickListener() {

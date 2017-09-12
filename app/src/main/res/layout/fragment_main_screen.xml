@@ -17,6 +17,13 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
+        <include
+            layout="@layout/tfila_cell_layout_main_screen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </include>
+
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"

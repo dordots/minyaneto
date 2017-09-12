@@ -7,16 +7,6 @@
             android:title="@string/sidebar_home"
             />
         <item
-            android:id="@+id/sidebar_settings"
-            android:icon="@drawable/ic_sidebar_settings"
-            android:title="@string/sidebar_settings"
-            />
-        <item
-            android:id="@+id/sidebar_serach"
-            android:icon="@drawable/ic_sidebar_search"
-            android:title="@string/sidebar_search"
-            />
-        <item
             android:id="@+id/sidebar_addSynagogue"
             android:icon="@drawable/ic_sidebar_add_minyan"
             android:title="@string/sidebar_addSynagogue"
