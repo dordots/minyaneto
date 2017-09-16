@@ -11,12 +11,14 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.app.minyaneto_android.R;
+import com.app.minyaneto_android.acivities.MainActivity;
 import com.app.minyaneto_android.models.minyan.ExactTime;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.minyan.PrayDayType;
@@ -33,7 +35,6 @@ public class AddMinyanFragment extends Fragment {
     private EditText etMinutes;
     private Spinner spinnerRelativeTimeType;
     private TimePicker timePicker;
-    private CheckBox cbEveryDay;
     private CheckBox cbSunday;
     private CheckBox cbMonday;
     private CheckBox cbTuesday;
@@ -54,13 +55,13 @@ public class AddMinyanFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         spinnerPrayType = (Spinner) view.findViewById(R.id.add_minyan_pray_type_spinner);
         etMinutes = (EditText) view.findViewById(R.id.add_minyan_minutes);
         spinnerRelativeTimeType = (Spinner) view.findViewById(R.id.add_minyan_day_times);
-        cbEveryDay = (CheckBox) view.findViewById(R.id.add_minyan_every_day);
         cbSunday = (CheckBox) view.findViewById(R.id.add_minyan_sunday);
         cbMonday = (CheckBox) view.findViewById(R.id.add_minyan_monday);
         cbTuesday = (CheckBox) view.findViewById(R.id.add_minyan_tuesday);
@@ -94,7 +95,7 @@ public class AddMinyanFragment extends Fragment {
                 }
             }
         });
-
+        ((RadioButton) view.findViewById(R.id.add_minyan_exact_time)).setChecked(true);
         btnAddMinyn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,32 +120,29 @@ public class AddMinyanFragment extends Fragment {
             time = new ExactTime(timePicker.getHour(), timePicker.getMinute());
         }
         ArrayList<PrayDayType> days = new ArrayList<>();
-        if (cbEveryDay.isChecked()) {
-            days.add(PrayDayType.SUNDAY);
 
-        } else {
-            if (cbSunday.isChecked()) {
-                days.add(PrayDayType.SUNDAY);
-            }
-            if (cbMonday.isChecked()) {
-                days.add(PrayDayType.MONDAY);
-            }
-            if (cbTuesday.isChecked()) {
-                days.add(PrayDayType.TUESDAY);
-            }
-            if (cbWednesday.isChecked()) {
-                days.add(PrayDayType.WEDNESDAY);
-            }
-            if (cbThursday.isChecked()) {
-                days.add(PrayDayType.THURSDAY);
-            }
-            if (cbFriday.isChecked()) {
-                days.add(PrayDayType.FRIDAY);
-            }
-            if (cbSaterday.isChecked()) {
-                days.add(PrayDayType.SATURDAY);
-            }
+        if (cbSunday.isChecked()) {
+            days.add(PrayDayType.SUNDAY);
         }
+        if (cbMonday.isChecked()) {
+            days.add(PrayDayType.MONDAY);
+        }
+        if (cbTuesday.isChecked()) {
+            days.add(PrayDayType.TUESDAY);
+        }
+        if (cbWednesday.isChecked()) {
+            days.add(PrayDayType.WEDNESDAY);
+        }
+        if (cbThursday.isChecked()) {
+            days.add(PrayDayType.THURSDAY);
+        }
+        if (cbFriday.isChecked()) {
+            days.add(PrayDayType.FRIDAY);
+        }
+        if (cbSaterday.isChecked()) {
+            days.add(PrayDayType.SATURDAY);
+        }
+
 
         Minyan minyan = new Minyan();
         minyan.setPrayType((PrayType) spinnerPrayType.getSelectedItem());
@@ -165,6 +163,10 @@ public class AddMinyanFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity())
+                    .setActionBarTitle(getResources().getString(R.string.add_minyan_fragment));
+        }
         return inflater.inflate(R.layout.fragment_add_minyan, container, false);
     }
 }

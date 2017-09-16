@@ -1,14 +1,15 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context="com.app.minyaneto_android.fragments.synagogue_details_fragments.SynagogueDetailsFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -18,37 +19,41 @@
             android:weightSum="0.8">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/synagogoe_details_title"
-                android:textAlignment="center" />
-
-            <TextView
                 android:id="@+id/synagogoe_details_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
-                android:hint="@string/enter_name_synagogue" />
+                android:gravity="center"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/synagogoe_details_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
-                android:hint="@string/enter_address_synagogue" />
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/synagogoe_details_nosach"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" " />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/another_info" />
 
             <TextView
                 android:id="@+id/add_synagogue_comments"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.1"
-
-                android:hint="@string/enter_comment_synagogue" />
-
-            <TextView
-                android:id="@+id/synagogoe_details_nosach"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_weight="0.1" />
 
             <CheckBox
                 android:id="@+id/synagogoe_details_accessible"
@@ -100,11 +105,16 @@
             android:layout_weight="0.4"
             android:gravity="center" />
 
-        <Button
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/synagogoe_details_add_minyan"
             android:layout_width="wrap_content"
-            android:text="@string/add_minyan"
-            android:layout_height="wrap_content" />
-
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_margin="16dp"
+            android:clickable="true"
+            app:srcCompat="@drawable/ic_action_bar_refresh" />
     </LinearLayout>
-</FrameLayout>
+
+
+
+</RelativeLayout>

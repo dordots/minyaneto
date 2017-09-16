@@ -21,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.app.minyaneto_android.R;
+import com.app.minyaneto_android.acivities.MainActivity;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -79,6 +80,10 @@ public class AddSynagogueFragment extends Fragment implements OnMapReadyCallback
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity())
+                    .setActionBarTitle(getResources().getString(R.string.add_synagogue_fragment));
+        }
         return inflater.inflate(R.layout.fragment_add_synagogue, container, false);
     }
 

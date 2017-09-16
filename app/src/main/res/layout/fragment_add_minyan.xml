@@ -10,11 +10,6 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/minyan_details" />
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,18 +18,86 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/choose_minyan_pray_type" />
+                android:text="@string/choose_minyan_pray_type" />
 
             <Spinner
                 android:id="@+id/add_minyan_pray_type_spinner"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
-        <RadioGroup
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_minyan_days" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <CheckBox
+                android:id="@+id/add_minyan_sunday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/pray_day_type_s" />
+
+            <CheckBox
+                android:id="@+id/add_minyan_monday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/pray_day_type_m" />
+
+            <CheckBox
+                android:id="@+id/add_minyan_tuesday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/pray_day_type_tu" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <CheckBox
+                android:id="@+id/add_minyan_wednesday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/pray_day_type_w" />
+
+            <CheckBox
+                android:id="@+id/add_minyan_thursday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/pray_day_type_th" />
+
+            <CheckBox
+                android:id="@+id/add_minyan_friday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/pray_day_type_fr" />
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/add_minyan_saterday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/pray_day_type_sa" />
+
+        <RadioGroup
             android:id="@+id/radio_group_add_minyan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="1">
 
@@ -55,117 +118,49 @@
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_gravity="center"
-            android:layout_height="wrap_content">
-        <TimePicker
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:timePickerMode="spinner"
-            android:id="@+id/timePicker" />
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:orientation="horizontal"
-            android:id="@+id/liner_layout_relative_time"
-            android:layout_height="wrap_content">
+            android:layout_gravity="center">
 
-            <EditText
+            <TimePicker
+                android:id="@+id/timePicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:timePickerMode="spinner" />
+
+            <LinearLayout
+                android:id="@+id/liner_layout_relative_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="@string/anter_time"
-                android:id="@+id/add_minyan_minutes"
-                android:inputType="numberSigned" />
+                android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/minetes" />
+                <EditText
+                    android:id="@+id/add_minyan_minutes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/anter_time"
+                    android:inputType="numberSigned" />
 
-            <Spinner
-                android:id="@+id/add_minyan_day_times"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/minetes" />
 
-            </Spinner>
-        </LinearLayout>
+                <Spinner
+                    android:id="@+id/add_minyan_day_times"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                </Spinner>
+            </LinearLayout>
         </RelativeLayout>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add_minyan_days" />
 
-        <CheckBox
-            android:id="@+id/add_minyan_every_day"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/add_minyan_every_day" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="3"
-            android:orientation="horizontal">
-
-            <CheckBox
-                android:id="@+id/add_minyan_sunday"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/add_minyan_sunday" />
-
-            <CheckBox
-                android:id="@+id/add_minyan_monday"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/add_minyan_monday" />
-
-            <CheckBox
-                android:id="@+id/add_minyan_tuesday"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/add_minyan_tuesday" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:weightSum="3"
-            android:layout_height="wrap_content">
-
-        <CheckBox
-            android:id="@+id/add_minyan_wednesday"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="@string/add_minyan_wednesday" />
-
-        <CheckBox
-            android:id="@+id/add_minyan_thursday"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="@string/add_minyan_thursday" />
-
-        <CheckBox
-            android:id="@+id/add_minyan_friday"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="@string/add_minyan_friday" />
-        </LinearLayout>
-        <CheckBox
-            android:id="@+id/add_minyan_saterday"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/add_minyan_saterday" />
 
         <Button
             android:id="@+id/add_minyan_btn"
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:text="@string/add" />
 
     </LinearLayout>

@@ -1,6 +1,7 @@
 package com.app.minyaneto_android.fragments.main_screen_fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Context;
@@ -26,12 +27,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.app.minyaneto_android.acivities.MainActivity;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.fragments.synagogue_details_fragments.SynagogueDetailsFragment;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.app.minyaneto_android.utilities.SynagougeFictiveData;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -62,7 +65,8 @@ import java.util.List;
 import static android.content.Context.LOCATION_SERVICE;
 
 
-public class MainScreenFragment extends Fragment implements OnMapReadyCallback, OnRequestPermissionsResultCallback, GoogleMap.OnMarkerClickListener {
+public class MainScreenFragment extends Fragment implements OnMapReadyCallback, OnRequestPermissionsResultCallback,
+        GoogleMap.OnMarkerClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final int PERMISSIONS_REQUEST_RESOLUTION_REQUIRED = 123;
     private static final int MAX_DISTANCE_FROM_LAST_LOCATION = 2000;
@@ -70,41 +74,82 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
     private RecyclerView mRecyclerView;
     private List<Synagogue> synagogues;
 
+    private GoogleApiClient mGoogleApiClient;
+    private Location mLocation;
+
     private static ChangeFragment changeFragment;
     private GoogleMap mMap;
     private List<Marker> synagoguesMarkers;
 
+
     private double lastZoom = -1;
     private LatLng lastLatLng = null;
 
-    private FusedLocationProviderClient mFusedLocationClient;
+    // private FusedLocationProviderClient mFusedLocationClient;
 
     public static void setChangeFragment(ChangeFragment changeFragment) {
         MainScreenFragment.changeFragment = changeFragment;
     }
 
-    public interface ChangeFragment{
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        enableMyLocationIcon();
+        if (mLocation != null && mMap != null) {
+            LatLng myLoc = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLoc, 15));
+            updateCurrentLocation(myLoc);
+
+            //updateSynagogues(new LatLng(mLocation.getLatitude(),mLocation.getLongitude()));
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    public interface ChangeFragment {
         void OnChangeFragment(Fragment fragment);
     }
 
     private static MainScreenFragment _instance;
 
 
-
     public MainScreenFragment() {/*Required empty public constructor*/}
 
 
-    public static MainScreenFragment getInstance() {
+    public static MainScreenFragment getInstance(Activity context) {
         if (_instance == null) {
             _instance = new MainScreenFragment();
+        }
+        if (context instanceof MainActivity) {
+            ((MainActivity) context)
+                    .setActionBarTitle(context.getResources().getString(R.string.main_screen_fragment));
         }
         return _instance;
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
+        // mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
         synagoguesMarkers = new ArrayList<>();
         synagogues = new ArrayList<>();
         if (getActivity() instanceof MainActivity) {
@@ -116,12 +161,24 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
                     mapFragment.getMapAsync(currentOnMapReadyCallback);
                 }
             });
+
         }
+
+
+        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity())
+                    .setActionBarTitle(getResources().getString(R.string.main_screen_fragment));
+        }
         return inflater.inflate(R.layout.fragment_main_screen, container, false);
     }
 
@@ -145,7 +202,9 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
     public void onStart() {
         super.onStart();
         checkPermissions(true);
+        mGoogleApiClient.connect();
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -179,7 +238,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
                     }
                 }
                 lastZoom = cameraPosition.zoom;
-                if(lastZoom<13.0)
+                if (lastZoom < 13.0)
                     return;
                 LatLng pos = mMap.getCameraPosition().target;
                 if (calculateDistance(lastLatLng, pos) > MAX_DISTANCE_FROM_LAST_LOCATION) {
@@ -276,7 +335,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        mFusedLocationClient.getLastLocation()
+       /* mFusedLocationClient.getLastLocation()
                 .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
@@ -287,6 +346,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
                         }
                     }
                 });
+                */
 
     }
 
@@ -337,20 +397,20 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
             @Override
             public void onGoToWazeClick(int position) {
                 if (position == -1) return;
-                LatLng loc=synagogues.get(position).getGeo();
-                String uri = "waze://?ll="+loc.latitude+", "+loc.longitude+"&navigate=yes";
-                startActivity(new Intent(android.content.Intent.ACTION_VIEW,
-                        Uri.parse(uri)));
+                LatLng loc = synagogues.get(position).getGeo();
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                        Uri.parse("geo:0,0?q=" + loc.latitude + "," + loc.longitude));
+                startActivity(intent);
             }
 
             @Override
             public void onShowDetailsClick(int position) {
-                if(position==-1)return;
-                if(changeFragment!=null)
+                if (position == -1) return;
+                if (changeFragment != null)
                     changeFragment.OnChangeFragment(SynagogueDetailsFragment.newInstance(synagogues.get(position), new SynagogueDetailsFragment.WantCahngeFragmentListener() {
                         @Override
                         public void onWantToAddAMinyan(Fragment fragment) {
-                           changeFragment.OnChangeFragment(fragment);
+                            changeFragment.OnChangeFragment(fragment);
                         }
                     }));
             }
@@ -403,7 +463,13 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public boolean onMarkerClick(Marker marker) {
         marker.showInfoWindow();
+        int i = 0;
+        for (Marker marker1 : synagoguesMarkers) {
+            if (marker1.getPosition() == marker.getPosition()) {
 
+            }
+        }
+        //TODO select the current item in the list
         return false;
     }
 

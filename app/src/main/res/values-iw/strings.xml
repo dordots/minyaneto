@@ -9,46 +9,4 @@
     <string name="actionbar_refresh_location">רענן מיקום</string>
 
 
-    <string name="sefer_tora">ספר תורה</string>
-    <string name="lessons">שיעורים</string>
-    <string name="parking">חניה</string>
-    <string name="accessible">נגישות</string>
-
-    <string name="enter_name_synagogue">הכנס שם בית כנסת</string>
-    <string name="enter_address_synagogue">הכנס כתובת בית כנסת</string>
-    <string name="choose_nosach_synagogue">בחר נוסח</string>
-
-    <string name="synagogoe_details_title">פרטי בית כנסת</string>
-    <string name="add">הוסף</string>
-    <string name="check">אנא מלא את כל הפרטים.</string>
-    <string name="error_synagogue">בית כנסת זה כבר קיים. לא ניתן להוסיפו שנית.</string>
-    <string name="sidebar_addMinyan">הוסף מניין</string>
-    <string name="enter_comment_synagogue">הכנס פירוט</string>
-    <string name="minyans_list">רשימת מניינים</string>
-
-    <string name="minyan_details">פרטי מניין</string>
-    <string name="exact_time">שעה מדויקת</string>
-    <string name="relative_time">שעה יחסית לזמני היום</string>
-    <string name="choose_minyan_pray_type">בחר סוג תפילה</string>
-    <string name="minetes">דקות מזמן</string>
-    <string name="add_minyan_days">באלו ימים מתקיימת התפילה?</string>
-    <string name="add_minyan_every_day">כל יום חול</string>
-    <string name="add_minyan_sunday">ראשון</string>
-    <string name="add_minyan_monday">שני</string>
-    <string name="add_minyan_tuesday">שלישי</string>
-    <string name="add_minyan_wednesday">רביעי</string>
-    <string name="add_minyan_thursday">חמישי</string>
-    <string name="add_minyan_friday">שישי</string>
-    <string name="add_minyan_saterday">שבת</string>
-
-    <string name="anter_time">הכנס זמן</string>
-    <string name="add_minyan">הוסף מניין</string>
-
-    <string name="about_startach">סטארט-אח הינו ארגון חברתי התנדבותי בלה בלה בלה</string>
-
-    <string name="name_synagogue">שם בית כנסת</string>
-    <string name="time_of_tfila">שעה</string>
-    <string name="distance">מרחק</string>
-
-
 </resources>

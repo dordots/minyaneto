@@ -9,7 +9,7 @@ import com.app.minyaneto_android.R;
 
 public class SplashScreen extends AppCompatActivity {
 
-    private final int SPLASH_SCREEN_TIME_IN_MILI = 0;
+    private final int SPLASH_SCREEN_TIME_IN_MILI = 1000;
     private CountDownTimer splashTimer;
 
     @Override

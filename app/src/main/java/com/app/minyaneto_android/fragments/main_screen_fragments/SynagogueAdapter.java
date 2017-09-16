@@ -40,6 +40,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
 
     public void setMyClickListener(SynagogueClickListener listener) {
         this.myClickListener = listener;
+        return;
     }
 
     public SynagogueAdapter(List<Synagogue> synagogues, LatLng geo,int idWazw,int idShowDetails) {
@@ -85,6 +86,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
         //TODO calculate real time
         Synagogue synagogue = synagogues.get(position);
         //TODO return time in good format
+        //TODO choose the best time from all minyans
         return synagogue.getMinyans().get(0).getTime().getHour() + ":" + synagogue.getMinyans().get(0).getTime().getMinutes();
 
     }

@@ -41,12 +41,24 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
     private ArrayList<Fragment> liveFragments = new ArrayList<>();
     private boolean showRefreshButton = true;
+    private String fragmentTitle = "";
 
     private RefreshMapDataClickListener myRefreshMapDataClickListener;
 
     public interface RefreshMapDataClickListener {
         void onClickRefreshIcon();
     }
+
+    public interface UpdateTitle {
+        String onFragmentChange();
+    }
+
+    public void setMyUpdateTitle(UpdateTitle myUpdateTitle) {
+        this.myUpdateTitle = myUpdateTitle;
+    }
+
+    private UpdateTitle myUpdateTitle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +71,11 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         Toolbar toolbar = (Toolbar) findViewById(R.id.sidebar_action);
         setSupportActionBar(toolbar);
 
-        /*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
-        toggle.syncState();*/
+        toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.sidebar_navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -78,9 +90,11 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 changeFragment(fragment);
             }
         });
-        changeFragment(MainScreenFragment.getInstance());
+        changeFragment(MainScreenFragment.getInstance(this));
 
-
+    }
+    public void setActionBarTitle(String title) {
+        getSupportActionBar().setTitle(title);
     }
 
 
@@ -90,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            // getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
             super.onBackPressed();
         }
@@ -115,12 +128,27 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 ft.show(fragment);
                 ft.commit();
             } else {
-                ft.add(R.id.views, fragment);//.addToBackStack(null);
+                ft.add(R.id.views, fragment);
                 ft.commit();
                 liveFragments.add(fragment);
             }
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
             drawer.closeDrawer(GravityCompat.START);
+            if (myUpdateTitle != null) {
+                fragmentTitle = myUpdateTitle.onFragmentChange();
+                invalidateOptionsMenu();
+            }
+            if (fragment instanceof MainScreenFragment) {
+                if (!showRefreshButton) {
+                    showRefreshButton = true;
+                    invalidateOptionsMenu();
+                }
+            } else {
+                if (showRefreshButton) {
+                    showRefreshButton = false;
+                    invalidateOptionsMenu();
+                }
+            }
         }
     }
 
@@ -135,18 +163,10 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.sidebar_home) {
-            if (!showRefreshButton) {
-                showRefreshButton = true;
-                invalidateOptionsMenu();
-            }
-            MainScreenFragment.getInstance().checkPermissions(true);
-            changeFragment(MainScreenFragment.getInstance());
+            MainScreenFragment.getInstance(this).checkPermissions(true);
+            changeFragment(MainScreenFragment.getInstance(this));
         } else {
-            if (showRefreshButton) {
-                showRefreshButton = false;
-                invalidateOptionsMenu();
-            }
-           if (id == R.id.sidebar_addSynagogue) {
+            if (id == R.id.sidebar_addSynagogue) {
                 changeFragment(AddSynagogueFragment.getInstance(new AddSynagogueFragment.OnSeccessAdd() {
                     @Override
                     public void OnSeccess(Synagogue synagogue) {
@@ -163,9 +183,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             } else if (id == R.id.sidebar_about) {
                 changeFragment(AboutFragment.getInstance());
             }
-
         }
-
         return true;
     }
 
@@ -191,6 +209,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.action_bar_menu, menu);
         menu.findItem(R.id.actionbar_refresh).setVisible(showRefreshButton);
+        //menu.findItem(R.id.sidebar_action).setTitle(fragmentTitle);
         return true;
     }
 

@@ -3,103 +3,125 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.app.minyaneto_android.fragments.add_synagogue_fragments.AddSynagogueFragment">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <fragment
             android:id="@+id/add_synagogue_map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="355dp"
-        android:padding="@dimen/text_margin"
-        android:orientation="vertical"
-        android:weightSum="0.8">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/synagogoe_details_title"
-            android:textAlignment="center" />
-
-        <EditText
-            android:id="@+id/add_synagogoe_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.1"
-            android:hint="@string/enter_name_synagogue" />
-
-        <AutoCompleteTextView
-            android:id="@+id/add_synagogoe_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.1"
-            android:hint="@string/enter_address_synagogue" />
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/add_synagogue_comments"
-            android:layout_weight="0.1"
-
-            android:hint="@string/enter_comment_synagogue"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.1"
-            android:orientation="horizontal">
+            android:layout_height="355dp"
+            android:orientation="vertical"
+            android:padding="@dimen/text_margin"
+            android:weightSum="0.8">
 
-            <TextView
+
+            <EditText
+                android:id="@+id/add_synagogoe_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:hint="@string/enter_name_synagogue" />
+
+            <AutoCompleteTextView
+                android:id="@+id/add_synagogoe_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:hint="@string/enter_address_synagogue" />
+
+            <EditText
+                android:id="@+id/add_synagogue_comments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+
+                android:hint="@string/enter_comment_synagogue" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/choose_nosach_synagogue" />
+
+                <Spinner
+                    android:id="@+id/add_synagogoe_nosach"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/nosachim" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/choose_nosach_synagogue" />
+                android:orientation="horizontal"
+                android:weightSum="2">
 
-            <Spinner
-                android:id="@+id/add_synagogoe_nosach"
-                android:layout_width="match_parent"
-                android:entries="@array/nosachim"
-                android:layout_height="wrap_content" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/add_synagogoe_accessible"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        android:text="@string/accessible" />
+
+                    <CheckBox
+                        android:id="@+id/add_synagogoe_sefer_tora"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        android:text="@string/sefer_tora" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/add_synagogoe_parking"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        android:text="@string/parking" />
+
+                    <CheckBox
+                        android:id="@+id/add_synagogoe_lessons"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        android:text="@string/lessons" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/add_synagogoe_btn_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/add"
+                android:textAlignment="center" />
         </LinearLayout>
-
-        <CheckBox
-            android:id="@+id/add_synagogoe_accessible"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.1"
-            android:text="@string/accessible" />
-
-        <CheckBox
-            android:id="@+id/add_synagogoe_sefer_tora"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.1"
-            android:text="@string/sefer_tora" />
-
-        <CheckBox
-            android:id="@+id/add_synagogoe_parking"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.1"
-            android:text="@string/parking" />
-
-        <CheckBox
-            android:id="@+id/add_synagogoe_lessons"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.1"
-            android:text="@string/lessons" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textAlignment="center"
-            android:id="@+id/add_synagogoe_btn_add"
-            android:text="@string/add"/>
-    </LinearLayout>
     </LinearLayout>
 </FrameLayout>
