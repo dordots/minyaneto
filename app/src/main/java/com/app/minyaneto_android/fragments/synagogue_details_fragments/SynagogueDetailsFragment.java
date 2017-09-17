@@ -92,8 +92,8 @@ public class SynagogueDetailsFragment extends DialogFragment {
         mRecyclerViewMinyans.setLayoutManager(linearLayoutManager);
         if (mSynagogue == null)
             return;
-        tvNameSynagogue.setText(getResources().getString(R.string.synagogue)+" "+mSynagogue.getName());
-        tvAddressSynagogue.setText(getResources().getString(R.string.address)+" " +mSynagogue.getAddress());
+        tvNameSynagogue.setText(mSynagogue.getName());
+        tvAddressSynagogue.setText(mSynagogue.getAddress());
         tvCommentsSynagogue.setText(mSynagogue.getComments());
         tvNosachSynagogue.setText(getResources().getString(R.string.nosach)+" "+mSynagogue.getNosach());
         cbLessons.setChecked(mSynagogue.isClasses());

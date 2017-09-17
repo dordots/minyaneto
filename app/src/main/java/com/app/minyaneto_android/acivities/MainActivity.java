@@ -1,6 +1,5 @@
 package com.app.minyaneto_android.acivities;
 
-
 import android.content.Intent;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;

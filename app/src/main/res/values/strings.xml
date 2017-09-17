@@ -19,6 +19,7 @@
     <string name="enter_name_synagogue">הכנס שם בית כנסת</string>
     <string name="enter_address_synagogue">הכנס כתובת בית כנסת</string>
     <string name="choose_nosach_synagogue">בחר נוסח</string>
+    <string name="choose_address_synagogue">מצא כתובת</string>
 
     <string name="synagogoe_details_title">פרטי בית כנסת</string>
     <string name="add">הוסף</string>
@@ -29,8 +30,6 @@
     <!-- synagogue details -->
     <string name="sidebar_addMinyan">הוסף מניין</string>
     <string name="minyans_list">זמני תפילות</string>
-    <string name="synagogue">בית כנסת </string>
-    <string name="address">כתובת: </string>
     <string name="another_info">מידע נוסף</string>
     <string name="nosach">נוסח </string>
 
