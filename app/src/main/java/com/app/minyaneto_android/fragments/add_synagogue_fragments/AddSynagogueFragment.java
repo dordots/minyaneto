@@ -13,7 +13,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.minyaneto_android.R;
@@ -60,7 +60,7 @@ public class AddSynagogueFragment extends Fragment implements OnMapReadyCallback
     private GoogleMap mMap;
 
     EditText etNameSynagogue;
-    AutoCompleteTextView actvAddressSynagogue;
+    TextView tvAddressSynagogue;
     EditText etCommentsSynagogue;
     Spinner spinnerNosachSynagogue;
     CheckBox cbParking;
@@ -124,7 +124,7 @@ public class AddSynagogueFragment extends Fragment implements OnMapReadyCallback
             }
         });
         etNameSynagogue = (EditText) view.findViewById(R.id.add_synagogoe_name);
-        actvAddressSynagogue = (AutoCompleteTextView) view.findViewById(R.id.add_synagogoe_address);
+        tvAddressSynagogue = (TextView) view.findViewById(R.id.add_synagogoe_address);
         etCommentsSynagogue = (EditText) view.findViewById(R.id.add_synagogue_comments);
         spinnerNosachSynagogue = (Spinner) view.findViewById(R.id.add_synagogoe_nosach);
         cbParking = (CheckBox) view.findViewById(R.id.add_synagogoe_parking);
@@ -138,17 +138,6 @@ public class AddSynagogueFragment extends Fragment implements OnMapReadyCallback
                 addSynagogue();
             }
         });
-        String[] address = {"בני נצרים", "יבול", "ירושלים"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                (getContext(), android.R.layout.simple_list_item_1, address);
-        actvAddressSynagogue.setAdapter(adapter);
-        actvAddressSynagogue.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) return;
-               updateMarker();
-            }
-        });
     }
 
     private void updateMarker() {
@@ -159,7 +148,7 @@ public class AddSynagogueFragment extends Fragment implements OnMapReadyCallback
                 Geocoder mGeocoder = new Geocoder(getContext(), Locale.getDefault());
                 List<Address> myAddresses = null;
                 try {
-                    myAddresses = mGeocoder.getFromLocationName(actvAddressSynagogue.getText().toString(), 20);
+                    myAddresses = mGeocoder.getFromLocationName(tvAddressSynagogue.getText().toString(), 20);
                     if (myAddresses.size() > 0) {
                         mMap.clear();
                         LatLng loc = new LatLng(myAddresses.get(0).getLatitude(), myAddresses.get(0).getLongitude());
@@ -173,13 +162,13 @@ public class AddSynagogueFragment extends Fragment implements OnMapReadyCallback
     }
 
     private void addSynagogue() {
-        if (etNameSynagogue.getText().toString().equals("") || actvAddressSynagogue.getText().toString().equals("")) {
+        if (etNameSynagogue.getText().toString().equals("") || tvAddressSynagogue.getText().toString().equals("")) {
             Toast.makeText(getContext(), getResources().getString(R.string.check), Toast.LENGTH_SHORT).show();
             return;
         }
         Synagogue s = new Synagogue();
         s.setName(etNameSynagogue.getText().toString());
-        s.setAddress(actvAddressSynagogue.getText().toString());
+        s.setAddress(tvAddressSynagogue.getText().toString());
         s.setComments(etCommentsSynagogue.getText().toString());
         s.setNosach((String) spinnerNosachSynagogue.getSelectedItem());
         s.setClasses(cbLessons.isChecked());
@@ -221,7 +210,7 @@ public class AddSynagogueFragment extends Fragment implements OnMapReadyCallback
         if (requestCode == PLACE_PICKER_REQUEST){
             if(resultCode == Activity.RESULT_OK){
                 Place place = PlacePicker.getPlace(getActivity(), data);
-                actvAddressSynagogue.setText(place.getAddress());
+                tvAddressSynagogue.setText(place.getAddress());
                 updateMarker();
             }
         }
@@ -231,28 +220,6 @@ public class AddSynagogueFragment extends Fragment implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick(LatLng latLng) {
-                mMap.clear();
-                changeMarker(latLng);
-
-            }
-        });
-        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-            @Override
-            public void onMarkerDragStart(Marker marker) {
-            }
-
-            @Override
-            public void onMarkerDrag(Marker marker) {
-            }
-
-            @Override
-            public void onMarkerDragEnd(Marker _marker) {
-                setMarker(_marker);
-            }
-        });
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -271,10 +238,12 @@ public class AddSynagogueFragment extends Fragment implements OnMapReadyCallback
                         }
                     }
                 });
+        mMap.getUiSettings().setScrollGesturesEnabled(false);
     }
 
     private void changeMarker(LatLng loc) {
-        Marker _marker = mMap.addMarker(new MarkerOptions()
+        mMap.getUiSettings().setScrollGesturesEnabled(true);
+        /*Marker _marker = */mMap.addMarker(new MarkerOptions()
                 .position(loc)
                 .draggable(true)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
@@ -284,11 +253,12 @@ public class AddSynagogueFragment extends Fragment implements OnMapReadyCallback
                 .tilt(30)                   // Sets the tilt of the camera to 30 degrees
                 .build();                   // Creates a CameraPosition from the builder
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        mMap.getUiSettings().setScrollGesturesEnabled(false);
         //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 15));
-        setMarker(_marker);
+        //setMarker(_marker);
     }
 
-    private void setMarker(Marker _marker) {
+    /*private void setMarker(Marker _marker) {
         marker = _marker;
         new Runnable() {
             @Override
@@ -298,13 +268,14 @@ public class AddSynagogueFragment extends Fragment implements OnMapReadyCallback
                 try {
                     addresses = geocoder.getFromLocation(marker.getPosition().latitude, marker.getPosition().longitude, 1);
                     if(addresses.size()>0)
-                        actvAddressSynagogue.setText(addresses.get(0).getAddressLine(0));
+                        tvAddressSynagogue.setText(addresses.get(0).getAddressLine(0));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }.run();
     }
+    */
 
 
 }

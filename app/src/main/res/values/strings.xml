@@ -17,7 +17,7 @@
 
     <!-- add synagogue -->
     <string name="enter_name_synagogue">הכנס שם בית כנסת</string>
-    <string name="enter_address_synagogue">הכנס כתובת בית כנסת</string>
+    <string name="enter_address_synagogue">כתובת בית כנסת</string>
     <string name="choose_nosach_synagogue">בחר נוסח</string>
     <string name="choose_address_synagogue">מצא כתובת</string>
 
@@ -52,6 +52,7 @@
     <string name="name_synagogue">בית כנסת</string>
     <string name="time_of_tfila">שעה</string>
     <string name="distance">מרחק</string>
+    <string name="meters">מ</string>
 
     <!-- Nouns -->
     <string name="nouns_the">ה-</string>
@@ -115,4 +116,12 @@
     <string name="add_synagogue_fragment">הוספת בית כנסת</string>
     <string name="main_screen_fragment">מניינטו</string>
     <string name="synagogue_details_fragment">פרטי בית כנסת</string>
+
+
+    <string name="title_activity_maps">Map</string>
+    <string name="route_distance">Distance</string>
+    <string name="route_distance_value">40.2 Km</string>
+    <string name="route_duration">Duration</string>
+    <string name="route_duration_value">48 mins</string>
+    <string name="server_error">Server error. Something when wrong with the server</string>
 </resources>

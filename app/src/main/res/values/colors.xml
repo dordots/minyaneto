@@ -7,4 +7,12 @@
     <color name="black">#000000</color>
     <color name="gray">#e6e6e6 </color>
     <color name="white">#ffffff</color>
+
+
+
+    <color name="colorPrimaryText">#000000</color>
+    <color name="colorSecondaryText">#737373</color>
+    <color name="colorIcons">#FFFFFF</color>
+    <color name="colorDivider">#737373</color>
+    <color name="colorMap">#FAE6D6</color>
 </resources>

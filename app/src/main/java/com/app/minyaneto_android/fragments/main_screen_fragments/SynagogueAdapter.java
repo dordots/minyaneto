@@ -21,7 +21,6 @@ import java.util.List;
 public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.SynagogueViewHolder> {
 
     private List<Synagogue> synagogues;
-    private LatLng geo;
     private SynagogueClickListener myClickListener;
     private int idShowDetails;
     private int idWazw;
@@ -43,9 +42,8 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
         return;
     }
 
-    public SynagogueAdapter(List<Synagogue> synagogues, LatLng geo,int idWazw,int idShowDetails) {
+    public SynagogueAdapter(List<Synagogue> synagogues,int idWazw,int idShowDetails) {
         this.synagogues = synagogues;
-        this.geo = geo;
         this.idWazw=idWazw;
         this.idShowDetails=idShowDetails;
     }
@@ -74,7 +72,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
             holder.prayerTimeTextView.setText(calcTime(position));
             holder.prayTypeTextView.setText(synagogue.getMinyans().get(0).getPrayType().toString().charAt(0)+"");
         }
-        holder.distanceSynagogueTextView.setText(calculateDistance(synagogue.getGeo()) + " מ'");
+        holder.distanceSynagogueTextView.setText(synagogue.getDistanceFromLocation()+"");
 
         if(row_index==position)
             holder.row_linearlayout.setBackgroundColor(Color.LTGRAY);
@@ -91,18 +89,6 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
 
     }
 
-    private long calculateDistance(LatLng location) {
-
-        double dLat = Math.toRadians(location.latitude - geo.latitude);
-        double dLon = Math.toRadians(location.longitude - geo.longitude);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
-                + Math.cos(Math.toRadians(geo.latitude))
-                * Math.cos(Math.toRadians(location.latitude)) * Math.sin(dLon / 2)
-                * Math.sin(dLon / 2);
-        double c = 2 * Math.asin(Math.sqrt(a));
-        long distanceInMeters = Math.round(6371000 * c);
-        return distanceInMeters;
-    }
 
     public class SynagogueViewHolder extends RecyclerView.ViewHolder {
 

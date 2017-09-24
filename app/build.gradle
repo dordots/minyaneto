@@ -35,5 +35,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:11.0.4'
     compile 'com.google.android.gms:play-services-maps:11.0.4'
     compile 'com.google.android.gms:play-services:11.0.4'
+    compile files('libs/zmanim-1.4.0alpha.jar')
+    compile files('libs/org.apache.commons.io.jar')
 
 }

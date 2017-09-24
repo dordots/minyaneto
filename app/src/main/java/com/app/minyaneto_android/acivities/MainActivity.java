@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         changeFragment(MainScreenFragment.getInstance(this));
 
     }
+
     public void setActionBarTitle(String title) {
         getSupportActionBar().setTitle(title);
     }
@@ -127,26 +128,35 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 ft.show(fragment);
                 ft.commit();
             } else {
-                ft.add(R.id.views, fragment);
+                if (fragment instanceof MainScreenFragment) {
+                    ft.add(R.id.views, fragment);
+                } else {
+                    ft.add(R.id.views, fragment).addToBackStack("tag");
+                }
                 ft.commit();
                 liveFragments.add(fragment);
             }
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
-            drawer.closeDrawer(GravityCompat.START);
-            if (myUpdateTitle != null) {
-                fragmentTitle = myUpdateTitle.onFragmentChange();
+            updateTitle(fragment);
+
+        }
+    }
+
+    private void updateTitle(Fragment fragment) {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
+        drawer.closeDrawer(GravityCompat.START);
+        if (myUpdateTitle != null) {
+            fragmentTitle = myUpdateTitle.onFragmentChange();
+            invalidateOptionsMenu();
+        }
+        if (fragment instanceof MainScreenFragment) {
+            if (!showRefreshButton) {
+                showRefreshButton = true;
                 invalidateOptionsMenu();
             }
-            if (fragment instanceof MainScreenFragment) {
-                if (!showRefreshButton) {
-                    showRefreshButton = true;
-                    invalidateOptionsMenu();
-                }
-            } else {
-                if (showRefreshButton) {
-                    showRefreshButton = false;
-                    invalidateOptionsMenu();
-                }
+        } else {
+            if (showRefreshButton) {
+                showRefreshButton = false;
+                invalidateOptionsMenu();
             }
         }
     }

@@ -74,6 +74,7 @@ public class AddMinyanFragment extends Fragment {
         linearLayoutRelativeTime = (LinearLayout) view.findViewById(R.id.liner_layout_relative_time);
 
         timePicker.setVisibility(View.INVISIBLE);
+        timePicker.setIs24HourView(true);
         linearLayoutRelativeTime.setVisibility(View.INVISIBLE);
         RadioGroup f = (RadioGroup) view.findViewById(R.id.radio_group_add_minyan);
         f.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {

@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/text_margin"
+            android:layout_margin="@dimen/text_margin"
             android:weightSum="0.8">
 
             <TextView
@@ -99,21 +99,20 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/synagogoe_details_recycler_minyans"
-
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.4"
             android:gravity="center" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/synagogoe_details_add_minyan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|start"
-            android:clickable="true"
-            app:srcCompat="@drawable/ic_action_bar_refresh" />
     </LinearLayout>
 
-
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/synagogoe_details_add_minyan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:layout_gravity="bottom|start"
+        android:clickable="true"
+        app:srcCompat="@drawable/ic_action_bar_refresh" />
 
 </RelativeLayout>
