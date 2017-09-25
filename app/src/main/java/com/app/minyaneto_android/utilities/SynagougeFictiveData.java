@@ -27,7 +27,7 @@ public class SynagougeFictiveData {
 
         s = new Synagogue("ירושלים רמות", "לעלות בכניסה ג לקומה 2", "בית מנחם",
                 new LatLng(location.latitude + 0.001, location.longitude + 0.001), "עדות המזרח", false, true, false, true);
-        s.addMinyan(new Minyan(PrayType.AFTER_NOON, new ExactTime(12,0),
+        s.addMinyan(new Minyan(PrayType.AFTER_NOON, new ExactTime(12,30),
                 PrayDayType.SUNDAY, PrayDayType.SATURDAY));
         synagogues.add(s);
 
@@ -41,7 +41,7 @@ public class SynagougeFictiveData {
         s = new Synagogue("ירושלים גבעת שאול", "לפנות במסדרון שמאלה ולעלות במדרגות לקומה 1", "אהל שרה",
                 new LatLng(location.latitude - 0.00124, location.longitude - 0.0021), "אשכנז", false, true, true, false);
 
-        s.addMinyan(new Minyan(PrayType.MORNING, new ExactTime(12,0),
+        s.addMinyan(new Minyan(PrayType.MORNING, new ExactTime(12,10),
                 PrayDayType.WEDNESDAY));
         synagogues.add(s);
 
@@ -55,21 +55,21 @@ public class SynagougeFictiveData {
         s = new Synagogue("ירושלים רמות", "כניסה ב", "כרם התימנים",
                 new LatLng(location.latitude + 0.0041, location.longitude - 0.001), "ספרד", true, false, false, true);
 
-        s.addMinyan(new Minyan(PrayType.MORNING, new ExactTime(12,0),
+        s.addMinyan(new Minyan(PrayType.MORNING, new ExactTime(11,50),
                 PrayDayType.MONDAY));
         synagogues.add(s);
 
         s = new Synagogue("ירושלים קרית משה", "לרדת 2 קומות", "מיימון",
                 new LatLng(location.latitude - 0.0015, location.longitude + 0.005), "תימני", false, true, false, true);
 
-        s.addMinyan(new Minyan(PrayType.MORNING, new ExactTime(12,0),
+        s.addMinyan(new Minyan(PrayType.MORNING, new ExactTime(12,30),
                 PrayDayType.MONDAY));
         synagogues.add(s);
 
         s = new Synagogue("ירושלים בית הדפוס", "לפנות במסדרון שמאלה ולעלות במדרגות לקומה 1", "אהל שרה",
                 new LatLng(location.latitude - 0.00124, location.longitude - 0.0021), "אשכנז", false, true, true, false);
 
-        s.addMinyan(new Minyan(PrayType.MORNING, new ExactTime(12,0),
+        s.addMinyan(new Minyan(PrayType.MORNING, new ExactTime(13,0),
                 PrayDayType.MONDAY));
         synagogues.add(s);
 

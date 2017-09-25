@@ -11,11 +11,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.minyaneto_android.R;
+import com.app.minyaneto_android.models.minyan.Minyan;
+import com.app.minyaneto_android.models.minyan.Time;
+import com.app.minyaneto_android.models.minyan.WeekDay;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.google.android.gms.maps.model.LatLng;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.SynagogueViewHolder> {
@@ -32,9 +37,6 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
         void onGoToWazeClick(int position);
 
         void onShowDetailsClick(int position);
-
-        void onItemLongClick(int position, View v);
-
     }
 
     public void setMyClickListener(SynagogueClickListener listener) {
@@ -69,7 +71,9 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
         holder.nameTextView.setText(synagogue.getName());
         if (synagogue.getMinyans().size() > 0) {
             //TODO real time from minyans
-            holder.prayerTimeTextView.setText(calcTime(position));
+            SimpleDateFormat format =
+                    new SimpleDateFormat("HH:mm");
+            holder.prayerTimeTextView.setText(format.format(calcTime(position)));
             holder.prayTypeTextView.setText(synagogue.getMinyans().get(0).getPrayType().toString().charAt(0)+"");
         }
         holder.distanceSynagogueTextView.setText(synagogue.getDistanceFromLocation()+"");
@@ -80,13 +84,13 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
             holder.row_linearlayout.setBackgroundColor(Color.WHITE);
     }
 
-    private String calcTime(int position) {
+    private Date calcTime(int position) {
         //TODO calculate real time
         Synagogue synagogue = synagogues.get(position);
         //TODO return time in good format
         //TODO choose the best time from all minyans
-        return synagogue.getMinyans().get(0).getTime().getHour() + ":" + synagogue.getMinyans().get(0).getTime().getMinutes();
-
+        Minyan minyan=synagogue.getMinyans().get(0);
+        return minyan.getTime().toDate(WeekDay.values()[new Date().getDay()]);
     }
 
 
@@ -133,16 +137,6 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
                     notifyDataSetChanged();
                 }
             });
-
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    if (myClickListener != null)
-                        myClickListener.onItemLongClick(getAdapterPosition(), v);
-                    return false;
-                }
-            });
         }
-
     }
 }

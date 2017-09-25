@@ -5,7 +5,12 @@ import android.content.res.Resources;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.acivities.MainActivity;
 
+import net.sourceforge.zmanim.ZmanimCalendar;
+import net.sourceforge.zmanim.util.GeoLocation;
+
 import java.util.Date;
+import java.util.TimeZone;
+
 /**
  * Created by משה on 25/08/2017.
  */
@@ -22,6 +27,25 @@ public class RelativeTime implements Time {
 
     @Override
     public int getHour() {
+        /*
+        String locationName = "Lakewood, NJ";
+        double latitude = 40.096; //latitude of Lakewood, NJ
+        double longitude = -74.222; //longitude of Lakewood, NJ
+        double elevation = 0; //optional elevation
+        //use a Valid Olson Database timezone listed in java.util.TimeZone.getAvailableIDs()
+        TimeZone timeZone = TimeZone.getTimeZone("America/New_York");
+        //create the location object
+        GeoLocation location1 = new GeoLocation(locationName, latitude, longitude, elevation, timeZone);
+        //create the ZmanimCalendar
+        ZmanimCalendar zc = new ZmanimCalendar(location1);
+        //optionally set the internal calendar
+        //zc.getCalendar().set(1969, Calendar.FEBRUARY, 8);
+        String d = ("Today's Zmanim for " + locationName);
+        d += "Sunrise: " + zc.getSunrise(); //output sunrise
+        d += "Sof Zman Shema GRA: " + zc.getSofZmanShmaGRA(); //output Sof Zman Shema GRA
+        d += "Sunset: " + zc.getSunset(); //output sunset
+        */
+
         // Implementation depends on Kosher Java
         return 0;
     }
@@ -35,7 +59,11 @@ public class RelativeTime implements Time {
     @Override
     public Date toDate(WeekDay weekDay) {
         // Implementation depends on Kosher Java
-        return null;
+
+        //TODO create a ExactTime and return toDate
+        ExactTime myTime=new ExactTime(getHour(),getMinutes());
+
+        return myTime.toDate(weekDay);
     }
 
     @Override

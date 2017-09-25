@@ -58,7 +58,7 @@ public class ExactTime implements Time {
         String nounAt =  MainActivity.resources.getString(R.string.nouns_at);
         SimpleDateFormat format =
                 new SimpleDateFormat("HH:mm");
-        String time = format.format(toDate(WeekDay.FRIDAY));
+        String time = format.format(toDate(WeekDay.values()[new Date().getDay()]));
         return nounAt + " " + time;
     }
 }

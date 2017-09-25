@@ -133,7 +133,6 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
         synagoguesMarkers = new ArrayList<>();
         synagogues = new ArrayList<>();
         if (getActivity() instanceof MainActivity) {
@@ -147,7 +146,6 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
             });
         }
 
-        //// TODO: 24/09/2017
         // First we need to check availability of play services
         if (checkPlayServices()) {
 
@@ -216,24 +214,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
-        /*
-        String locationName = "Lakewood, NJ";
-        double latitude = 40.096; //latitude of Lakewood, NJ
-        double longitude = -74.222; //longitude of Lakewood, NJ
-        double elevation = 0; //optional elevation
-        //use a Valid Olson Database timezone listed in java.util.TimeZone.getAvailableIDs()
-        TimeZone timeZone = TimeZone.getTimeZone("America/New_York");
-        //create the location object
-        GeoLocation location1 = new GeoLocation(locationName, latitude, longitude, elevation, timeZone);
-        //create the ZmanimCalendar
-        ZmanimCalendar zc = new ZmanimCalendar(location1);
-        //optionally set the internal calendar
-        //zc.getCalendar().set(1969, Calendar.FEBRUARY, 8);
-        String d = ("Today's Zmanim for " + locationName);
-        d += "Sunrise: " + zc.getSunrise(); //output sunrise
-        d += "Sof Zman Shema GRA: " + zc.getSofZmanShmaGRA(); //output Sof Zman Shema GRA
-        d += "Sunset: " + zc.getSunset(); //output sunset
-        */
+
         handleLocationSetting();
     }
 
@@ -431,18 +412,6 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
                         }
                     }));
             }
-
-            @Override
-            public void onItemLongClick(int position, View v) {
-               /* try {
-                    if (position == -1) return;
-                    synagogues.remove(position);
-                    adapter.notifyItemRemoved(position);
-                } catch (Exception ex) {
-                    Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-                */
-            }
         });
         mRecyclerView.setAdapter(adapter);
     }
@@ -481,13 +450,14 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public boolean onMarkerClick(Marker marker) {
         marker.showInfoWindow();
-        int i = 0;
+        int i=0;
         for (Marker marker1 : synagoguesMarkers) {
             if (marker1.getPosition() == marker.getPosition()) {
-
+                //TODO select the current item in the list
+                return false;
             }
+            i++;
         }
-        //TODO select the current item in the list
         return false;
     }
 
@@ -521,7 +491,6 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
                             }
                         }
                     });
-
                 } catch (ProtocolException e) {
                     e.printStackTrace();
                 } catch (MalformedURLException e) {
