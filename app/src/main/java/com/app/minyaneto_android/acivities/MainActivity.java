@@ -188,7 +188,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                                 }));
                     }
                 }));
-
             } else if (id == R.id.sidebar_about) {
                 changeFragment(AboutFragment.getInstance());
             }

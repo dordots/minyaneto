@@ -163,10 +163,6 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
             mGoogleApiClient.connect();
         }
         checkPermissions(true);
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity())
-                    .setActionBarTitle(getResources().getString(R.string.main_screen_fragment));
-        }
     }
 
     @Override
@@ -178,6 +174,11 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
         // Resuming the periodic location updates
         if (mGoogleApiClient.isConnected() && mRequestingLocationUpdates) {
             startLocationUpdates();
+        }
+
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity())
+                    .setActionBarTitle(getResources().getString(R.string.main_screen_fragment));
         }
     }
 
