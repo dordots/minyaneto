@@ -1,14 +1,19 @@
 package com.app.minyaneto_android.fragments.main_screen_fragments;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.provider.ContactsContract;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.models.minyan.Minyan;
@@ -17,6 +22,8 @@ import com.app.minyaneto_android.models.minyan.WeekDay;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.google.android.gms.maps.model.LatLng;
 
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,9 +34,8 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
 
     private List<Synagogue> synagogues;
     private SynagogueClickListener myClickListener;
-    private int idShowDetails;
-    private int idWazw;
     private  int row_index=-1;
+    private Context context;
 
     public interface SynagogueClickListener {
         void onItemClick(int position);
@@ -44,10 +50,9 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
         return;
     }
 
-    public SynagogueAdapter(List<Synagogue> synagogues,int idWazw,int idShowDetails) {
+    public SynagogueAdapter(List<Synagogue> synagogues, Context context) {
         this.synagogues = synagogues;
-        this.idWazw=idWazw;
-        this.idShowDetails=idShowDetails;
+        this.context=context;
     }
 
     @Override
@@ -65,16 +70,49 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
     @Override
     public void onBindViewHolder(SynagogueViewHolder holder, final int position) {
         Synagogue synagogue = synagogues.get(position);
-        //holder.imageView.setImageResource(synagogue.getNosachResId());
-        holder.goWazeImageView.setImageResource(idWazw);
-        holder.showDetailsImageView.setImageResource(idShowDetails);
         holder.nameTextView.setText(synagogue.getName());
+        holder.walkingTime.setText(synagogue.getWalking_time()+"");
+        holder.drivigTime.setText(synagogue.getDriving_time()+"");
+        holder.menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.tfila_menu:
+                        PopupMenu popup = new PopupMenu(context, v);
+                        popup.getMenuInflater().inflate(R.menu.popup_menu,
+                                popup.getMenu());
+                        popup.show();
+                        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+                                switch (item.getItemId()) {
+                                    case R.id.synagogue_details:
+                                        if (myClickListener != null)
+                                            myClickListener.onShowDetailsClick(position);
+                                        break;
+                                    case R.id.go_place:
+                                        if (myClickListener != null)
+                                            myClickListener.onGoToWazeClick(position);
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+                                return true;
+                            }
+                        });
+
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        });
         if (synagogue.getMinyans().size() > 0) {
             //TODO real time from minyans
-            SimpleDateFormat format =
-                    new SimpleDateFormat("HH:mm");
-            holder.prayerTimeTextView.setText(format.format(calcTime(position)));
-            holder.prayTypeTextView.setText(synagogue.getMinyans().get(0).getPrayType().toString().charAt(0)+"");
+            holder.prayerTimeTextView.setText(getTime(position));
+            //holder.prayTypeTextView.setText(synagogue.getMinyans().get(0).getPrayType().toString().charAt(0)+"");
         }
         holder.distanceSynagogueTextView.setText(synagogue.getDistanceFromLocation()+"");
 
@@ -84,50 +122,40 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
             holder.row_linearlayout.setBackgroundColor(Color.WHITE);
     }
 
-    private Date calcTime(int position) {
+    private String getTime(int position) {
         //TODO calculate real time
         Synagogue synagogue = synagogues.get(position);
+        SimpleDateFormat format =  new SimpleDateFormat("HH:mm");
+        String result="";
+        for (Minyan minyan: synagogue.getMinyans()){
+            result=" ,"+format.format(minyan.getTime().toDate(WeekDay.values()[new Date().getDay()]))+result;
+        }
         //TODO return time in good format
         //TODO choose the best time from all minyans
-        Minyan minyan=synagogue.getMinyans().get(0);
-        return minyan.getTime().toDate(WeekDay.values()[new Date().getDay()]);
+        return result;
     }
 
 
     public class SynagogueViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView goWazeImageView;
-        ImageView showDetailsImageView;
         TextView nameTextView;
-        TextView prayTypeTextView;
         TextView prayerTimeTextView;
         TextView distanceSynagogueTextView;
+        TextView drivigTime;
+        TextView walkingTime;
         LinearLayout row_linearlayout;
+        ImageView menu;
 
 
         public SynagogueViewHolder(View itemView) {
             super(itemView);
-            goWazeImageView = (ImageView) itemView.findViewById(R.id.go_waze);
-            showDetailsImageView = (ImageView) itemView.findViewById(R.id.synagogue_details);
             nameTextView = (TextView) itemView.findViewById(R.id.synagogue_name);
-            prayTypeTextView = (TextView) itemView.findViewById(R.id.pray_type_minyan);
             prayerTimeTextView = (TextView) itemView.findViewById(R.id.prayer_time);
             distanceSynagogueTextView = (TextView) itemView.findViewById(R.id.synagogue_distance);
             row_linearlayout=(LinearLayout)itemView.findViewById(R.id.row_linrLayout);
-            goWazeImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (myClickListener != null)
-                        myClickListener.onGoToWazeClick(getAdapterPosition());
-                }
-            });
-            showDetailsImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (myClickListener != null)
-                        myClickListener.onShowDetailsClick(getAdapterPosition());
-                }
-            });
+            drivigTime=(TextView)itemView.findViewById(R.id.synagogue_driving_time);
+            walkingTime=(TextView)itemView.findViewById(R.id.synagogue_walking_time);
+            menu=(ImageView)itemView.findViewById(R.id.tfila_menu) ;
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

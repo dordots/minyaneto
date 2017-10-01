@@ -5,6 +5,7 @@ import com.app.minyaneto_android.acivities.MainActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 /**
  * Created by User on 15/08/2017.
@@ -15,6 +16,8 @@ public class Minyan {
     private PrayType prayType;
     private Time time;
     private ArrayList<PrayDayType> prayDayTypeArray;
+    private Date lastUpdate;
+
 
     public Minyan() {}
 

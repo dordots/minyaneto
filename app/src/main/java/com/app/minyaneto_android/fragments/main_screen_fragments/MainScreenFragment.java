@@ -26,6 +26,8 @@ import android.widget.TextView;
 import com.app.minyaneto_android.acivities.MainActivity;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.fragments.synagogue_details_fragments.SynagogueDetailsFragment;
+import com.app.minyaneto_android.models.minyan.Minyan;
+import com.app.minyaneto_android.models.minyan.WeekDay;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.app.minyaneto_android.utilities.SynagougeFictiveData;
 import com.google.android.gms.common.ConnectionResult;
@@ -61,9 +63,11 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -377,9 +381,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
         });
         updateMarkers();
 
-        final SynagogueAdapter adapter = new SynagogueAdapter(synagogues,
-                R.drawable.ic_navigation_icon,
-                R.drawable.ic_more_info);
+        final SynagogueAdapter adapter = new SynagogueAdapter(synagogues,getContext());
         adapter.setMyClickListener(new SynagogueAdapter.SynagogueClickListener() {
             @Override
             public void onItemClick(int position) {
@@ -420,11 +422,13 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
         if (mMap == null) return;
         mMap.clear();
         synagoguesMarkers = new ArrayList<>();
+        SimpleDateFormat format =
+                new SimpleDateFormat("HH:mm");
         for (Synagogue sy : synagogues) {
             Marker m = mMap.addMarker(new MarkerOptions()
                     .position(sy.getGeo())
                     .title(sy.getName() + " - " + sy.getNosach())
-                    .snippet(sy.getAddress() /*+ ":" +
+                    .snippet(format.format(getCurrentMinyan(sy.getMinyans())) /*+ ":" +
                              sy.getNosach() + ":" +
                              sy.isSefer_tora() + ":" +
                              sy.isClasses() + ":" +
@@ -433,6 +437,19 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
             synagoguesMarkers.add(m);
         }
+    }
+    private Date getCurrentMinyan(ArrayList<Minyan> myMinyans){
+        Date now=new Date();
+        Collections.sort(myMinyans, new Comparator<Minyan>() {
+            public int compare(Minyan o1, Minyan o2) {
+                Date date1 = o1.getTime().toDate(WeekDay.values()[new Date().getDay()]);
+                Date date2 = o2.getTime().toDate(WeekDay.values()[new Date().getDay()]);
+                if (date1.equals(date2))
+                    return 0;
+                return date1.before(date2) ? -1 : 1;
+            }
+        });
+        return myMinyans.get(0).getTime().toDate(WeekDay.values()[new Date().getDay()]);
     }
 
     private long calculateDistance(LatLng location1, LatLng location2) {

@@ -124,4 +124,7 @@
     <string name="route_duration">Duration</string>
     <string name="route_duration_value">48 mins</string>
     <string name="server_error">Server error. Something when wrong with the server</string>
+
+    <string name="show_synagogue_details">פרטים נוספים</string>
+    <string name="go_there">נווט</string>
 </resources>

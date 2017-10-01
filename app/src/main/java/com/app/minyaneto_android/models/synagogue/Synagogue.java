@@ -15,6 +15,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Synagogue {
     private String id;
@@ -23,6 +24,8 @@ public class Synagogue {
     private String name;
     private String nosach;
     private double distanceFromLocation;
+    private int driving_time;
+    private int walking_time;
     private LatLng geo;
     private boolean classes;
     private boolean parking;
@@ -30,7 +33,9 @@ public class Synagogue {
     private boolean wheelchair_accessible;
     private ArrayList<Minyan> minyans;
 
-    public Synagogue(String address, String comments, String name, LatLng geo, String nosach, boolean classes, boolean parking, boolean sefer_tora, boolean wheelchair_accessible) {
+    public Synagogue(String address, String comments, String name, LatLng geo, String nosach, boolean classes,
+                     boolean parking, boolean sefer_tora, boolean wheelchair_accessible,
+                     int driving_time, int walking_time, Date d) {
         this.address = address;
         this.comments = comments;
         this.name = name;
@@ -41,11 +46,29 @@ public class Synagogue {
         this.sefer_tora = sefer_tora;
         this.wheelchair_accessible = wheelchair_accessible;
         this.minyans = new ArrayList<>();
+        this.driving_time=driving_time;
+        this.walking_time=walking_time;
     }
 
     public Synagogue() {
         this.minyans = new ArrayList<>();
 
+    }
+
+    public int getDriving_time() {
+        return driving_time;
+    }
+
+    public void setDriving_time(int driving_time) {
+        this.driving_time = driving_time;
+    }
+
+    public int getWalking_time() {
+        return walking_time;
+    }
+
+    public void setWalking_time(int walking_time) {
+        this.walking_time = walking_time;
     }
 
     public String getId() {
