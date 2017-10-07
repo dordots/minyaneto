@@ -5,9 +5,6 @@ import android.content.res.Resources;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.acivities.MainActivity;
 
-import net.sourceforge.zmanim.ZmanimCalendar;
-import net.sourceforge.zmanim.util.GeoLocation;
-
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -45,7 +42,6 @@ public class RelativeTime implements Time {
         d += "Sof Zman Shema GRA: " + zc.getSofZmanShmaGRA(); //output Sof Zman Shema GRA
         d += "Sunset: " + zc.getSunset(); //output sunset
         */
-
         // Implementation depends on Kosher Java
         return 0;
     }
