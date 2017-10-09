@@ -12,6 +12,7 @@ def downloadJarsToLibs(fileName, url) {
 }
 
 task downloadHostedJars(){
+    new File("app/libs").mkdirs();
     def jars = ['zmanim-1.4.0alpha.jar':'https://github.com/KosherJava/zmanim/raw/master/lib/zmanim-1.4.0alpha.jar'
                ]
     jars.each{fn, url -> downloadJarsToLibs(fn, url)}
@@ -40,7 +41,6 @@ android {
 
 
 dependencies {
-    //    compile fileTree(dir: 'libs', include: ['*.jar'])
     //    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
     //        exclude group: 'com.android.support', module: 'support-annotations'
     //    })
@@ -53,8 +53,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.google.android.gms:play-services-location:11.0.4'
     compile 'com.google.android.gms:play-services-maps:11.0.4'
-    compile 'com.google.android.gms:play-services:11.0.4'
+    compile 'com.google.android.gms:play-services-places:11.0.4'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'commons-io:commons-io:2.5'
-//    compile files('libs/zmanim-1.4.0alpha.jar')
 }
