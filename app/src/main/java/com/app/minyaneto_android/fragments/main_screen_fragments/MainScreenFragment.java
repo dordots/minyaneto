@@ -18,14 +18,20 @@ import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
+import com.android.volley.Request;
 import com.app.minyaneto_android.acivities.MainActivity;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.fragments.synagogue_details_fragments.SynagogueDetailsFragment;
+import com.app.minyaneto_android.models.client.CustomJSONObjectRequest;
+import com.app.minyaneto_android.models.client.GenericJsonParser;
+import com.app.minyaneto_android.models.client.JSONObjectRequestHandlerInterface;
+import com.app.minyaneto_android.models.client.ModelObject;
+import com.app.minyaneto_android.models.client.VolleyRequestQueueSingleton;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.minyan.WeekDay;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
@@ -59,6 +65,7 @@ import org.json.JSONObject;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -72,6 +79,8 @@ import java.util.List;
 
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -108,7 +117,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
     private GoogleMap mMap;
     private List<Marker> synagoguesMarkers;
 
-
+    SynagogueAdapter adapter;
     private double lastZoom = -1;
     private LatLng lastLatLng = null;
     private static MainScreenFragment _instance;
@@ -189,7 +198,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onPause() {
         super.onPause();
-        if(mGoogleApiClient!=null)
+        if (mGoogleApiClient != null)
             stopLocationUpdates();
     }
 
@@ -362,13 +371,92 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void updateSynagogues(final LatLng location) {
+        /*String url = "http://minyaneto.startach.com/v1/synagogues/?top_left=42.0000000,-72.0000000&bottom_right=40.0000000,-74.0000000";
+        CustomJSONObjectRequest<String> cjsobj = new CustomJSONObjectRequest<String>(Request.Method.GET, url, null);
+
+        JSONObjectRequestHandlerInterface<String> analyzer = new JSONObjectRequestHandlerInterface<String>() {
+            @Override
+            public boolean isProcessReceivedDataImplemented() {
+                return true;
+            }
+
+            @Override
+            public boolean isExecuteCommandsImplemented() {
+                return true;
+            }
+//{"synagogues":[{
+// "classes":false,     "comments":"",
+// "geo":{"lat":"40.654807","lon":"-74.17735"},
+// "minyans":[{"day":"sunday","name":"mincha","time":"13:45:00"},
+// {"day":"monday","name":"mincha","time":"13:45:00"},
+// {"day":"tuesday","name":"mincha","time":"13:45:00"},
+// {"day":"wednesday","name":"mincha","time":"13:45:00"},
+// {"day":"thursday","name":"mincha","time":"13:45:00"}],
+// "nosach":"Sefard","parking":null,"sefer-tora":null,"wheelchair-accessible":null},{"address":"200 Murray Street , Elizabeth, USA","classes":true,"comments":"","geo":{"lat":"40.662402","lon":"-74.222289"},"minyans":[{"day":"sunday","name":"shachrit","time":"08:30:00"},{"day":"saturday","name":"shachrit","time":"09:00:00"}],"name":"Adath Jeshurun","nosach":"Ashkenaz","parking":null,"sefer-tora":null,"wheelchair-accessible":null},{"address":"153 Bellevue Street, Elizabeth, USA","classes":false,"comments":"","geo":{"lat":"40.66088","lon":"-74.23651"},"minyans":[{"day":"monday","name":"shachrit","time":"06:25:00"},{"day":"thursday","name":"shachrit","time":"06:25:00"},{"day":"sunday","name":"shachrit","time":"08:00:00"},{"day":"rosh-chodesh","name":"shachrit","time":"06:15:00"},{"day":"tuesday","name":"shachrit","time":"06:30:00"},{"day":"wednesday","name":"shachrit","time":"06:30:00"},{"day":"friday","name":"shachrit","time":"06:30:00"},{"day":"saturday","name":"shachrit","time":"08:30:00"},{"day":"friday","name":"mincha_kabalat_shabat","time":"19:00:00"}],"name":"Bais Yitzchok","nosach":"Ashkenaz","parking":null,"sefer-tora":null,"wheelchair-accessible":null},{"address":"330 Elmora Avenue , Elizabeth, USA","classes":true,"comments":"Ashkenaz and Eidot haMizrach. For all other times, see http:\/\/thejec.org\/weekly-schedule","geo":{"lat":"40.667202","lon":"-74.23399"},"minyans":[{"day":"monday","name":"shachrit","time":"06:40:00"},{"day":"thursday","name":"shachrit","time":"06:40:00"},{"day":"monday","name":"shachrit","time":"08:00:00"},{"day":"thursday","name":"shachrit","time":"08:00:00"},{"day":"sunday","name":"shachrit","time":"07:30:00"},{"day":"sunday","name":"shachrit","time":"08:30:00"},{"day":"rosh-chodesh","name":"shachrit","time":"08:00:00"},{"day":"rosh-chodesh","name":"shachrit","time":"06:30:00"},{"day":"tuesday","name":"shachrit","time":"08:00:00"},{"day":"wednesday","name":"shachrit","time":"08:00:00"},{"day":"friday","name":"shachrit","time":"08:00:00"},{"day":"tuesday","name":"shachrit","time":"06:50:00"},{"day":"wednesday","name":"shachrit","time":"06:50:00"},{"day":"friday","name":"shachrit","time":"06:50:00"}],"name":"JEC Elmora \/ Main Shul","nosach":"Multiple","parking":null,"sefer-tora":null,"wheelchair-accessible":null},{"address":"1391 North Ave., Elizabeth, USA","classes":false,"comments":"This is only a minyan mincha during the yeshiva zman","geo":{"lat":"40.6825308","lon":"-74.2131845"},"minyans":[{"day":"sunday","name":"mincha","time":"15:05:00"},{"day":"monday","name":"mincha","time":"15:05:00"},{"day":"tuesday","name":"mincha","time":"15:05:00"},{"day":"wednesday","name":"mincha","time":"15:05:00"},{"day":"thursday","name":"mincha","time":"15:05:00"},{"day":"sunday","name":"maariv","time":"21:25:00"},{"day":"monday","name":"maariv","time":"21:25:00"},{"day":"tuesday","name":"maariv","time":"21:25:00"},{"day":"wednesday","name":"maariv","time":"21:25:00"},{"day":"thursday","name":"maariv","time":"21:25:00"}],"name":"Yeshiva Beer Yitzchok","nosach":" ","parking":null,"sefer-tora":null,"wheelchair-accessible":null},{"address":"1391 North Ave., Elizabeth, USA","classes":false,"comments":"We are 5 minutes away from Newark Airport.  Come chap a seder if theres a plane delay or come daven with us. There are no Yeshiva minyanim during Bein HaZmanim. ","geo":{"lat":"40.682282","lon":"-74.213231"},"minyans":[{"day":"monday","name":"shachrit","time":"08:00:00"},{"day":"thursday","name":"shachrit","time":"08:00:00"},{"day":"sunday","name":"shachrit","time":"08:00:00"},{"day":"sunday","name":"mincha","time":"15:05:00"},{"day":"monday","name":"mincha","time":"15:05:00"},{"day":"tuesday","name":"mincha","time":"15:05:00"},{"day":"wednesday","name":"mincha","time":"15:05:00"},{"day":"thursday","name":"mincha","time":"15:05:00"},{"day":"sunday","name":"maariv","time":"21:15:00"},{"day":"monday","name":"maariv","time":"21:15:00"},{"day":"tuesday","name":"maariv","time":"21:15:00"},{"day":"wednesday","name":"maariv","time":"21:15:00"},{"day":"thursday","name":"maariv","time":"21:15:00"},{"day":"rosh-chodesh","name":"shachrit","time":"08:00:00"},{"day":"tuesday","name":"shachrit","time":"08:00:00"},{"day":"wednesday","name":"shachrit","time":"08:00:00"},{"day":"friday","name":"shachrit","time":"08:00:00"}],"name":"Yeshivas Be`er Yitzchok \/ Kollel of Elizabeth","nosach":"Ashkenaz","parking":null,"sefer-tora":null,"wheelchair-accessible":null},{"address":"7 Slater Dr., Elizabeth, USA","classes":false,"comments":"Cor. Trunball St., park at the employee \/ visitors parking. ring bell","geo":{"lat":"40.652607","lon":"-74.17913"},"minyans":[{"day":"sunday","name":"mincha","time":"14:15:00"},{"day":"monday","name":"mincha","time":"14:15:00"},{"day":"tuesday","name":"mincha","time":"14:15:00"},{"day":"wednesday","name":"mincha","time":"14:15:00"},{"day":"thursday","name":"mincha","time":"14:15:00"}],"name":"Adorama Warehouse ","nosach":"Sefard","parking":null,"sefer-tora":null,"wheelchair-accessible":null},{"address":"1391 North Avenue, Elizabeth, USA","classes":true,"comments":"Ashkenaz and Eidot haMizrach. For all other times, see http:\/\/schedule.thejec.org","geo":{"lat":"40.68214","lon":"-74.21334"},"minyans":[{"day":"monday","name":"shachrit","time":"06:20:00"},{"day":"thursday","name":"shachrit","time":"06:20:00"},{"day":"monday","name":"shachrit","time":"07:00:00"},{"day":"thursday","name":"shachrit","time":"07:00:00"},{"day":"monday","name":"shachrit","time":"08:00:00"},{"day":"thursday","name":"shachrit","time":"08:00:00"},{"day":"sunday","name":"shachrit","time":"06:45:00"},{"day":"sunday","name":"shachrit","time":"08:00:00"},{"day":"sunday","name":"mincha","time":"15:05:00"},{"day":"monday","name":"mincha","time":"15:05:00"},{"day":"tuesday","name":"mincha","time":"15:05:00"},{"day":"wednesday","name":"mincha","time":"15:05:00"},{"day":"thursday","name":"mincha","time":"15:05:00"},{"day":"tuesday","name":"shachrit","time":"07:00:00"},{"day":"wednesday","name":"shachrit","time":"07:00:00"},{"day":"friday","name":"shachrit","time":"07:00:00"},{"day":"tuesday","name":"shachrit","time":"06:25:00"},{"day":"wednesday","name":"shachrit","time":"06:25:00"},{"day":"friday","name":"shachrit","time":"06:25:00"},{"day":"saturday","name":"shachrit","time":"08:45:00"},{"day":"tuesday","name":"shachrit","time":"08:00:00"},{"day":"wednesday","name":"shachrit","time":"08:00:00"},{"day":"friday","name":"shachrit","time":"08:00:00"}],"name":"JEC Adath Israel\/North Avenue shul","nosach":"Multiple","parking":null,"sefer-tora":null,"wheelchair-accessible":null}]}
+
+            //https://stackoverflow.com/questions/36291420/parsing-json-data-into-model-objects-in-java
+            @Override
+            public String processReceivedData(JSONObject jsObj) {
+                Log.d("json_subtree", "processReceivedData");
+                JSONArray _synagoges = null;
+                try {
+                    _synagoges = jsObj.getJSONArray("synagogues");
+                    List<Synagogue> listCourses = new ArrayList<Synagogue>();
+                    List<JSONObject> listObjs = parseJsonData(jsObj,"teachers");
+                    for (JSONObject c: listObjs) {
+                        Synagogue s = new Synagogue();
+                        s.setName(c.getString("name"));
+                        s.setAddress(c.getString("address"));
+                       // s.s
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+
+                //parser json
+                return null;
+            }
+
+            @Override
+            public boolean executeCommands(String processedData) {
+                Log.d("json_subtree", "executeCommands");
+                if (processedData == "Done") {
+                    int i = 0;
+                    for (Synagogue synagogue : synagogues) {
+                        getDistance(synagogue.getGeo().latitude, synagogue.getGeo().longitude,
+                                mLastLocation.getLatitude(), mLastLocation.getLongitude(), i);
+                        i++;
+                    }
+
+                    updateAdapter();
+                    return true;
+                }
+                return false;
+            }
+        };
+        cjsobj.setmJsonRequestHandler(analyzer);
+        cjsobj.addToRequestQueue(VolleyRequestQueueSingleton.getInstance(getContext()));
+       */
+
         synagogues = SynagougeFictiveData.getFictiveSynagouges(location);
-        int i=0;
-        for( Synagogue synagogue :synagogues){
-            getDistance(synagogue.getGeo().latitude,synagogue.getGeo().longitude,
-                    mLastLocation.getLatitude(),mLastLocation.getLongitude(),i);
-            i++;
+        updateAdapter();
+
+
+
+    }
+
+    public static List<JSONObject> parseJsonData(JSONObject obj, String pattern)throws JSONException {
+
+        List<JSONObject> listObjs = new ArrayList<JSONObject>();
+        JSONArray geodata = obj.getJSONArray (pattern);
+        for (int i = 0; i < geodata.length(); ++i) {
+            final JSONObject site = geodata.getJSONObject(i);
+            listObjs.add(site);
         }
+        return listObjs;
     }
 
     private void updateAdapter() {
@@ -382,7 +470,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
         });
         updateMarkers();
 
-        final SynagogueAdapter adapter = new SynagogueAdapter(synagogues,getContext());
+        adapter = new SynagogueAdapter(synagogues, getContext());
         adapter.setMyClickListener(new SynagogueAdapter.SynagogueClickListener() {
             @Override
             public void onItemClick(int position) {
@@ -417,6 +505,8 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
             }
         });
         mRecyclerView.setAdapter(adapter);
+
+
     }
 
     public void updateMarkers() {
@@ -439,8 +529,9 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
             synagoguesMarkers.add(m);
         }
     }
-    private Date getCurrentMinyan(ArrayList<Minyan> myMinyans){
-        Date now=new Date();
+
+    private Date getCurrentMinyan(ArrayList<Minyan> myMinyans) {
+        Date now = new Date();
         Collections.sort(myMinyans, new Comparator<Minyan>() {
             public int compare(Minyan o1, Minyan o2) {
                 Date date1 = o1.getTime().toDate(WeekDay.values()[new Date().getDay()]);
@@ -468,10 +559,12 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public boolean onMarkerClick(Marker marker) {
         marker.showInfoWindow();
-        int i=0;
+        int i = 0;
         for (Marker marker1 : synagoguesMarkers) {
-            if (marker1.getPosition() == marker.getPosition()) {
+            if (marker1.getPosition().equals(marker.getPosition())) {
                 //TODO select the current item in the list
+                mRecyclerView.getLayoutManager().scrollToPosition(i);
+
                 return false;
             }
             i++;
@@ -550,7 +643,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
                 checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        if(mGoogleApiClient==null)
+        if (mGoogleApiClient == null)
             return;
         mLastLocation = LocationServices.FusedLocationApi
                 .getLastLocation(mGoogleApiClient);
@@ -559,10 +652,10 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
             double latitude = mLastLocation.getLatitude();
             double longitude = mLastLocation.getLongitude();
             updateCurrentLocation(new LatLng(latitude, longitude));
-            mRequestingLocationUpdates=false;
+            mRequestingLocationUpdates = false;
 
         } else {
-            mRequestingLocationUpdates=true;
+            mRequestingLocationUpdates = true;
             startLocationUpdates();
         }
     }
@@ -609,9 +702,9 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-           return;
+            return;
         }
-        if(mGoogleApiClient==null || !mGoogleApiClient.isConnected())
+        if (mGoogleApiClient == null || !mGoogleApiClient.isConnected())
             return;
         LocationServices.FusedLocationApi
                 .requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
@@ -622,7 +715,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
      * Stopping location updates
      */
     protected void stopLocationUpdates() {
-        if(mGoogleApiClient==null || !mGoogleApiClient.isConnected())
+        if (mGoogleApiClient == null || !mGoogleApiClient.isConnected())
             return;
         LocationServices.FusedLocationApi.removeLocationUpdates(
                 mGoogleApiClient, this);

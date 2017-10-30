@@ -5,27 +5,54 @@
     android:layout_height="match_parent"
     tools:context="com.app.minyaneto_android.fragments.main_screen_fragments.MainScreenFragment">
 
-    <com.app.minyaneto_android.dynamic_height_ratio_layout.DynamicHeightRatioLayout
+    <!-- <com.app.minyaneto_android.dynamic_height_ratio_layout.DynamicHeightRatioLayout
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:orientation="vertical"
+         map:navHeight="15dp"
+         map:navColor="@color/colorPrimary">
+
+         <fragment
+             android:id="@+id/main_map"
+             android:name="com.google.android.gms.maps.SupportMapFragment"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"/>
+
+         <android.support.v7.widget.RecyclerView
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:gravity="center"
+
+             android:id="@+id/recycler"/>
+
+
+     </com.app.minyaneto_android.dynamic_height_ratio_layout.DynamicHeightRatioLayout>
+     -->
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        map:navHeight="15dp"
-        map:navColor="@color/colorPrimary">
+        android:orientation="vertical">
 
         <fragment
             android:id="@+id/main_map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="10px"
+            android:background="@color/colorPrimary" />
 
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-
-            android:id="@+id/recycler"/>
-
-
-    </com.app.minyaneto_android.dynamic_height_ratio_layout.DynamicHeightRatioLayout>
+            android:layout_weight="1"
+            android:gravity="center" />
+        
+    </LinearLayout>
 
 </FrameLayout>
