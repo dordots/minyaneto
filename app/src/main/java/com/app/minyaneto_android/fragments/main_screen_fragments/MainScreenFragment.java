@@ -2,6 +2,7 @@ package com.app.minyaneto_android.fragments.main_screen_fragments;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -121,6 +122,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
     private double lastZoom = -1;
     private LatLng lastLatLng = null;
     private static MainScreenFragment _instance;
+    ProgressDialog progress;
 
     public interface ChangeFragment {
         void OnChangeFragment(Fragment fragment);
@@ -166,7 +168,6 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
             buildGoogleApiClient();
             createLocationRequest();
         }
-
     }
 
     @Override
@@ -371,7 +372,11 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void updateSynagogues(final LatLng location) {
-        /*String url = "http://minyaneto.startach.com/v1/synagogues/?top_left=42.0000000,-72.0000000&bottom_right=40.0000000,-74.0000000";
+        progress = new ProgressDialog(getContext());
+        progress.setMessage(getResources().getString(R.string.wait));
+        ///0progress.setCancelable(false);
+        progress.show();
+        String url = "http://minyaneto.startach.com/v1/synagogues/?top_left=42.0000000,-72.0000000&bottom_right=40.0000000,-74.0000000";
         CustomJSONObjectRequest<String> cjsobj = new CustomJSONObjectRequest<String>(Request.Method.GET, url, null);
 
         JSONObjectRequestHandlerInterface<String> analyzer = new JSONObjectRequestHandlerInterface<String>() {
@@ -398,24 +403,23 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
             @Override
             public String processReceivedData(JSONObject jsObj) {
                 Log.d("json_subtree", "processReceivedData");
-                JSONArray _synagoges = null;
+                List<Synagogue> _synagoges = new ArrayList<>();
                 try {
-                    _synagoges = jsObj.getJSONArray("synagogues");
-                    List<Synagogue> listCourses = new ArrayList<Synagogue>();
-                    List<JSONObject> listObjs = parseJsonData(jsObj,"teachers");
-                    for (JSONObject c: listObjs) {
-                        Synagogue s = new Synagogue();
+
+                    List<JSONObject> listObjs = parseJsonData(jsObj, "synagogues");
+                    for (JSONObject obj : listObjs) {
+                        /*Synagogue s = new Synagogue();
                         s.setName(c.getString("name"));
                         s.setAddress(c.getString("address"));
-                       // s.s
+                       */
+                        _synagoges.add((Synagogue) GenericJsonParser.fromJson(obj.toString(),
+                                Synagogue.class));
+
                     }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-
-
                 //parser json
                 return null;
             }
@@ -430,7 +434,6 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
                                 mLastLocation.getLatitude(), mLastLocation.getLongitude(), i);
                         i++;
                     }
-
                     updateAdapter();
                     return true;
                 }
@@ -439,19 +442,15 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
         };
         cjsobj.setmJsonRequestHandler(analyzer);
         cjsobj.addToRequestQueue(VolleyRequestQueueSingleton.getInstance(getContext()));
-       */
-
         synagogues = SynagougeFictiveData.getFictiveSynagouges(location);
         updateAdapter();
 
-
-
     }
 
-    public static List<JSONObject> parseJsonData(JSONObject obj, String pattern)throws JSONException {
+    public static List<JSONObject> parseJsonData(JSONObject obj, String pattern) throws JSONException {
 
         List<JSONObject> listObjs = new ArrayList<JSONObject>();
-        JSONArray geodata = obj.getJSONArray (pattern);
+        JSONArray geodata = obj.getJSONArray(pattern);
         for (int i = 0; i < geodata.length(); ++i) {
             final JSONObject site = geodata.getJSONObject(i);
             listObjs.add(site);
@@ -505,7 +504,10 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
             }
         });
         mRecyclerView.setAdapter(adapter);
-
+        if (progress != null) {
+            progress.dismiss();
+            progress = null;
+        }
 
     }
 
@@ -564,7 +566,6 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
             if (marker1.getPosition().equals(marker.getPosition())) {
                 //TODO select the current item in the list
                 mRecyclerView.getLayoutManager().scrollToPosition(i);
-
                 return false;
             }
             i++;

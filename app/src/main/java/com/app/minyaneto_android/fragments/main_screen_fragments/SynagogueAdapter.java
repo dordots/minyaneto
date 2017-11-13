@@ -37,6 +37,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
     private  int row_index=-1;
     private Context context;
 
+
     public interface SynagogueClickListener {
         void onItemClick(int position);
 
@@ -73,7 +74,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
         holder.nameTextView.setText(synagogue.getName());
         holder.walkingTime.setText(synagogue.getWalking_time()+"");
         holder.drivigTime.setText(synagogue.getDriving_time()+"");
-        holder.menu.setOnClickListener(new View.OnClickListener() {
+       /* holder.menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
@@ -109,6 +110,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
                 }
             }
         });
+        */
         if (synagogue.getMinyans().size() > 0) {
             //TODO real time from minyans
             holder.prayerTimeTextView.setText(getTime(position));
@@ -144,7 +146,8 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
         TextView drivigTime;
         TextView walkingTime;
         LinearLayout row_linearlayout;
-        ImageView menu;
+        ImageView go;
+        ImageView details;
 
 
         public SynagogueViewHolder(View itemView) {
@@ -155,7 +158,10 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
             row_linearlayout=(LinearLayout)itemView.findViewById(R.id.row_linrLayout);
             drivigTime=(TextView)itemView.findViewById(R.id.synagogue_driving_time);
             walkingTime=(TextView)itemView.findViewById(R.id.synagogue_walking_time);
-            menu=(ImageView)itemView.findViewById(R.id.tfila_menu) ;
+            //menu=(ImageView)itemView.findViewById(R.id.tfila_menu) ;
+            go=(ImageView)itemView.findViewById(R.id.go_waze) ;
+            details=(ImageView)itemView.findViewById(R.id.synagogue_details) ;
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -163,6 +169,21 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
                     if (myClickListener != null)
                         myClickListener.onItemClick(getAdapterPosition());
                     notifyDataSetChanged();
+                }
+            });
+
+            go.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (myClickListener != null)
+                        myClickListener.onGoToWazeClick(getAdapterPosition());
+                }
+            });
+            details.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (myClickListener != null)
+                        myClickListener.onShowDetailsClick(getAdapterPosition());
                 }
             });
         }

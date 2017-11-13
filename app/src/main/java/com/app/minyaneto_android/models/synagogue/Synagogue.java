@@ -19,6 +19,7 @@ import java.util.Date;
 
 public class Synagogue {
     private String id;
+
     private String address;
     private String comments;
     private String name;

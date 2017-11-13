@@ -18,7 +18,6 @@ public class Minyan {
     private ArrayList<PrayDayType> prayDayTypeArray;
     private Date lastUpdate;
 
-
     public Minyan() {}
 
     public Minyan(PrayType prayType, Time time, PrayDayType ... prayDayType) {
