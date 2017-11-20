@@ -14,8 +14,23 @@ public enum PrayType {
 
     private int stringId;
 
-    PrayType(int stringId){
+    PrayType(int stringId) {
         this.stringId = stringId;
+    }
+
+    public static PrayType getType(String string) throws Exception {
+        switch (string) {
+            case "shachrit":
+            case "shacharit":
+            case "shaharit":
+            case "שחרית":
+                return PrayType.MORNING;
+            case "mincha":
+            case "minha":
+            case "מנחה":
+                return PrayType.AFTER_NOON;
+        }
+        throw new Exception(string);
     }
 
     @Override

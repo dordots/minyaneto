@@ -37,7 +37,7 @@ public class MinyanAdapter extends RecyclerView.Adapter<MinyanAdapter.MinyanView
         Minyan minyan = minyans.get(position);
         holder.prayTypeTextView.setText(minyan.getPrayType().toString());
         holder.prayerTimeTextView.setText(minyan.getTime().getHour()+":"+minyan.getTime().getMinutes());
-        holder.prayDayTypeTextView.setText(Arrays.toString(minyan.getPrayDayTypeArray().toArray()));
+        holder.prayDayTypeTextView.setText(minyan.getPrayDayType().toString());
     }
 
 

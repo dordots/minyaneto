@@ -130,7 +130,9 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
         SimpleDateFormat format =  new SimpleDateFormat("HH:mm");
         String result="";
         for (Minyan minyan: synagogue.getMinyans()){
-            result=" ,"+format.format(minyan.getTime().toDate(WeekDay.values()[new Date().getDay()]))+result;
+            Date f=minyan.getTime().toDate(WeekDay.values()[minyan.getPrayDayType().ordinal()]);
+            if(f.after(new Date()))
+                result=" ,"+format.format(f)+result;
         }
         //TODO return time in good format
         //TODO choose the best time from all minyans

@@ -1,5 +1,6 @@
 package com.app.minyaneto_android.models.synagogue;
 
+import com.app.minyaneto_android.models.client.HelpJsonParser;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -14,8 +15,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Synagogue {
     private String id;
@@ -36,7 +39,7 @@ public class Synagogue {
 
     public Synagogue(String address, String comments, String name, LatLng geo, String nosach, boolean classes,
                      boolean parking, boolean sefer_tora, boolean wheelchair_accessible,
-                     int driving_time, int walking_time, Date d) {
+                     int driving_time, int walking_time) {
         this.address = address;
         this.comments = comments;
         this.name = name;
@@ -47,8 +50,32 @@ public class Synagogue {
         this.sefer_tora = sefer_tora;
         this.wheelchair_accessible = wheelchair_accessible;
         this.minyans = new ArrayList<>();
-        this.driving_time=driving_time;
-        this.walking_time=walking_time;
+        this.driving_time = driving_time;
+        this.walking_time = walking_time;
+    }
+
+    public Synagogue(JSONObject object) throws JSONException {
+        this.address = object.getString("address");
+        this.name = object.getString("name");
+        this.classes = object.getString("classes") == "true" ? true : false;
+        this.comments = object.getString("comments");
+        this.wheelchair_accessible = object.getString("wheelchair-accessible") == "true" ? true : false;
+        this.nosach = object.getString("nosach");
+        this.sefer_tora = object.getString("sefer-tora") == "true" ? true : false;
+        this.parking = object.getString("parking") == "true" ? true : false;
+        this.geo = new LatLng(object.getJSONObject("geo").getDouble("lat"), object.getJSONObject("geo").getDouble("lon"));
+
+        this.minyans = new ArrayList<>();
+        List<JSONObject> listObjs = HelpJsonParser.parseJsonData(object, "minyans");
+        for (JSONObject ob : listObjs) {
+            try {
+                this.minyans.add(new Minyan(ob));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public Synagogue() {

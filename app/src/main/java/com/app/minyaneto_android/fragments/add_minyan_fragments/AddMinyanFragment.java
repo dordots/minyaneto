@@ -148,9 +148,10 @@ public class AddMinyanFragment extends Fragment {
         Minyan minyan = new Minyan();
         minyan.setPrayType((PrayType) spinnerPrayType.getSelectedItem());
         minyan.setTime(time);
-        minyan.setPrayDayTypeArray(days);
+        //TODO sent new minyan to server for all the days
+        minyan.setPrayDayType(days.get(0));
 
-        //TODO add  mintan to server
+        //TODO add  minyan to server
 
         //TODO return to back fragment
         // getActivity().onBackPressed();

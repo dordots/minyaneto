@@ -3,6 +3,11 @@ package com.app.minyaneto_android.models.minyan;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.acivities.MainActivity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -15,16 +20,32 @@ public class Minyan {
     private String id;
     private PrayType prayType;
     private Time time;
-    private ArrayList<PrayDayType> prayDayTypeArray;
+    private PrayDayType prayDayType;
     private Date lastUpdate;
 
-    public Minyan() {}
+    public Minyan() {
+    }
 
-    public Minyan(PrayType prayType, Time time, PrayDayType ... prayDayType) {
+    public Minyan(PrayType prayType, Time time, PrayDayType prayDayType) {
         this.prayType = prayType;
         this.time = time;
-        this.prayDayTypeArray = new ArrayList<>();
-        setPrayDayTypeArray(prayDayType);
+        this.prayDayType = prayDayType;
+    }
+
+    public Minyan(JSONObject object) throws JSONException, ParseException ,Exception{
+
+            this.prayType=PrayType.getType(object.getString("name"));
+            this.prayDayType=PrayDayType.getType(object.getString("day"));
+            String m_time=object.getString("time");
+            if(m_time.split(":").length>1) {
+                SimpleDateFormat format =  new SimpleDateFormat("HH:mm");
+
+                this.time = new ExactTime(format.parse(m_time).getHours(),format.parse(m_time).getMinutes());
+            }
+            else
+            {
+                this.time=new RelativeTime(RelativeTimeType.valueOf(m_time.split(" ")[0]), Integer.parseInt(m_time.split(" ")[1], 0));
+            }
     }
 
     public String getId() {
@@ -51,17 +72,20 @@ public class Minyan {
         this.time = time;
     }
 
-    public ArrayList<PrayDayType> getPrayDayTypeArray() {
-        return prayDayTypeArray;
+    public PrayDayType getPrayDayType() {
+        return prayDayType;
     }
 
-    public void setPrayDayTypeArray(ArrayList<PrayDayType> prayDayTypeArray) {
-        this.prayDayTypeArray = prayDayTypeArray;
+    public void setPrayDayType(PrayDayType prayDayType) {
+        this.prayDayType = prayDayType;
     }
 
-    public void setPrayDayTypeArray(PrayDayType ... prayDayTypeArray) {
-        if (prayDayTypeArray.length > 0)
-            this.prayDayTypeArray = new ArrayList<>(Arrays.asList(prayDayTypeArray));
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     @Override
@@ -71,15 +95,15 @@ public class Minyan {
 
         String nounPray = MainActivity.resources.getString(R.string.nouns_pray);
         String nounInDays =
-                MainActivity.resources.getQuantityString(R.plurals.nouns_in_days, prayDayTypeArray.size());
-        StringBuilder days = new StringBuilder();
-        for(PrayDayType pdt : prayDayTypeArray){
-            days.append(pdt + ", ");
-        }
-        days.delete(days.length()-2, days.length());
+                MainActivity.resources.getQuantityString(R.plurals.nouns_in_days, 1);
+//        StringBuilder days = new StringBuilder();
+//        for (PrayDayType pdt : prayDayTypeArray) {
+//            days.append(pdt + ", ");
+//        }
+//        days.delete(days.length() - 2, days.length());
 
         return String.format("%s %s %s %s %s", nounPray, prayType.toString(),
-                nounInDays, days.toString(), time.toString());
+                nounInDays, prayDayType.toString(), time.toString());
     }
 
     @Override
@@ -92,7 +116,7 @@ public class Minyan {
         if (id != null ? !id.equals(minyan.id) : minyan.id != null) return false;
         if (prayType != minyan.prayType) return false;
         if (!time.equals(minyan.time)) return false;
-        return prayDayTypeArray.equals(minyan.prayDayTypeArray);
+        return prayDayType.equals(minyan.prayDayType);
 
     }
 
@@ -101,7 +125,7 @@ public class Minyan {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + prayType.hashCode();
         result = 31 * result + time.hashCode();
-        result = 31 * result + prayDayTypeArray.hashCode();
+        result = 31 * result + prayDayType.hashCode();
         return result;
     }
 

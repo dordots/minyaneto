@@ -3,6 +3,8 @@ package com.app.minyaneto_android.models.minyan;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.acivities.MainActivity;
 
+import java.util.IllegalFormatException;
+
 /**
  * Created by משה on 25/08/2017.
  */
@@ -19,6 +21,32 @@ public enum PrayDayType{
     ROSH_CHODESH(R.string.pray_day_type_rh);
 
     private int stringId;
+    public static PrayDayType getType(String str) throws Exception {
+        switch (str){
+            case "sunday":
+            case "ראשון":
+                return SUNDAY;
+            case "monday":
+            case "שני":
+                return MONDAY;
+            case "tuesday":
+            case "שלישי":
+                return TUESDAY;
+            case "wednesday":
+            case "רביעי":
+                return WEDNESDAY;
+            case "thursday":
+            case "חמישי":
+                return THURSDAY;
+            case "friday":
+            case "שישי":
+                return FRIDAY;
+            case "saturday":
+            case "שבת":
+                return SATURDAY;
+        }
+        throw new Exception(str);
+    }
 
     PrayDayType(int stringId){
         this.stringId = stringId;
