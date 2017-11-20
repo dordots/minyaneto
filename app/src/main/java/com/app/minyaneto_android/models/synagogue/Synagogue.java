@@ -56,6 +56,7 @@ public class Synagogue {
 
     public Synagogue(JSONObject object) throws JSONException {
         this.address = object.getString("address");
+        this.id= object.getString("id");
         this.name = object.getString("name");
         this.classes = object.getString("classes") == "true" ? true : false;
         this.comments = object.getString("comments");

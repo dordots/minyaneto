@@ -25,33 +25,18 @@
 
 
             <EditText
+                android:id="@+id/add_synagogoe_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/enter_address_synagogue" />
+
+            <EditText
                 android:id="@+id/add_synagogoe_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
                 android:hint="@string/enter_name_synagogue" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="1">
-
-                <TextView
-                    android:id="@+id/add_synagogoe_address"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.84"
-                    android:hint="@string/enter_address_synagogue" />
-
-                <Button
-                    android:id="@+id/getPlaceBtn"
-                    android:layout_width="wrap_content"
-
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.21"
-                    android:text="@string/choose_address_synagogue" />
-            </LinearLayout>
 
             <EditText
                 android:id="@+id/add_synagogue_comments"
