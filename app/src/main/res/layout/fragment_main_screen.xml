@@ -12,6 +12,7 @@
         map:navHeight="15dp"
         map:navColor="@color/colorPrimary">
 
+        
         <fragment
             android:id="@+id/main_map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
