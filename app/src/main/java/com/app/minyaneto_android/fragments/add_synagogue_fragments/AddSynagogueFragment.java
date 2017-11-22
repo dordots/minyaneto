@@ -126,7 +126,7 @@ public class AddSynagogueFragment extends android.support.v4.app.Fragment implem
             public void onClick(View v) {
                 try {
                     Intent intent =
-                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
                                     .build(getActivity());
                     startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
                 } catch (GooglePlayServicesRepairableException e) {
@@ -237,11 +237,11 @@ public class AddSynagogueFragment extends android.support.v4.app.Fragment implem
                         }
                     }
                 });
-        mMap.getUiSettings().setScrollGesturesEnabled(false);
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setScrollGesturesEnabled(true);
     }
 
     private void changeMarker(LatLng loc) {
-        mMap.getUiSettings().setScrollGesturesEnabled(true);
         Marker _marker = mMap.addMarker(new MarkerOptions()
                 .position(loc)
                 .draggable(true)
@@ -252,7 +252,6 @@ public class AddSynagogueFragment extends android.support.v4.app.Fragment implem
                 .tilt(30)                   // Sets the tilt of the camera to 30 degrees
                 .build();                   // Creates a CameraPosition from the builder
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        mMap.getUiSettings().setScrollGesturesEnabled(false);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 15));
         setMarker(_marker);
     }

@@ -239,11 +239,12 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
 
         handleLocationSetting();
     }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setOnMarkerClickListener(this);
-        latLngBounds= googleMap.getProjection().getVisibleRegion().latLngBounds;
+        latLngBounds = googleMap.getProjection().getVisibleRegion().latLngBounds;
         mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
 
             @Override
@@ -382,6 +383,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
     List<Synagogue> _synagogues = new ArrayList<>();
 
     private void updateSynagogues(final LatLng location) {
+
         progress = new ProgressDialog(getContext());
         progress.setMessage(getResources().getString(R.string.wait));
         progress.setCancelable(false);
@@ -395,8 +397,8 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
 //        latLngBounds.northeast;
 //        latLngBounds.southwest;
 
-        String url = "http://minyaneto.startach.com/v1/synagogues/?max_hits=20&top_left="+33.2326675+","+34.0780113+
-                "&bottom_right="+29.3842887+","+35.8924053;
+        String url = "http://minyaneto.startach.com/v1/synagogues/?max_hits=20&top_left=" + 33.2326675 + "," + 34.0780113 +
+                "&bottom_right=" + 29.3842887 + "," + 35.8924053;
         CustomJSONObjectRequest<String> cjsobj = new CustomJSONObjectRequest<String>(Request.Method.GET, url, null);
 
         JSONObjectRequestHandlerInterface<String> analyzer = new JSONObjectRequestHandlerInterface<String>() {
@@ -420,8 +422,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
                     for (JSONObject obj : listObjs) {
                         try {
                             _synagogues.add(new Synagogue(obj));
-                        }
-                        catch (JSONException e){
+                        } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
@@ -441,7 +442,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
                         getDistance(synagogue.getGeo().latitude, synagogue.getGeo().longitude,
                                 mLastLocation.getLatitude(), mLastLocation.getLongitude(), i);
                         i++;
-                        if(i==3)
+                        if (i == 3)
                             continue;
                     }
                     synagogues = _synagogues;
@@ -455,6 +456,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
         cjsobj.addToRequestQueue(VolleyRequestQueueSingleton.getInstance(getContext()));
         //synagogues = SynagougeFictiveData.getFictiveSynagouges(location);
         //updateAdapter();
+
 
     }
 
@@ -593,14 +595,14 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
                     JSONObject steps = legs.getJSONObject(0);
                     JSONObject distance = steps.getJSONObject("distance");
                     final String parsedDistance = distance.getString("text");
-                    final String time=steps.getJSONObject("duration").getString("text");
+                    final String time = steps.getJSONObject("duration").getString("text");
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
                             synagogues.get(index).setDistanceFromLocation(1000 * Double.parseDouble(parsedDistance
                                     .split(" ")[0]));
                             synagogues.get(index).setDriving_time(1); //TODO real time
-                            if (index == 3){ //synagogues.size() - 1) {
+                            if (index == 3) { //synagogues.size() - 1) {
                                 updateAdapter();
                             }
                         }
