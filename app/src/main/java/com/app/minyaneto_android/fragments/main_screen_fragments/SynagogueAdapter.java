@@ -190,4 +190,6 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
             });
         }
     }
+
+
 }

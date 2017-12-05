@@ -565,6 +565,8 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
             if (marker1.getPosition().equals(marker.getPosition())) {
                 //TODO select the current item in the list
                 mRecyclerView.getLayoutManager().scrollToPosition(i);
+
+
                 return false;
             }
             i++;
