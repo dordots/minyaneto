@@ -1,15 +1,13 @@
 package com.app.minyaneto_android.models.minyan;
 
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.acivities.MainActivity;
+import com.app.minyaneto_android.ui.acivities.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 /**

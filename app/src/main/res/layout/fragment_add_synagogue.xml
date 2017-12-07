@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.app.minyaneto_android.fragments.add_synagogue_fragments.AddSynagogueFragment">
+    tools:context=".ui.fragments.add_synagogue_fragments.AddSynagogueFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

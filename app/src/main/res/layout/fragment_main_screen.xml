@@ -1,33 +1,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.app.minyaneto_android.fragments.main_screen_fragments.MainScreenFragment">
-
-    <!-- <com.app.minyaneto_android.dynamic_height_ratio_layout.DynamicHeightRatioLayout
-         android:layout_width="match_parent"
-         android:layout_height="match_parent"
-         android:orientation="vertical"
-         map:navHeight="15dp"
-         map:navColor="@color/colorPrimary">
-
-         <fragment
-             android:id="@+id/main_map"
-             android:name="com.google.android.gms.maps.SupportMapFragment"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"/>
-
-         <android.support.v7.widget.RecyclerView
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:gravity="center"
-
-             android:id="@+id/recycler"/>
-
-
-     </com.app.minyaneto_android.dynamic_height_ratio_layout.DynamicHeightRatioLayout>
-     -->
+    tools:context=".ui.fragments.main_screen_fragments.MainScreenFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

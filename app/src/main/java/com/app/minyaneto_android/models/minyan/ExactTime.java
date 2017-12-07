@@ -1,7 +1,7 @@
 package com.app.minyaneto_android.models.minyan;
 
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.acivities.MainActivity;
+import com.app.minyaneto_android.ui.acivities.MainActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

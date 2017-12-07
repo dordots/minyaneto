@@ -1,4 +1,4 @@
-package com.app.minyaneto_android.fragments.synagogue_details_fragments;
+package com.app.minyaneto_android.ui.fragments.synagogue_details_fragments;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.models.minyan.Minyan;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class MinyanAdapter extends RecyclerView.Adapter<MinyanAdapter.MinyanViewHolder> {

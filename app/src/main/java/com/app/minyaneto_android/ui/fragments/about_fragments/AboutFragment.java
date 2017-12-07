@@ -1,4 +1,4 @@
-package com.app.minyaneto_android.fragments.about_fragments;
+package com.app.minyaneto_android.ui.fragments.about_fragments;
 
 
 import android.os.Bundle;
@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.acivities.MainActivity;
+import com.app.minyaneto_android.ui.acivities.MainActivity;
 
 public class AboutFragment extends Fragment {
 

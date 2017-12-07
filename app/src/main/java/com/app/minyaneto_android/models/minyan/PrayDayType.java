@@ -1,9 +1,7 @@
 package com.app.minyaneto_android.models.minyan;
 
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.acivities.MainActivity;
-
-import java.util.IllegalFormatException;
+import com.app.minyaneto_android.ui.acivities.MainActivity;
 
 /**
  * Created by משה on 25/08/2017.

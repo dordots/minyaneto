@@ -1,8 +1,6 @@
 package com.app.minyaneto_android.restApi;
 
 
-
-
 /**
  * class to contain all the url's for the app
  * <p/>
@@ -21,5 +19,12 @@ public class URL {
     public static String getUser(int id) {
 
         return getUrlOrders() + "/" + id;
+    }
+
+    public static String getDistanceUrl(double lat1, double lon1, double lat2, double lon2) {
+
+        return "http://maps.googleapis.com/maps/api/directions/" +
+                "json?origin=" + lat1 + "," + lon1 + "&destination=" + lat2 + "," + lon2
+                + "&sensor=false&units=metric&mode=driving";
     }
 }

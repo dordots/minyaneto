@@ -1,32 +1,22 @@
-package com.app.minyaneto_android.fragments.main_screen_fragments;
+package com.app.minyaneto_android.ui.fragments.main_screen_fragments;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.provider.ContactsContract;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.models.minyan.Minyan;
-import com.app.minyaneto_android.models.minyan.Time;
 import com.app.minyaneto_android.models.minyan.WeekDay;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
-import com.google.android.gms.maps.model.LatLng;
 
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.app.minyaneto_android.fragments.add_synagogue_fragments;
+package com.app.minyaneto_android.ui.fragments.add_synagogue_fragments;
 
 import android.Manifest;
 import android.app.Activity;
@@ -20,10 +20,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.acivities.MainActivity;
+import com.app.minyaneto_android.ui.acivities.MainActivity;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;

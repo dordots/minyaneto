@@ -6,6 +6,7 @@ import android.util.Log;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.app.minyaneto_android.models.geo.Geocoded;
 import com.app.minyaneto_android.models.minyan.Minyan;
 
 import ravtech.co.il.httpclient.AppQueue;
@@ -67,4 +68,21 @@ public class RequestHelper {
     }
 
 
+    public static void getDistance(Context context, double lat1, double lon1, double lat2, double lon2,
+                                   Response.Listener<Geocoded> responseListener, Response.ErrorListener errorResponse) {
+
+        GenericRequest<Geocoded> request = new GenericRequest<Geocoded>(
+                Request.Method.POST,
+                URL.getDistanceUrl(lat1,lon1,lat2,lon2),
+                Geocoded.class,
+                "",
+                responseListener,
+                errorResponse
+        );
+
+
+        setRetryPolicy(request);
+
+        AppQueue.getInstance(context).addToRequestQueue(request);
+    }
 }

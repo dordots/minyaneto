@@ -128,4 +128,27 @@
     <string name="show_synagogue_details">פרטים נוספים</string>
     <string name="go_there">נווט</string>
     <string name="wait">אנא המתן...</string>
+    <string name="click_back_again">לחץ שוב ליציאה מהאפליקציה</string>
+
+
+    <!-- permission massage -->
+    <string name="storage_permission_toast">Storage permission needed. Please allow in App Settings for additional functionality.</string>
+    <string name="location_permission_toast">Location permission needed. Please allow in App Settings for additional functionality.</string>
+    <string name="camera_permission_toast">Camera permission needed. Please allow in App Settings for additional functionality.</string>
+
+    <!-- Alerts -->
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="message_alert_no_interner">For this action internet required</string>
+    <string name="open_internet_settings">Settings</string>
+    <string name="select_settings" />
+    <string name="cancel">Cancel</string>
+    <string name="close_app">Close App</string>
+    <string name="prmission" />
+    <string name="ok">OK</string>
+    <string name="no_gps_connection" />
+    <string name="message_alert_no_gps" >For use with this app the GPS is required</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

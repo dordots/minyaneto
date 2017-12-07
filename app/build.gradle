@@ -2,25 +2,29 @@ apply plugin: 'com.android.application'
 
 repositories {
     mavenCentral()
+    maven {
+        url 'https://maven.google.com/'
+        name 'Google'
+    }
 }
 
 def downloadJarsToLibs(fileName, url) {
     def f = new File('app\\libs\\' + fileName)
     if (!f.exists()) {
-        new URL(url).withInputStream{ i -> f.withOutputStream{ it << i }}
+        new URL(url).withInputStream { i -> f.withOutputStream { it << i } }
     }
 }
 
-task downloadHostedJars(){
+task downloadHostedJars() {
     new File("app/libs").mkdirs();
-    def jars = ['zmanim-1.4.0alpha.jar':'https://github.com/KosherJava/zmanim/raw/master/lib/zmanim-1.4.0alpha.jar'
-               ]
-    jars.each{fn, url -> downloadJarsToLibs(fn, url)}
+    def jars = ['zmanim-1.4.0alpha.jar': 'https://github.com/KosherJava/zmanim/raw/master/lib/zmanim-1.4.0alpha.jar'
+    ]
+    jars.each { fn, url -> downloadJarsToLibs(fn, url) }
 }
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "26.0.0"
+    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.app.minyaneto_android"
         minSdkVersion 21
@@ -50,18 +54,18 @@ dependencies {
     //    })
     //    testCompile 'junit:junit:4.12'
 
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:appcompat-v7:25.4.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:support-v4:25.3.1'
-    compile 'com.android.support:cardview-v7:25.3.1'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'com.google.android.gms:play-services-location:11.0.4'
-    compile 'com.google.android.gms:play-services-maps:11.0.4'
-    compile 'com.google.android.gms:play-services-places:11.0.4'
+    compile 'com.android.support:design:25.4.0'
+    compile 'com.android.support:support-v4:25.4.0'
+    compile 'com.android.support:cardview-v7:25.4.0'
+    compile 'com.android.support:recyclerview-v7:25.4.0'
+    compile 'com.google.android.gms:play-services-location:11.6.2'
+    compile 'com.google.android.gms:play-services-maps:11.6.2'
+    compile 'com.google.android.gms:play-services-places:11.6.2'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'commons-io:commons-io:2.5'
-    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.google.code.gson:gson:2.8.1'
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.fasterxml.jackson.core:jackson-core:2.7.3'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.3'

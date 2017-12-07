@@ -1,4 +1,4 @@
-package com.app.minyaneto_android.fragments.main_screen_fragments;
+package com.app.minyaneto_android.ui.fragments.main_screen_fragments;
 
 import android.Manifest;
 import android.app.Activity;
@@ -25,21 +25,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.volley.Request;
-import com.app.minyaneto_android.acivities.MainActivity;
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.fragments.synagogue_details_fragments.SynagogueDetailsFragment;
+import com.app.minyaneto_android.ui.acivities.MainActivity;
+import com.app.minyaneto_android.ui.fragments.synagogue_details_fragments.SynagogueDetailsFragment;
 import com.app.minyaneto_android.models.client.CustomJSONObjectRequest;
-import com.app.minyaneto_android.models.client.GenericJsonParser;
 import com.app.minyaneto_android.models.client.HelpJsonParser;
 import com.app.minyaneto_android.models.client.JSONObjectRequestHandlerInterface;
-import com.app.minyaneto_android.models.client.ModelObject;
 import com.app.minyaneto_android.models.client.VolleyRequestQueueSingleton;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.minyan.WeekDay;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
-import com.app.minyaneto_android.utilities.SynagougeFictiveData;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -68,10 +63,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -85,8 +78,6 @@ import java.util.List;
 
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import static android.content.Context.LOCATION_SERVICE;
 

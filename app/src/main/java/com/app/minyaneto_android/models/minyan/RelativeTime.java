@@ -3,10 +3,9 @@ package com.app.minyaneto_android.models.minyan;
 import android.content.res.Resources;
 
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.acivities.MainActivity;
+import com.app.minyaneto_android.ui.acivities.MainActivity;
 
 import java.util.Date;
-import java.util.TimeZone;
 
 /**
  * Created by משה on 25/08/2017.
