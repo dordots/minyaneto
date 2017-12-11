@@ -1,6 +1,11 @@
 package zmanim;
 
+import android.arch.core.executor.testing.InstantTaskExecutorRule;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.location.Location;
+import android.location.LocationManager;
+import android.support.annotation.NonNull;
 
 import com.app.minyaneto_android.location.LocationProvider;
 import com.app.minyaneto_android.zmanim.ZmanimCalendarProvider;
@@ -11,8 +16,11 @@ import net.sourceforge.zmanim.ComplexZmanimCalendar;
 import net.sourceforge.zmanim.util.GeoLocation;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.robolectric.RobolectricTestRunner;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -20,12 +28,14 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
+@RunWith(RobolectricTestRunner.class)
 public class ZmanimPresenterTest {
+
+    @Rule
+    public InstantTaskExecutorRule instantExecutorRule = new InstantTaskExecutorRule();
 
     private ZmanimCalendarProvider calendarProvider;
     private LocationProvider locationProvider;
@@ -79,10 +89,17 @@ public class ZmanimPresenterTest {
         }
 
         @Override
-        public Location getLocation() {
-            Location location = mock(Location.class);
-            when(location.getLatitude()).thenReturn(31.768);
-            when(location.getLongitude()).thenReturn(35.214);
+        public LiveData<Location> getLocation() {
+            MutableLiveData<Location> data = new MutableLiveData<>();
+            data.postValue(getMockLocation());
+            return data;
+        }
+
+        @NonNull
+        private Location getMockLocation() {
+            Location location = new Location(LocationManager.GPS_PROVIDER);
+            location.setLatitude(31.768);
+            location.setLongitude(35.214);
             return location;
         }
     }
