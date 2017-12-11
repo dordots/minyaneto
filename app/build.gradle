@@ -32,21 +32,29 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
-//        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    productFlavors {
+        mock {
+            applicationIdSuffix = ".mock"
+        }
+        prod {
+
+        }
+    }
+
     packagingOptions {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
     }
 }
-
-
 
 dependencies {
     //    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -71,4 +79,9 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.7.3'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.3'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.7.3'
+    compile files('libs/zmanim-1.4.0alpha.jar')
+
+    testCompile 'junit:junit:4.12'
+    testCompile "org.mockito:mockito-all:$rootProject.ext.mockitoVersion"
+    testCompile "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
 }
