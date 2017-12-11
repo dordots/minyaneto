@@ -8,21 +8,17 @@ import java.util.TimeZone;
 
 public class AndroidLocationProvider implements LocationProvider {
 
-    private final double longitude;
-    private final double latitude;
     private final Context context;
+    private final Location location;
 
     public AndroidLocationProvider(Context context) {
         this.context = context;
         LocationManager lm = (LocationManager) this.context.getSystemService(Context.LOCATION_SERVICE);
-        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if (location != null) {
-            longitude = location.getLongitude();
-            latitude = location.getLatitude();
-        } else {
-            longitude = 35.214;
-            latitude = 31.768;
-        }
+        location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//        if (location == null) {
+//            longitude = (35.214);
+//            latitude = 31.768;
+//        }
     }
 
     @Override
@@ -31,12 +27,7 @@ public class AndroidLocationProvider implements LocationProvider {
     }
 
     @Override
-    public double getLatitude() {
-        return latitude;
-    }
-
-    @Override
-    public double getLongitude() {
-        return longitude;
+    public Location getLocation() {
+        return location;
     }
 }
