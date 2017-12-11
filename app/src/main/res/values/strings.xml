@@ -6,6 +6,7 @@
     <!-- menu -->
     <string name="sidebar_home">ראשי</string>
     <string name="sidebar_addSynagogue">הוסף בית כנסת</string>
+    <string name="sidebar_zmanim">זמני היום</string>
     <string name="sidebar_about">על סטארט-אח</string>
     <string name="actionbar_refresh_location">רענן מיקום</string>
 
@@ -128,4 +129,5 @@
     <string name="show_synagogue_details">פרטים נוספים</string>
     <string name="go_there">נווט</string>
     <string name="wait">אנא המתן...</string>
+    <string name="zmanim_fragment">זמני היום</string>
 </resources>

@@ -2,6 +2,7 @@ package com.app.minyaneto_android.acivities;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
@@ -13,8 +14,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +26,7 @@ import com.app.minyaneto_android.fragments.add_synagogue_fragments.AddSynagogueF
 import com.app.minyaneto_android.fragments.main_screen_fragments.MainScreenFragment;
 import com.app.minyaneto_android.fragments.synagogue_details_fragments.SynagogueDetailsFragment;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
+import com.app.minyaneto_android.zmanim.ZmanimFragment;
 
 import java.util.ArrayList;
 
@@ -40,24 +40,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
     private ArrayList<Fragment> liveFragments = new ArrayList<>();
     private boolean showRefreshButton = true;
-    private String fragmentTitle = "";
 
     private RefreshMapDataClickListener myRefreshMapDataClickListener;
-
-    public interface RefreshMapDataClickListener {
-        void onClickRefreshIcon();
-    }
-
-    public interface UpdateTitle {
-        String onFragmentChange();
-    }
-
-    public void setMyUpdateTitle(UpdateTitle myUpdateTitle) {
-        this.myUpdateTitle = myUpdateTitle;
-    }
-
-    private UpdateTitle myUpdateTitle;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     public void setActionBarTitle(String title) {
         getSupportActionBar().setTitle(title);
     }
-
 
     @Override
     public void onBackPressed() {
@@ -144,10 +127,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     private void updateTitle(Fragment fragment) {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
         drawer.closeDrawer(GravityCompat.START);
-        if (myUpdateTitle != null) {
-            fragmentTitle = myUpdateTitle.onFragmentChange();
-            invalidateOptionsMenu();
-        }
         if (fragment instanceof MainScreenFragment) {
             if (!showRefreshButton) {
                 showRefreshButton = true;
@@ -174,27 +153,26 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         if (id == R.id.sidebar_home) {
             MainScreenFragment.getInstance(this).checkPermissions(true);
             changeFragment(MainScreenFragment.getInstance(this));
-        } else {
-            if (id == R.id.sidebar_addSynagogue) {
-                changeFragment(AddSynagogueFragment.getInstance(new AddSynagogueFragment.OnSeccessAdd() {
-                    @Override
-                    public void OnSeccess(Synagogue synagogue) {
-                        changeFragment(SynagogueDetailsFragment.newInstance(synagogue,
-                                new SynagogueDetailsFragment.WantCahngeFragmentListener() {
-                                    @Override
-                                    public void onWantToAddAMinyan(Fragment fragment) {
-                                        changeFragment(fragment);
-                                    }
-                                }));
-                    }
-                }));
-            } else if (id == R.id.sidebar_about) {
-                changeFragment(AboutFragment.getInstance());
-            }
+        } else if (id == R.id.sidebar_addSynagogue) {
+            changeFragment(AddSynagogueFragment.getInstance(new AddSynagogueFragment.OnSuccessAdd() {
+                @Override
+                public void OnSuccess(Synagogue synagogue) {
+                    changeFragment(SynagogueDetailsFragment.newInstance(synagogue,
+                            new SynagogueDetailsFragment.WantCahngeFragmentListener() {
+                                @Override
+                                public void onWantToAddAMinyan(Fragment fragment) {
+                                    changeFragment(fragment);
+                                }
+                            }));
+                }
+            }));
+        } else if (id == R.id.sidebar_about) {
+            changeFragment(AboutFragment.getInstance());
+        } else if (id == R.id.sidebar_zmanim) {
+            changeFragment(new ZmanimFragment());
         }
         return true;
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -223,5 +201,9 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
     public void setRefreshClickListener(RefreshMapDataClickListener listener) {
         this.myRefreshMapDataClickListener = listener;
+    }
+
+    public interface RefreshMapDataClickListener {
+        void onClickRefreshIcon();
     }
 }
