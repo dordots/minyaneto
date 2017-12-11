@@ -10,7 +10,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.1'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -27,6 +27,8 @@ allprojects {
 }
 
 ext {
+    supportLibVersion = '26.1.0'
+    playServicesVersion = '11.6.2'
     mockitoVersion = '1.10.19'
     hamcrestVersion = '1.3'
 }

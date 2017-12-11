@@ -1,5 +1,7 @@
 package com.app.minyaneto_android.zmanim;
 
+import android.location.Location;
+
 import com.app.minyaneto_android.location.LocationProvider;
 
 import net.sourceforge.zmanim.ComplexZmanimCalendar;
@@ -20,9 +22,10 @@ public class ZmanimPresenter implements ZmanimContract.UserActionsListener {
 
     @Override
     public void showZmanim() {
+        Location locationUpdate = locationProvider.getLocation();
         GeoLocation location = new GeoLocation("",
-                locationProvider.getLatitude(),
-                locationProvider.getLongitude(),
+                locationUpdate.getLatitude(),
+                locationUpdate.getLongitude(),
                 locationProvider.getTimeZone());
         ComplexZmanimCalendar czc = zmanimCalendarProvider.getCzc(location);
         zmanimView.displayAlosHashahar(czc.getAlos19Point8Degrees());
