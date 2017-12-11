@@ -1,24 +1,45 @@
 package com.app.minyaneto_android.location;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 
 import java.util.TimeZone;
 
 public class AndroidLocationProvider implements LocationProvider {
 
     private final Context context;
-    private final Location location;
+    private final MutableLiveData<Location> liveLocation;
 
     public AndroidLocationProvider(Context context) {
         this.context = context;
+        liveLocation = new MutableLiveData<>();
         LocationManager lm = (LocationManager) this.context.getSystemService(Context.LOCATION_SERVICE);
-        location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-//        if (location == null) {
-//            longitude = (35.214);
-//            latitude = 31.768;
-//        }
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                liveLocation.postValue(location);
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+
+            }
+        });
     }
 
     @Override
@@ -27,7 +48,7 @@ public class AndroidLocationProvider implements LocationProvider {
     }
 
     @Override
-    public Location getLocation() {
-        return location;
+    public LiveData<Location> getLocation() {
+        return liveLocation;
     }
 }

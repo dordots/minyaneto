@@ -1,5 +1,6 @@
 package com.app.minyaneto_android.location;
 
+import android.arch.lifecycle.LiveData;
 import android.location.Location;
 
 import java.util.TimeZone;
@@ -7,5 +8,5 @@ import java.util.TimeZone;
 public interface LocationProvider {
     TimeZone getTimeZone();
 
-    Location getLocation();
+    LiveData<Location> getLocation();
 }

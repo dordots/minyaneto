@@ -25,24 +25,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.volley.Request;
-import com.app.minyaneto_android.acivities.MainActivity;
 import com.app.minyaneto_android.R;
+import com.app.minyaneto_android.acivities.MainActivity;
 import com.app.minyaneto_android.fragments.synagogue_details_fragments.SynagogueDetailsFragment;
 import com.app.minyaneto_android.models.client.CustomJSONObjectRequest;
-import com.app.minyaneto_android.models.client.GenericJsonParser;
 import com.app.minyaneto_android.models.client.HelpJsonParser;
 import com.app.minyaneto_android.models.client.JSONObjectRequestHandlerInterface;
-import com.app.minyaneto_android.models.client.ModelObject;
 import com.app.minyaneto_android.models.client.VolleyRequestQueueSingleton;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.minyan.WeekDay;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
-import com.app.minyaneto_android.utilities.SynagougeFictiveData;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
@@ -68,13 +65,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -82,11 +75,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import java.util.Objects;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -99,47 +88,34 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
     private static final int MAX_DISTANCE_FROM_LAST_LOCATION = 2000;
 
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
-
-    private Location mLastLocation;
-
-    // Google client to interact with Google API
-    private GoogleApiClient mGoogleApiClient;
-
-    // boolean flag to toggle periodic location updates
-    private boolean mRequestingLocationUpdates = false;
-
-    private LocationRequest mLocationRequest;
-
     // Location updates intervals in sec
     private static int UPDATE_INTERVAL = 10000; // 10 sec
     private static int FATEST_INTERVAL = 5000; // 5 sec
     private static int DISPLACEMENT = 10; // 10 meters
-
-
+    private static ChangeFragment changeFragment;
+    private static MainScreenFragment _instance;
+    SynagogueAdapter adapter;
+    LatLngBounds latLngBounds;
+    List<Synagogue> _synagogues = new ArrayList<>();
+    Handler handler = new Handler();
+    private Location mLastLocation;
+    // Google client to interact with Google API
+    private GoogleApiClient mGoogleApiClient;
+    // boolean flag to toggle periodic location updates
+    private boolean mRequestingLocationUpdates = false;
+    private LocationRequest mLocationRequest;
     private RecyclerView mRecyclerView;
     private List<Synagogue> synagogues;
-
-    private static ChangeFragment changeFragment;
     private GoogleMap mMap;
     private List<Marker> synagoguesMarkers;
-
-    SynagogueAdapter adapter;
     private double lastZoom = -1;
-    LatLngBounds latLngBounds;
-
     private LatLng lastLatLng = null;
-    private static MainScreenFragment _instance;
-    ProgressDialog progress;
 
-    public interface ChangeFragment {
-        void OnChangeFragment(Fragment fragment);
-    }
+    public MainScreenFragment() {/*Required empty public constructor*/}
 
     public static void setChangeFragment(ChangeFragment changeFragment) {
         MainScreenFragment.changeFragment = changeFragment;
     }
-
-    public MainScreenFragment() {/*Required empty public constructor*/}
 
     public static MainScreenFragment getInstance(Activity context) {
         if (_instance == null) {
@@ -230,7 +206,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.main_map);
         mapFragment.getMapAsync(this);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler);
+        mRecyclerView = view.findViewById(R.id.recycler);
         mRecyclerView.setHasFixedSize(true);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -296,7 +272,6 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
                     handleLocationSetting();
                 }
 
-                return;
             }
         }
     }
@@ -318,7 +293,10 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
             return;
 
         LocationManager service = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
-        boolean enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean enabled = false;
+        if (service != null) {
+            enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        }
 
         if (!enabled) {
             displayLocationSettingsRequest(getActivity());
@@ -380,14 +358,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
         updateSynagogues(mLocation);
     }
 
-    List<Synagogue> _synagogues = new ArrayList<>();
-
     private void updateSynagogues(final LatLng location) {
-
-        progress = new ProgressDialog(getContext());
-        progress.setMessage(getResources().getString(R.string.wait));
-        progress.setCancelable(false);
-        progress.show();
 //        String url = "http://minyaneto.startach.com/v1/synagogues/?max_hits=20&top_left="+(mLastLocation.getLongitude()-0.5)+","+(mLastLocation.getLatitude()-0.5)+
 //        "&bottom_right="+(mLastLocation.getLongitude()+0.5)+","+(mLastLocation.getLatitude()+0.5);
 //
@@ -399,7 +370,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
 
         String url = "http://minyaneto.startach.com/v1/synagogues/?max_hits=20&top_left=" + 33.2326675 + "," + 34.0780113 +
                 "&bottom_right=" + 29.3842887 + "," + 35.8924053;
-        CustomJSONObjectRequest<String> cjsobj = new CustomJSONObjectRequest<String>(Request.Method.GET, url, null);
+        CustomJSONObjectRequest<String> cjsobj = new CustomJSONObjectRequest<>(Request.Method.GET, url, null);
 
         JSONObjectRequestHandlerInterface<String> analyzer = new JSONObjectRequestHandlerInterface<String>() {
             @Override
@@ -436,14 +407,12 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
             @Override
             public boolean executeCommands(String processedData) {
                 Log.d("json_subtree", "executeCommands");
-                if (processedData == "Done") {
+                if (Objects.equals(processedData, "Done")) {
                     int i = 0;
                     for (Synagogue synagogue : _synagogues) {
                         getDistance(synagogue.getGeo().latitude, synagogue.getGeo().longitude,
                                 mLastLocation.getLatitude(), mLastLocation.getLongitude(), i);
                         i++;
-                        if (i == 3)
-                            continue;
                     }
                     synagogues = _synagogues;
                     //updateAdapter();
@@ -506,11 +475,6 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
             }
         });
         mRecyclerView.setAdapter(adapter);
-        if (progress != null) {
-            progress.dismiss();
-            progress = null;
-        }
-
     }
 
     public void updateMarkers() {
@@ -532,7 +496,6 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
         if (myMinyans.size() == 0) {
             return null;
         }
-        Date now = new Date();
         Collections.sort(myMinyans, new Comparator<Minyan>() {
             public int compare(Minyan o1, Minyan o2) {
                 Date date1 = o1.getTime().toDate(WeekDay.values()[o1.getPrayDayType().ordinal()]);
@@ -553,8 +516,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
                 * Math.cos(Math.toRadians(location1.latitude)) * Math.sin(dLon / 2)
                 * Math.sin(dLon / 2);
         double c = 2 * Math.asin(Math.sqrt(a));
-        long distanceInMeters = Math.round(6371000 * c);
-        return distanceInMeters;
+        return Math.round(6371000 * c);
     }
 
     @Override
@@ -571,8 +533,6 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
         }
         return false;
     }
-
-    Handler handler = new Handler();
 
     public void getDistance(final double lat1, final double lon1, final double lat2, final double lon2, final int index) {
         Thread thread = new Thread(new Runnable() {
@@ -607,13 +567,7 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
                             }
                         }
                     });
-                } catch (ProtocolException e) {
-                    e.printStackTrace();
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
+                } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
             }
@@ -664,7 +618,6 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
             startLocationUpdates();
         }
     }
-
 
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(getContext())
@@ -756,5 +709,9 @@ public class MainScreenFragment extends Fragment implements OnMapReadyCallback,
 
         // Displaying the new location on UI
         displayLocation();
+    }
+
+    public interface ChangeFragment {
+        void OnChangeFragment(Fragment fragment);
     }
 }
