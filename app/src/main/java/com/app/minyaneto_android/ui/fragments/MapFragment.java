@@ -229,7 +229,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         checkPlayServices();
 
         // Resuming the periodic location updates
-        if (mGoogleApiClient.isConnected() && mRequestingLocationUpdates) {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && mRequestingLocationUpdates) {
             startLocationUpdates();
         }
 
