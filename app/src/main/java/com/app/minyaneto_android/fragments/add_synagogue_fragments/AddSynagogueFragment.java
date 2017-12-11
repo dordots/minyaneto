@@ -20,7 +20,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.acivities.MainActivity;
@@ -49,10 +48,10 @@ import java.util.Locale;
 
 public class AddSynagogueFragment extends android.support.v4.app.Fragment implements OnMapReadyCallback {
 
-    private OnSeccessAdd onSeccessAdd;
+    private OnSuccessAdd onSuccessAdd;
 
-    public interface OnSeccessAdd {
-        void OnSeccess(Synagogue synagogue);
+    public interface OnSuccessAdd {
+        void OnSuccess(Synagogue synagogue);
     }
 
     private GoogleMap mMap;
@@ -76,9 +75,9 @@ public class AddSynagogueFragment extends android.support.v4.app.Fragment implem
         // Required empty public constructor
     }
 
-    public static AddSynagogueFragment getInstance(OnSeccessAdd onSeccessAdd) {
+    public static AddSynagogueFragment getInstance(OnSuccessAdd onSuccessAdd) {
         AddSynagogueFragment fragment = new AddSynagogueFragment();
-        fragment.onSeccessAdd = onSeccessAdd;
+        fragment.onSuccessAdd = onSuccessAdd;
         return fragment;
     }
 
@@ -177,8 +176,8 @@ public class AddSynagogueFragment extends android.support.v4.app.Fragment implem
         if (marker != null)
             s.setGeo(marker.getPosition());
         //TODO add synagogue to server
-        if (onSeccessAdd != null)
-            onSeccessAdd.OnSeccess(s);
+        if (onSuccessAdd != null)
+            onSuccessAdd.OnSuccess(s);
     }
 
 
