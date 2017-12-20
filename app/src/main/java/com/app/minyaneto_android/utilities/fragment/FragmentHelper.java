@@ -322,4 +322,25 @@ public class FragmentHelper {
                 .commit();
 
     }
+
+    public int getFragmentsSize(){
+
+        int size = 0 ;
+
+        if (mFragmentActivity.getSupportFragmentManager().getFragments() != null) {
+
+            for (Fragment fragment : mFragmentActivity.getSupportFragmentManager().getFragments()) {
+
+                if (fragment != null) {
+
+                    size++;
+
+                }
+
+            }
+
+        }
+        return size;
+
+    }
 }

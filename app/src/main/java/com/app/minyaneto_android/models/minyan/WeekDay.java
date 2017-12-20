@@ -22,8 +22,9 @@ public enum WeekDay {
         this.stringId = stringId;
     }
 
-    @Override
+    // TODO: CR david
+   /*@Override
     public String toString() {
         return MainActivity.resources.getString(stringId);
-    }
+    }*/
 }

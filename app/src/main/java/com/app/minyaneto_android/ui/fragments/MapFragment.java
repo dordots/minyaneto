@@ -15,14 +15,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.models.geo.Geocoded;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.minyan.WeekDay;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
-import com.app.minyaneto_android.restApi.RequestHelper;
 import com.app.minyaneto_android.utilities.Permissions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -55,6 +51,7 @@ import java.util.Date;
 import java.util.List;
 
 
+
 /**
  * Created by david vardi.
  */
@@ -70,6 +67,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private static final int MAX_DISTANCE_FROM_LAST_LOCATION = 2000;
 
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
+
     public static final String TAG = MapFragment.class.getSimpleName();
 
     private Location mLastLocation;
@@ -88,7 +86,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     private static final int DISPLACEMENT = 10; // 10 meters
 
-
     private GoogleMap mMap;
 
     private List<Marker> synagoguesMarkers;
@@ -101,6 +98,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
 
     private OnFragmentInteractionListener mListener;
+
     public SupportMapFragment mMapFragment;
 
 
@@ -122,6 +120,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         initOnCreate();
     }
 
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_map, container, false);
+
+        init(view);
+
+        return view;
+    }
+
     private void initOnCreate() {
 
         // First we need to check availability of play services
@@ -134,34 +144,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
-    private void onRefreshMap() {
+    public void onRefreshMap() {
 
         mMapFragment.getMapAsync(this);
 
-    }
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_map, container, false);
-
-        // TODO: 06 דצמבר 2017 get teh views from this xml
-        //  return inflater.inflate(R.layout.fragment_main_screen, container, false);
-
-
-        init(view);
-
-        return view;
     }
 
 
     private void init(View view) {
 
-        mMapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.main_map);
+        mMapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.FM_map);
 
         mMapFragment.getMapAsync(this);
+
+        synagoguesMarkers = new ArrayList<>();
+
 
         handleLocationSetting();
     }
@@ -174,7 +171,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnSynagoguesListener");
         }
     }
 
@@ -184,10 +181,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         mListener = null;
     }
 
+    public void updateMarker(LatLng latLng) {
+
+    }
+
+
+
 
     public interface OnFragmentInteractionListener {
-
-        void onSetActionBarTitle(String title);
 
         void onUpdateSynagogues(LatLng latLng);
 
@@ -205,14 +206,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
             mGoogleApiClient.connect();
         }
+        checkPermissions(true);
 
+    }
+
+    public boolean checkPermissions(boolean askIfNotGranted) {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (askIfNotGranted)
+                ActivityCompat.requestPermissions(getActivity(), new String[]
+                                {Manifest.permission.ACCESS_FINE_LOCATION},
+                        PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+            return false;
+        }
+        return true;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        mListener.onSetActionBarTitle(getContext().getResources().getString(R.string.main_screen_fragment));
 
         checkPlayServices();
 
@@ -324,6 +336,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             }
         }
     }
+
+
 
 
     private void handleLocationSetting() {
@@ -439,6 +453,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
             synagoguesMarkers.add(m);
         }
+
     }
 
     private Date getCurrentMinyan(ArrayList<Minyan> myMinyans) {
@@ -493,28 +508,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
 
-    public void getDistance(final double lat1, final double lon1, final double lat2, final double lon2) {
-
-        RequestHelper.getDistance(getContext(), lat1, lon1, lat2, lon2, new Response.Listener<Geocoded>() {
-            @Override
-            public void onResponse(Geocoded response) {
-
-                // TODO: 07 דצמבר 2017 insert the real app key for this and add case for walking and for if the distance more than hour
-                if (response.getStatus().equals("OK"))
-
-                    mListener.onGetDistanse(Double.parseDouble(response.getRoutes().get(0).getLegs().get(0).getDistance().getText().split(" ")[0]) * 1000,
-                            response.getRoutes().get(0).getLegs().get(0).getDuration().getText());
-
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-
-    }
 
     private void enableMyLocationIcon() {
         if (mMap == null)
@@ -663,5 +656,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         // Displaying the new location on UI
         displayLocation();
+    }
+
+    public Location getLastLocation(){
+
+        return mLastLocation;
+    }
+
+    public void moveCamera(LatLng lng){
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+
+                .target(lng)
+                .zoom(15)
+                .build();
+
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+    }
+
+    public void showInfoMarker(int pos){
+
+        synagoguesMarkers.get(pos).showInfoWindow();
+
     }
 }

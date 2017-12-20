@@ -1,6 +1,7 @@
-package com.app.minyaneto_android.ui.fragments.synagogue_details_fragments;
+package com.app.minyaneto_android.ui.fragments;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -16,59 +17,70 @@ import android.widget.TextView;
 
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.ui.acivities.MainActivity;
-import com.app.minyaneto_android.ui.fragments.add_minyan_fragments.AddMinyanFragment;
+import com.app.minyaneto_android.ui.adapters.MinyanAdapter;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
 
 
 public class SynagogueDetailsFragment extends DialogFragment {
-    private static Synagogue mSynagogue;
-    private static WantCahngeFragmentListener myWantCahngeFragmentListener;
+
+    public static final String TAG = SynagogueDetailsFragment.class.getSimpleName();
+    private Synagogue mSynagogue;
+
+    private WantCahngeFragmentListener mListener;
 
     private RecyclerView mRecyclerViewMinyans;
 
-
     TextView tvNameSynagogue;
+
     TextView tvAddressSynagogue;
+
     TextView tvCommentsSynagogue;
+
     TextView tvNosachSynagogue;
+
     CheckBox cbParking;
+
     CheckBox cbSefer_tora;
+
     CheckBox cbWheelchair_accessible;
+
     CheckBox cbLessons;
+
     FloatingActionButton btnAddMinyan;
 
 
-    public interface WantCahngeFragmentListener {
-        void onWantToAddAMinyan(Fragment fragment);
-    }
 
+    public static SynagogueDetailsFragment newInstance(Synagogue synagogue) {
 
-    public SynagogueDetailsFragment() {
-        // Required empty public constructor
-    }
-
-
-    public static SynagogueDetailsFragment newInstance(Synagogue synagogue,
-                                                       WantCahngeFragmentListener mWantCahngeFragmentListener) {
         SynagogueDetailsFragment fragment = new SynagogueDetailsFragment();
-        mSynagogue = synagogue;
-        myWantCahngeFragmentListener = mWantCahngeFragmentListener;
+
+        Bundle bundle = new Bundle();
+
+        bundle.putParcelable(Synagogue.TAG, synagogue);
+
+        fragment.setArguments(bundle);
+
         return fragment;
     }
+
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getArguments() != null && getArguments().containsKey(Synagogue.TAG)) {
+
+            mSynagogue = getArguments().getParcelable(Synagogue.TAG);
+
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity())
-                    .setActionBarTitle(getResources().getString(R.string.synagogue_details_fragment));
-        }
+
         return inflater.inflate(R.layout.fragment_synagogue_details, container, false);
     }
 
@@ -83,7 +95,7 @@ public class SynagogueDetailsFragment extends DialogFragment {
         cbSefer_tora = (CheckBox) view.findViewById(R.id.synagogoe_details_sefer_tora);
         cbWheelchair_accessible = (CheckBox) view.findViewById(R.id.synagogoe_details_accessible);
         cbLessons = (CheckBox) view.findViewById(R.id.synagogoe_details_lessons);
-        btnAddMinyan=(FloatingActionButton) view.findViewById(R.id.synagogoe_details_add_minyan);
+        btnAddMinyan = (FloatingActionButton) view.findViewById(R.id.synagogoe_details_add_minyan);
         mRecyclerViewMinyans = (RecyclerView) view.findViewById(R.id.synagogoe_details_recycler_minyans);
         mRecyclerViewMinyans.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -94,7 +106,7 @@ public class SynagogueDetailsFragment extends DialogFragment {
         tvNameSynagogue.setText(mSynagogue.getName());
         tvAddressSynagogue.setText(mSynagogue.getAddress());
         tvCommentsSynagogue.setText(mSynagogue.getComments());
-        tvNosachSynagogue.setText(getResources().getString(R.string.nosach)+" "+mSynagogue.getNosach());
+        tvNosachSynagogue.setText(getResources().getString(R.string.nosach) + " " + mSynagogue.getNosach());
         cbLessons.setChecked(mSynagogue.isClasses());
         cbParking.setChecked(mSynagogue.isParking());
         cbSefer_tora.setChecked(mSynagogue.isSefer_tora());
@@ -103,16 +115,42 @@ public class SynagogueDetailsFragment extends DialogFragment {
         btnAddMinyan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (myWantCahngeFragmentListener != null)
-                    myWantCahngeFragmentListener.onWantToAddAMinyan(AddMinyanFragment.newInstance());
+                if (mListener != null)
+                    mListener.onWantToAddAMinyan();
             }
         });
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof WantCahngeFragmentListener) {
+            mListener = (WantCahngeFragmentListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnSynagoguesListener");
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mListener.onSetActionBarTitle(getResources().getString(R.string.synagogue_details_fragment));
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         return super.onCreateDialog(savedInstanceState);
+    }
+
+
+    public interface WantCahngeFragmentListener {
+
+        void onWantToAddAMinyan();
+
+        void onSetActionBarTitle(String string);
     }
 
 }

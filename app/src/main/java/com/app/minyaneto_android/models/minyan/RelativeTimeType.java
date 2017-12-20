@@ -8,6 +8,10 @@ import com.app.minyaneto_android.ui.acivities.MainActivity;
  */
 
 public enum RelativeTimeType {
+
+    // TODO: CR david
+
+
     DAWN(R.string.relative_time_dawn),
     SUNRISE(R.string.relative_time_sunrise),
     SUNSET(R.string.relative_time_sunset),
@@ -19,8 +23,8 @@ public enum RelativeTimeType {
         this.stringId = stringId;
     }
 
-    @Override
+   /* @Override
     public String toString() {
         return MainActivity.resources.getString(stringId);
-    }
+    }*/
 }

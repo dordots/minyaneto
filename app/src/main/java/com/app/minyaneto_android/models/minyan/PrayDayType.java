@@ -8,6 +8,9 @@ import com.app.minyaneto_android.ui.acivities.MainActivity;
  */
 
 public enum PrayDayType{
+
+    // TODO: CR david
+
     SUNDAY(R.string.pray_day_type_s),
     MONDAY(R.string.pray_day_type_m),
     TUESDAY(R.string.pray_day_type_tu),
@@ -19,6 +22,7 @@ public enum PrayDayType{
     ROSH_CHODESH(R.string.pray_day_type_rh);
 
     private int stringId;
+
     public static PrayDayType getType(String str) throws Exception {
         switch (str){
             case "sunday":
@@ -50,8 +54,5 @@ public enum PrayDayType{
         this.stringId = stringId;
     }
 
-    @Override
-    public String toString() {
-        return MainActivity.resources.getString(stringId);
-    }
+
 }

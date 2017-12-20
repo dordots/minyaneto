@@ -1,4 +1,4 @@
-package com.app.minyaneto_android.ui.fragments.main_screen_fragments;
+package com.app.minyaneto_android.ui.adapters;
 
 import android.content.Context;
 import android.graphics.Color;

@@ -5,7 +5,7 @@
     tools:context="com.app.minyaneto_android.ui.fragments.MapFragment">
 
     <fragment
-        android:id="@+id/main_map"
+        android:id="@+id/FM_map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

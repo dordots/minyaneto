@@ -1,5 +1,7 @@
 package com.app.minyaneto_android.models.minyan;
 
+import android.app.Application;
+
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.ui.acivities.MainActivity;
 
@@ -10,10 +12,13 @@ import java.util.Date;
 public class ExactTime implements Time {
 
     private int hour;
+
     private int minute;
 
     public ExactTime(int hour, int minute) {
+
         this.hour = hour;
+
         this.minute = minute;
     }
 
@@ -55,9 +60,10 @@ public class ExactTime implements Time {
 
     @Override
     public String toString() {
-        String nounAt =  MainActivity.resources.getString(R.string.nouns_at);
-        SimpleDateFormat format =
-                new SimpleDateFormat("HH:mm");
+
+        // TODO: CR david
+        String nounAt = "ב-";
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
         String time = format.format(toDate(WeekDay.values()[new Date().getDay()]));
         return nounAt + " " + time;
     }

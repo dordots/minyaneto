@@ -63,11 +63,10 @@ public class RelativeTime implements Time {
 
     @Override
     public String toString() {
-        Resources res = MainActivity.resources;
-        String nounMinutes =  res.getString(R.string.nouns_minutes);
-        String nounAfterOrBefore =  offset > 0 ? res.getString(R.string.nouns_after): res.getString(R.string.nouns_before);
-        String nounThe =  offset < 0 ? res.getString(R.string.nouns_the) : "";
-        String nounAt =  res.getString(R.string.nouns_at);
+        String nounMinutes =  "דקות" ;
+        String nounAfterOrBefore =  offset > 0 ? "אחרי": "לפני";
+        String nounThe =  offset < 0 ? "ה-" : "";
+        String nounAt =  "ב-";
         if (offset == 0) {
             return String.format("%s%s", nounAt, relativeTimeType.toString());
         }

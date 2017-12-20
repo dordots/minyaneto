@@ -1,5 +1,8 @@
 package com.app.minyaneto_android.models.synagogue;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.app.minyaneto_android.models.client.HelpJsonParser;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.google.android.gms.maps.model.LatLng;
@@ -20,7 +23,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Synagogue {
+public class Synagogue implements Parcelable {
+    public static final String TAG = Synagogue.class.getName();
     private String id;
 
     private String address;
@@ -202,4 +206,57 @@ public class Synagogue {
 
         return minyans.add(minyan);
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.address);
+        dest.writeString(this.comments);
+        dest.writeString(this.name);
+        dest.writeString(this.nosach);
+        dest.writeDouble(this.distanceFromLocation);
+        dest.writeInt(this.driving_time);
+        dest.writeInt(this.walking_time);
+        dest.writeParcelable(this.geo, flags);
+        dest.writeByte(this.classes ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.parking ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.sefer_tora ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.wheelchair_accessible ? (byte) 1 : (byte) 0);
+        dest.writeList(this.minyans);
+    }
+
+    protected Synagogue(Parcel in) {
+        this.id = in.readString();
+        this.address = in.readString();
+        this.comments = in.readString();
+        this.name = in.readString();
+        this.nosach = in.readString();
+        this.distanceFromLocation = in.readDouble();
+        this.driving_time = in.readInt();
+        this.walking_time = in.readInt();
+        this.geo = in.readParcelable(LatLng.class.getClassLoader());
+        this.classes = in.readByte() != 0;
+        this.parking = in.readByte() != 0;
+        this.sefer_tora = in.readByte() != 0;
+        this.wheelchair_accessible = in.readByte() != 0;
+        this.minyans = new ArrayList<Minyan>();
+        in.readList(this.minyans, Minyan.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<Synagogue> CREATOR = new Parcelable.Creator<Synagogue>() {
+        @Override
+        public Synagogue createFromParcel(Parcel source) {
+            return new Synagogue(source);
+        }
+
+        @Override
+        public Synagogue[] newArray(int size) {
+            return new Synagogue[size];
+        }
+    };
 }

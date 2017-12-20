@@ -8,14 +8,13 @@ import com.app.minyaneto_android.ui.acivities.MainActivity;
  */
 
 public enum PrayType {
+
+    // TODO: CR david
     MORNING(R.string.pray_type_morning),
     AFTER_NOON(R.string.pray_type_after_noon),
     EVENING(R.string.pray_type_evening);
 
-    private int stringId;
-
     PrayType(int stringId) {
-        this.stringId = stringId;
     }
 
     public static PrayType getType(String string) throws Exception {
@@ -33,8 +32,5 @@ public enum PrayType {
         throw new Exception(string);
     }
 
-    @Override
-    public String toString() {
-        return MainActivity.resources.getString(stringId);
-    }
+
 }

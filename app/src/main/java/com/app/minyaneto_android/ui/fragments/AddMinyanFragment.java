@@ -1,5 +1,6 @@
-package com.app.minyaneto_android.ui.fragments.add_minyan_fragments;
+package com.app.minyaneto_android.ui.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 
 public class AddMinyanFragment extends Fragment {
 
+    public static final String TAG = AddMinyanFragment.class.getSimpleName();
     private Spinner spinnerPrayType;
     private EditText etMinutes;
     private Spinner spinnerRelativeTimeType;
@@ -45,6 +47,7 @@ public class AddMinyanFragment extends Fragment {
     private Button btnAddMinyn;
     private LinearLayout linearLayoutRelativeTime;
     boolean inRelativeTimeMode;
+    private AddMinyanListener mListener;
 
     public AddMinyanFragment() {
         // Required empty public constructor
@@ -118,6 +121,8 @@ public class AddMinyanFragment extends Fragment {
             }
             time = new RelativeTime((RelativeTimeType) spinnerRelativeTimeType.getSelectedItem(), Integer.parseInt(etMinutes.getText().toString()));
         } else {
+
+            // TODO: CR david
             time = new ExactTime(timePicker.getHour(), timePicker.getMinute());
         }
         ArrayList<PrayDayType> days = new ArrayList<>();
@@ -165,10 +170,33 @@ public class AddMinyanFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity())
-                    .setActionBarTitle(getResources().getString(R.string.add_minyan_fragment));
-        }
+
+
         return inflater.inflate(R.layout.fragment_add_minyan, container, false);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof AddMinyanListener) {
+            mListener = (AddMinyanListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnSynagoguesListener");
+        }
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mListener.onSetActionBarTitle(getResources().getString(R.string.about_fragment));
+    }
+
+    public interface AddMinyanListener {
+
+        void onSetActionBarTitle(String title);
     }
 }

@@ -1,4 +1,4 @@
-package com.app.minyaneto_android.ui.fragments.synagogue_details_fragments;
+package com.app.minyaneto_android.ui.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -34,9 +34,9 @@ public class MinyanAdapter extends RecyclerView.Adapter<MinyanAdapter.MinyanView
     @Override
     public void onBindViewHolder(MinyanViewHolder holder, int position) {
         Minyan minyan = minyans.get(position);
-        holder.prayTypeTextView.setText(minyan.getPrayType().toString());
+        holder.prayTypeTextView.setText(minyan.getPrayType().name());
         holder.prayerTimeTextView.setText(minyan.getTime().getHour()+":"+minyan.getTime().getMinutes());
-        holder.prayDayTypeTextView.setText(minyan.getPrayDayType().toString());
+        holder.prayDayTypeTextView.setText(minyan.getPrayDayType().name());
     }
 
 

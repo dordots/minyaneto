@@ -21,8 +21,6 @@ public class NavigationHelper implements NavigationView.OnNavigationItemSelected
 
     private AppCompatActivity mActivity;
 
-    private NavigationView mNavigationView;
-
     private DrawerLayout mDrawer;
 
     private OnMenuItemSelectListener mListener;
@@ -45,12 +43,12 @@ public class NavigationHelper implements NavigationView.OnNavigationItemSelected
 
         mActivity.setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) mActivity.findViewById(R.id.drawerLayout);
+        mDrawer = (DrawerLayout) mActivity.findViewById(R.id.drawerLayout);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                mActivity, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                mActivity, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
-        drawer.addDrawerListener(toggle);
+        mDrawer.addDrawerListener(toggle);
 
         toggle.syncState();
 
@@ -68,7 +66,7 @@ public class NavigationHelper implements NavigationView.OnNavigationItemSelected
 
     }
 
-    public boolean closeDrawer() {
+    boolean closeDrawer() {
 
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
 
@@ -118,7 +116,6 @@ public class NavigationHelper implements NavigationView.OnNavigationItemSelected
         void onMenuSelectAbout();
 
         void onMenuSelectHome();
-
 
     }
 }

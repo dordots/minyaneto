@@ -91,17 +91,15 @@ public class Minyan {
         if (!isValid())
             return "Minyan is not valid!";
 
-        String nounPray = MainActivity.resources.getString(R.string.nouns_pray);
-        String nounInDays =
-                MainActivity.resources.getQuantityString(R.plurals.nouns_in_days, 1);
-//        StringBuilder days = new StringBuilder();
-//        for (PrayDayType pdt : prayDayTypeArray) {
-//            days.append(pdt + ", ");
-//        }
-//        days.delete(days.length() - 2, days.length());
+        // TODO: CR david
 
-        return String.format("%s %s %s %s %s", nounPray, prayType.toString(),
-                nounInDays, prayDayType.toString(), time.toString());
+        String nounPray = "תפילת" ;
+
+        String nounInDays = "ביום";
+
+
+        return String.format("%s %s %s %s %s", nounPray, prayType.name(),
+                nounInDays, prayDayType.name(), time.toString());
     }
 
     @Override
