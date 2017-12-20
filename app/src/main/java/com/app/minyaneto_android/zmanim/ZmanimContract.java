@@ -8,6 +8,10 @@ public interface ZmanimContract {
 
         void displayMisheyakir(Date zman);
 
+        void displayHenezHahama(Date zman);
+
+        void displayShkiaa(Date zman);
+
         void displayTzaisHakochavim(Date zman);
     }
 
