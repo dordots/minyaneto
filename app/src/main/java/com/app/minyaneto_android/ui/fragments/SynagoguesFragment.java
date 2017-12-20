@@ -9,12 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.models.geo.Geocoded;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
-import com.app.minyaneto_android.restApi.RequestHelper;
 import com.app.minyaneto_android.ui.adapters.SynagogueAdapter;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -154,10 +150,10 @@ public class SynagoguesFragment extends Fragment {
             }
 
             @Override
-            public void onGoToWazeClick(int position) {
+            public void onRouteClick(int position) {
                 if (position == -1) return;
 
-                mListener.onOpenWaze(mSynagogues.get(position).getGeo());
+                mListener.onOpenRoute(mSynagogues.get(position).getGeo());
             }
 
             @Override
@@ -193,7 +189,7 @@ public class SynagoguesFragment extends Fragment {
 
         void onMoveCamera(LatLng latLng, int position);
 
-        void onOpenWaze(LatLng geo);
+        void onOpenRoute(LatLng geo);
 
         void onShowSynagogueDetails(Synagogue synagogue);
     }
