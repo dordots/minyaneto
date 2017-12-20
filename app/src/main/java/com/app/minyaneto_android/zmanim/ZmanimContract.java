@@ -4,11 +4,11 @@ import java.util.Date;
 
 public interface ZmanimContract {
     interface View {
-        void displayAlosHashahar(Date alos);
+        void displayAlosHashahar(Date zman);
 
-        void displayMisheyakir(Date misheyakir);
+        void displayMisheyakir(Date zman);
 
-        void displayTzaisHakochavim(Date tzais);
+        void displayTzaisHakochavim(Date zman);
     }
 
     interface UserActionsListener {

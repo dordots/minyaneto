@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="zmanim_titles">
+        <item>עלות השחר</item>
+        <item>משיכיר</item>
+        <item>צאת הכוכבים</item>
+    </string-array>
+    <string-array name="zmanim_descriptions">
+        <item>על פי רבינו הצדיק</item>
+        <item>על פי מסכת בבא בתרא דף ב' עמ' ב'</item>
+        <item>3 כוכבים בשמים, נקבע לפי זווית 32 מעלות</item>
+    </string-array>
+</resources>
