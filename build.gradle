@@ -28,7 +28,7 @@ allprojects {
 
 ext {
     supportLibVersion = '26.1.0'
-    playServicesVersion = '11.6.2'
+    playServicesVersion = '11.8.0'
     mockitoVersion = '2.0'
     hamcrestVersion = '1.3'
 }

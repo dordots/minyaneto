@@ -15,12 +15,13 @@ import android.widget.TextView;
 
 import com.app.minyaneto_android.Injection;
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.acivities.MainActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ZmanimFragment extends Fragment implements ZmanimContract.View {
+
+    public static final String TAG = ZmanimFragment.class.getSimpleName();
 
     private ZmanimContract.UserActionsListener listener;
     private SimpleDateFormat formatter;
@@ -47,15 +48,7 @@ public class ZmanimFragment extends Fragment implements ZmanimContract.View {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        setupActionBarTitle();
         return inflateAndSetupRecyclerView(inflater, container);
-    }
-
-    private void setupActionBarTitle() {
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity())
-                    .setActionBarTitle(getResources().getString(R.string.zmanim_fragment));
-        }
     }
 
     @NonNull
