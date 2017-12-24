@@ -27,7 +27,7 @@ public class AndroidLocationProvider implements LocationProvider {
                 if (location != null) {
                     liveLocation.postValue(location);
                 }
-                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
+                LocationListener listener = new LocationListener() {
                     @Override
                     public void onLocationChanged(Location location) {
                         liveLocation.postValue(location);
@@ -47,7 +47,10 @@ public class AndroidLocationProvider implements LocationProvider {
                     public void onProviderDisabled(String s) {
 
                     }
-                });
+                };
+                lm.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 0, listener);
+                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
             }
         }
     }
