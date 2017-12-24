@@ -36,6 +36,7 @@ import com.app.minyaneto_android.ui.fragments.SynagoguesFragment;
 import com.app.minyaneto_android.utilities.fragment.ActivityRunning;
 import com.app.minyaneto_android.utilities.fragment.FragmentHelper;
 import com.app.minyaneto_android.utilities.user.Alerts;
+import com.app.minyaneto_android.zmanim.ZmanimFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
@@ -153,6 +154,13 @@ public class MainActivity extends AppCompatActivity implements
     public void onMenuSelectAbout() {
 
         mFragmentHelper.addFragment(R.id.MA_main_container, AboutFragment.getInstance(), AboutFragment.TAG, AboutFragment.TAG);
+
+    }
+
+    @Override
+    public void onMenuSelectZmanim() {
+
+        mFragmentHelper.addFragment(R.id.MA_main_container, new ZmanimFragment(), ZmanimFragment.TAG, ZmanimFragment.TAG);
 
     }
 
