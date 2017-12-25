@@ -147,8 +147,5 @@
     <string name="ok">OK</string>
     <string name="no_gps_connection" />
     <string name="message_alert_no_gps">For use with this app the GPS is required</string>
-
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="no_address">כתובת לא חוקית</string>
 </resources>
