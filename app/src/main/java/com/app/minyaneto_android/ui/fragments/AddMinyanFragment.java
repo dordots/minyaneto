@@ -1,6 +1,7 @@
 package com.app.minyaneto_android.ui.fragments;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -122,8 +123,10 @@ public class AddMinyanFragment extends Fragment {
             time = new RelativeTime((RelativeTimeType) spinnerRelativeTimeType.getSelectedItem(), Integer.parseInt(etMinutes.getText().toString()));
         } else {
 
-            // TODO: CR david
-            time = new ExactTime(timePicker.getHour(), timePicker.getMinute());
+            if (Build.VERSION.SDK_INT >= 23 )
+                time = new ExactTime(timePicker.getHour(), timePicker.getMinute());
+            else
+                time = new ExactTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute());
         }
         ArrayList<PrayDayType> days = new ArrayList<>();
 

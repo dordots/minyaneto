@@ -36,7 +36,10 @@ import com.app.minyaneto_android.ui.fragments.SynagoguesFragment;
 import com.app.minyaneto_android.utilities.fragment.ActivityRunning;
 import com.app.minyaneto_android.utilities.fragment.FragmentHelper;
 import com.app.minyaneto_android.utilities.user.Alerts;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -199,9 +202,9 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onUpdateMarker(LatLng latLng) {
+    public void onUpdateMarker(Place place) {
 
-        mapFragment.updateMarker(latLng);
+        mapFragment.updateMarker(place);
 
     }
 
@@ -209,8 +212,10 @@ public class MainActivity extends AppCompatActivity implements
     public void onUpdateSynagogues(LatLng latLng) {
 
         if (isShowSynagoguesFragment) {
+            //map.getBounds().getSouthWest().lng()
 
             // TODO: לשלוח שאילתה לשרת לפי מיקום ולקבל רשימת בתי כנסת
+//            LatLngBounds latLngBounds = new LatLngBounds.Builder().include(latLng).include().build();
 
             String url = "http://minyaneto.startach.com/v1/synagogues/?max_hits=20&top_left=" + 33.2326675 + "," + 34.0780113 +
                     "&bottom_right=" + 29.3842887 + "," + 35.8924053;
@@ -303,7 +308,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onMarkerClick(int position) {
         // TODO: CR david - change boolean for tag
-        if (isShowSynagoguesFragment) {
+        if ( isShowSynagoguesFragment) {
 
             synagoguesFragment.scrollToSynagoguePosition(position);
 

@@ -32,6 +32,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -49,7 +50,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-
 
 
 /**
@@ -95,7 +95,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     LatLngBounds latLngBounds;
 
     private LatLng lastLatLng = null;
-
 
     private OnFragmentInteractionListener mListener;
 
@@ -181,11 +180,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         mListener = null;
     }
 
-    public void updateMarker(LatLng latLng) {
+    public void updateMarker(Place place) {
+
+        mMap.addMarker(new MarkerOptions().position(
+
+                place.getLatLng())
+
+                .title(place.getName().toString())
+
+                .draggable(true)
+
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+
+        moveCamera(place.getLatLng());
 
     }
-
-
 
 
     public interface OnFragmentInteractionListener {
@@ -278,7 +287,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 } else {
 
                     if (Math.floor(cameraPosition.zoom) > Math.floor(lastZoom)) {
-                        // updateMarkers();
+
+                        for (Marker m : synagoguesMarkers) {
+
+                            mMap.addMarker(new MarkerOptions().position(
+
+                                    m.getPosition())
+
+                                    .title(m.getTitle())
+
+                                    .snippet(m.getSnippet())
+
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+
+                        }
                     }
                 }
 
@@ -336,8 +358,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             }
         }
     }
-
-
 
 
     private void handleLocationSetting() {
@@ -508,7 +528,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
 
-
     private void enableMyLocationIcon() {
         if (mMap == null)
             return;
@@ -658,12 +677,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         displayLocation();
     }
 
-    public Location getLastLocation(){
+    public Location getLastLocation() {
 
         return mLastLocation;
     }
 
-    public void moveCamera(LatLng lng){
+    public void moveCamera(LatLng lng) {
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
 
@@ -675,7 +694,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     }
 
-    public void showInfoMarker(int pos){
+    public void showInfoMarker(int pos) {
 
         synagoguesMarkers.get(pos).showInfoWindow();
 

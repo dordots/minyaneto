@@ -27,7 +27,7 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 
 
-public class AddSynagogueFragment extends Fragment implements  View.OnClickListener {
+public class AddSynagogueFragment extends Fragment implements View.OnClickListener {
 
     private final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
 
@@ -60,7 +60,6 @@ public class AddSynagogueFragment extends Fragment implements  View.OnClickListe
 
         return new AddSynagogueFragment();
     }
-
 
 
     @Override
@@ -105,12 +104,12 @@ public class AddSynagogueFragment extends Fragment implements  View.OnClickListe
             startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
 
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
-            // TODO: Handle the error.
+            Toast.makeText(getContext(), getResources().getString(R.string.no_address), Toast.LENGTH_SHORT).show();
         }
 
     }
 
-    public void updateLatLng( LatLng latLng) {
+    public void updateLatLng(LatLng latLng) {
 
         mLatLng = latLng;
 
@@ -145,7 +144,7 @@ public class AddSynagogueFragment extends Fragment implements  View.OnClickListe
 
         //TODO add synagogue to server
 
-       mListener.onShowSynagogueDetails(s);
+        mListener.onShowSynagogueDetails(s);
     }
 
 
@@ -168,7 +167,7 @@ public class AddSynagogueFragment extends Fragment implements  View.OnClickListe
 
                 updateSynagogueAddress(place.getAddress().toString());
 
-                mListener.onUpdateMarker(place.getLatLng());
+                mListener.onUpdateMarker(place);
             }
         }
     }
@@ -210,7 +209,6 @@ public class AddSynagogueFragment extends Fragment implements  View.OnClickListe
 
                 break;
 
-
         }
     }
 
@@ -221,6 +219,6 @@ public class AddSynagogueFragment extends Fragment implements  View.OnClickListe
 
         void onSetActionBarTitle(String title);
 
-        void onUpdateMarker(LatLng latLng);
+        void onUpdateMarker(Place place);
     }
 }
