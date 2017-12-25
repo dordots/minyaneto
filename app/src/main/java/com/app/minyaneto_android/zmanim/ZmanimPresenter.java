@@ -41,6 +41,9 @@ public class ZmanimPresenter implements ZmanimContract.UserActionsListener {
                 location.getLatitude(),
                 location.getLongitude(),
                 locationProvider.getTimeZone());
+        if (location.hasAltitude()) {
+            geoLocation.setElevation(location.getAltitude());
+        }
         return zmanimCalendarProvider.getCzc(geoLocation);
     }
 
