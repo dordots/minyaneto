@@ -103,12 +103,22 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../OperatorsApp/ReportFieldsForMachineNetworkBridge/src/main/java/com/operators/reportfieldsformachinenetworkbridge/ReportFieldsForMachineNetworkBridge.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../OperatorsApp/ReportInfra/build.gradle">
           <value>
             <set />
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/../OperatorsApp/ReportNetworkBridge/build.gradle">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../OperatorsApp/ReportNetworkBridge/src/main/java/com/operators/reportrejectnetworkbridge/ReportNetworkBridge.java">
           <value>
             <set />
           </value>
@@ -609,6 +619,36 @@
           </value>
         </entry>
         <entry key="$USER_HOME$/.android/build-cache/044ee15698e2f1bcb64a5ceda3eb6b46462c18e3/output/jars/classes.jar!/com/zemingo/pollingmachanaim/JobBase.class">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Desktop/RetrofitIntro/app/src/main/java/com/journaldev/retrofitintro/APIClient.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Desktop/RetrofitIntro/app/src/main/java/com/journaldev/retrofitintro/EmeraldGetMachinesDataServiceRequest.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Desktop/RetrofitIntro/app/src/main/java/com/journaldev/retrofitintro/MachineDataDataResponse.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Desktop/RetrofitIntro/app/src/main/java/com/journaldev/retrofitintro/MainActivity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Desktop/codeexamples-android-master/com.vogella.android.retrofitgithub/app/src/main/java/com/vogella/android/retrofitgithub/MainActivity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Desktop/codeexamples-android-master/com.vogella.android.retrofitgithub/app/src/main/java/com/vogella/android/retrofitgithub/Test.java">
           <value>
             <set />
           </value>
