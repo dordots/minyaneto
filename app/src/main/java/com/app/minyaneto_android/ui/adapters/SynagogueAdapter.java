@@ -31,7 +31,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
     public interface SynagogueClickListener {
         void onItemClick(int position);
 
-        void onGoToWazeClick(int position);
+        void onRouteClick(int position);
 
         void onShowDetailsClick(int position);
     }
@@ -64,43 +64,8 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
         holder.nameTextView.setText(synagogue.getName());
         holder.walkingTime.setText(synagogue.getWalking_time()+"");
         holder.drivigTime.setText(synagogue.getDriving_time()+"");
-       /* holder.menu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.tfila_menu:
-                        PopupMenu popup = new PopupMenu(context, v);
-                        popup.getMenuInflater().inflate(R.menu.popup_menu,
-                                popup.getMenu());
-                        popup.show();
-                        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem item) {
-                                switch (item.getItemId()) {
-                                    case R.id.synagogue_details:
-                                        if (myClickListener != null)
-                                            myClickListener.onShowDetailsClick(position);
-                                        break;
-                                    case R.id.go_place:
-                                        if (myClickListener != null)
-                                            myClickListener.onGoToWazeClick(position);
-                                        break;
 
-                                    default:
-                                        break;
-                                }
-                                return true;
-                            }
-                        });
 
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-        });
-        */
         if (synagogue.getMinyans().size() > 0) {
             //TODO real time from minyans
             holder.prayerTimeTextView.setText(getTime(position));
@@ -168,7 +133,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
                 @Override
                 public void onClick(View v) {
                     if (myClickListener != null)
-                        myClickListener.onGoToWazeClick(getAdapterPosition());
+                        myClickListener.onRouteClick(getAdapterPosition());
                 }
             });
             details.setOnClickListener(new View.OnClickListener() {

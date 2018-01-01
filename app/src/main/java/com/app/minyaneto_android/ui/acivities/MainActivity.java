@@ -36,7 +36,10 @@ import com.app.minyaneto_android.ui.fragments.SynagoguesFragment;
 import com.app.minyaneto_android.utilities.fragment.ActivityRunning;
 import com.app.minyaneto_android.utilities.fragment.FragmentHelper;
 import com.app.minyaneto_android.utilities.user.Alerts;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements
         AddSynagogueFragment.AddSynagogueListener,
         SynagogueDetailsFragment.WantCahngeFragmentListener,
         SynagoguesFragment.OnSynagoguesListener,
-        AboutFragment.AboutListener {
+        AboutFragment.AboutListener, AddMinyanFragment.AddMinyanListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -99,7 +102,6 @@ public class MainActivity extends AppCompatActivity implements
         if (synagoguesFragment == null)
 
             synagoguesFragment = SynagoguesFragment.newInstance();
-
         mFragmentHelper.replaceFragment(R.id.MA_container, synagoguesFragment, SynagoguesFragment.TAG, null);
 
     }
@@ -131,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements
 
         initSynagoguesFragment();
 
-        if(mapFragment!=null){
+        if (mapFragment != null) {
 
             mapFragment.onRefreshMap();
         }
@@ -143,6 +145,8 @@ public class MainActivity extends AppCompatActivity implements
     public void onMenuSelectAddSynagogue() {
 
         isShowSynagoguesFragment = false;
+
+        // TODO: 20/12/2017 change to add
 
         mFragmentHelper.replaceFragment(R.id.MA_container, AddSynagogueFragment.getInstance(), AddSynagogueFragment.TAG, null);
 
@@ -189,9 +193,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onOpenWaze(LatLng geo) {
-
-        // TODO: 20 דצמבר 2017 CR david
+    public void onOpenRoute(LatLng geo) {
 
         Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=" + geo.latitude + "," + geo.longitude));
 
@@ -200,10 +202,9 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onUpdateMarker(LatLng latLng) {
+    public void onUpdateMarker(Place place) {
 
-        mapFragment.updateMarker(latLng);
-
+        mapFragment.updateMarker(place);
 
     }
 
@@ -211,18 +212,10 @@ public class MainActivity extends AppCompatActivity implements
     public void onUpdateSynagogues(LatLng latLng) {
 
         if (isShowSynagoguesFragment) {
+            //map.getBounds().getSouthWest().lng()
 
             // TODO: לשלוח שאילתה לשרת לפי מיקום ולקבל רשימת בתי כנסת
-
-
-            /*    progress = new ProgressDialog(getContext());
-
-                progress.setMessage(getResources().getString(R.string.wait));
-
-                progress.setCancelable(false);
-
-                progress.show();*/
-
+//            LatLngBounds latLngBounds = new LatLngBounds.Builder().include(latLng).include().build();
 
             String url = "http://minyaneto.startach.com/v1/synagogues/?max_hits=20&top_left=" + 33.2326675 + "," + 34.0780113 +
                     "&bottom_right=" + 29.3842887 + "," + 35.8924053;
@@ -285,9 +278,9 @@ public class MainActivity extends AppCompatActivity implements
             //updateAdapter();
 
 
-
         }
     }
+
     public void getDistance(final double lat1, final double lon1, final double lat2, final double lon2, final int i) {
 
         RequestHelper.getDistance(MainActivity.this, lat1, lon1, lat2, lon2, new Response.Listener<Geocoded>() {
@@ -297,8 +290,8 @@ public class MainActivity extends AppCompatActivity implements
                 // TODO: 07 דצמבר 2017 insert the real app key for this and add case for walking and for if the distance more than hour
                 if (response.getStatus().equals("OK"))
 
-                   synagogues.get(i).setDistanceFromLocation(Double.parseDouble(response.getRoutes().get(0).getLegs().get(0).getDistance().getText().split(" ")[0]) * 1000);
-                         //   response.getRoutes().get(0).getLegs().get(0).getDuration().getText());
+                    synagogues.get(i).setDistanceFromLocation(Double.parseDouble(response.getRoutes().get(0).getLegs().get(0).getDistance().getText().split(" ")[0]) * 1000);
+                //   response.getRoutes().get(0).getLegs().get(0).getDuration().getText());
 
 
             }
@@ -314,8 +307,8 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onMarkerClick(int position) {
-
-        if (isShowSynagoguesFragment) {
+        // TODO: CR david - change boolean for tag
+        if ( isShowSynagoguesFragment) {
 
             synagoguesFragment.scrollToSynagoguePosition(position);
 
@@ -327,7 +320,7 @@ public class MainActivity extends AppCompatActivity implements
 
         if (isShowSynagoguesFragment) {
 
-
+// TODO: 20/12/2017
         }
     }
 

@@ -45,6 +45,12 @@ public class AboutFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mListener =null;
+    }
 
     @Override
     public void onResume() {

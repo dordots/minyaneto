@@ -2,8 +2,8 @@ package com.app.minyaneto_android.ui.acivities;
 
 import android.content.Intent;
 import android.os.CountDownTimer;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.utilities.user.Alerts;

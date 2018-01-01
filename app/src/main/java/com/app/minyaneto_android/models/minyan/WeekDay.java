@@ -23,8 +23,8 @@ public enum WeekDay {
     }
 
     // TODO: CR david
-   /*@Override
-    public String toString() {
-        return MainActivity.resources.getString(stringId);
-    }*/
+//   @Override
+//    public String toString() {
+//        return MainActivity.resources.getString(stringId);
+//    }
 }
