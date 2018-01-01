@@ -282,25 +282,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
                 if (cameraPosition.zoom < 13.0) {
 
-                    mMap.clear();
-
+                    for (Marker m : synagoguesMarkers) {
+                        setMarkerVisible(false);
+                    }
                 } else {
 
                     if (Math.floor(cameraPosition.zoom) > Math.floor(lastZoom)) {
-
-                        for (Marker m : synagoguesMarkers) {
-
-                            mMap.addMarker(new MarkerOptions().position(
-
-                                    m.getPosition())
-
-                                    .title(m.getTitle())
-
-                                    .snippet(m.getSnippet())
-
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-
-                        }
+                        setMarkerVisible(true);
                     }
                 }
 
@@ -446,6 +434,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 .build();                   // Creates a CameraPosition from the builder
 
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        mMap.addMarker(new MarkerOptions().position(mLocation));
 
         enableMyLocationIcon();
 
@@ -698,5 +687,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         synagoguesMarkers.get(pos).showInfoWindow();
 
+    }
+
+    public void setMarkerVisible(boolean isVisible) {
+        for (Marker m : synagoguesMarkers) {
+            m.setVisible(isVisible);
+        }
     }
 }
