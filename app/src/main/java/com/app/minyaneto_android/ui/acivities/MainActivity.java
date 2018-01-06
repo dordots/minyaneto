@@ -9,43 +9,46 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import android.util.Log;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import ravtech.co.il.httpclient.ErrorResponse;
+import ravtech.co.il.httpclient.model.ErrorData;
+import ravtech.co.il.httpclient.model.Result;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.models.client.CustomJSONObjectRequest;
-import com.app.minyaneto_android.models.client.HelpJsonParser;
-import com.app.minyaneto_android.models.client.JSONObjectRequestHandlerInterface;
-import com.app.minyaneto_android.models.client.VolleyRequestQueueSingleton;
+
 import com.app.minyaneto_android.models.geo.Geocoded;
+import com.app.minyaneto_android.models.synagogue.Synagogue;
+import com.app.minyaneto_android.models.synagogue.SynagogueArray;
 import com.app.minyaneto_android.restApi.RequestHelper;
 import com.app.minyaneto_android.ui.fragments.AddMinyanFragment;
 import com.app.minyaneto_android.ui.fragments.MapFragment;
 import com.app.minyaneto_android.ui.fragments.AboutFragment;
 import com.app.minyaneto_android.ui.fragments.AddSynagogueFragment;
 import com.app.minyaneto_android.ui.fragments.SynagogueDetailsFragment;
-import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.app.minyaneto_android.ui.fragments.SynagoguesFragment;
 import com.app.minyaneto_android.utilities.fragment.ActivityRunning;
 import com.app.minyaneto_android.utilities.fragment.FragmentHelper;
 import com.app.minyaneto_android.utilities.user.Alerts;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ravtech.co.il.httpclient.ErrorResponse;
+import ravtech.co.il.httpclient.model.ErrorData;
+import ravtech.co.il.httpclient.model.Result;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -209,76 +212,110 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onUpdateSynagogues(LatLng latLng) {
+    public void onUpdateSynagogues(final LatLng latLng) {
 
         if (isShowSynagoguesFragment) {
             //map.getBounds().getSouthWest().lng()
-
             // TODO: לשלוח שאילתה לשרת לפי מיקום ולקבל רשימת בתי כנסת
 //            LatLngBounds latLngBounds = new LatLngBounds.Builder().include(latLng).include().build();
 
-            String url = "http://minyaneto.startach.com/v1/synagogues/?max_hits=20&top_left=" + 33.2326675 + "," + 34.0780113 +
-                    "&bottom_right=" + 29.3842887 + "," + 35.8924053;
-            CustomJSONObjectRequest<String> cjsobj = new CustomJSONObjectRequest<String>(Request.Method.GET, url, null);
 
-            JSONObjectRequestHandlerInterface<String> analyzer = new JSONObjectRequestHandlerInterface<String>() {
+//            String url = "http://minyaneto.startach.com/v1/synagogues/?max_hits=20&top_left=" + 33.2326675 + "," + 34.0780113 +
+//                    "&bottom_right=" + 29.3842887 + "," + 35.8924053;
+//            CustomJSONObjectRequest<String> cjsobj = new CustomJSONObjectRequest<String>(Request.Method.GET, url, null);
+//
+//            JSONObjectRequestHandlerInterface<String> analyzer = new JSONObjectRequestHandlerInterface<String>() {
+//                @Override
+//                public boolean isProcessReceivedDataImplemented() {
+//                    return true;
+//                }
+//
+//                @Override
+//                public boolean isExecuteCommandsImplemented() {
+//                    return true;
+//                }
+//
+//                @Override
+//                public String processReceivedData(JSONObject jsObj) {
+//                    Log.d("json_subtree", "processReceivedData");
+//                    synagogues = new ArrayList<>();
+//                    try {
+//                        List<JSONObject> listObjs = HelpJsonParser.parseJsonData(jsObj, "synagogues");
+//
+//                        for (JSONObject obj : listObjs) {
+//                            try {
+//                                synagogues.add(new Synagogue(obj));
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                        return "Done";
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                    return "Error";
+//                }
+//
+//                @Override
+//                public boolean executeCommands(String processedData) {
+//                    Log.d("json_subtree", "executeCommands");
+//                    if (processedData == "Done") {
+//                        int i = 0;
+//                        for (Synagogue synagogue : synagogues) {
+//                            getDistance(synagogue.getGeo().latitude, synagogue.getGeo().longitude,
+//                                    mapFragment.getLastLocation().getLatitude(), mapFragment.getLastLocation().getLongitude(), i);
+//                            i++;
+//                            if (i == 3)
+//                                continue;
+//                        }
+//                        synagoguesFragment.updateSynagogues(synagogues);
+//
+//                        return true;
+//                    }
+//                    return false;
+//                }
+//            };
+//            cjsobj.setmJsonRequestHandler(analyzer);
+//            cjsobj.addToRequestQueue(VolleyRequestQueueSingleton.getInstance(this));
+//            //synagogues = SynagougeFictiveData.getFictiveSynagouges(location);
+//            //updateAdapter();
+
+
+            RequestHelper.getSynagogues(this, latLng, new Response.Listener<SynagogueArray>() {
                 @Override
-                public boolean isProcessReceivedDataImplemented() {
-                    return true;
-                }
+                public void onResponse(SynagogueArray response) {
 
-                @Override
-                public boolean isExecuteCommandsImplemented() {
-                    return true;
-                }
-
-                @Override
-                public String processReceivedData(JSONObject jsObj) {
-                    Log.d("json_subtree", "processReceivedData");
-                    synagogues = new ArrayList<>();
-                    try {
-                        List<JSONObject> listObjs = HelpJsonParser.parseJsonData(jsObj, "synagogues");
-
-                        for (JSONObject obj : listObjs) {
-                            try {
-                                synagogues.add(new Synagogue(obj));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                    for (Synagogue s : new ArrayList<Synagogue>(response.getSynagogues())) {
+                        s.refreshData();
+                        s.setDistanceFromLocation(calculateDistance(s.getGeo(),latLng));
+                        if(s.getMinyans().size()==0){
+                            response.getSynagogues().remove(s);
                         }
-                        return "Done";
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
-                    return "Error";
-                }
+                    synagogues=response.getSynagogues();
+                    synagoguesFragment.updateSynagogues(synagogues);
 
+                }
+            }, new ErrorResponse.ErrorListener() {
                 @Override
-                public boolean executeCommands(String processedData) {
-                    Log.d("json_subtree", "executeCommands");
-                    if (processedData == "Done") {
-                        int i = 0;
-                        for (Synagogue synagogue : synagogues) {
-                            getDistance(synagogue.getGeo().latitude, synagogue.getGeo().longitude,
-                                    mapFragment.getLastLocation().getLatitude(), mapFragment.getLastLocation().getLongitude(), i);
-                            i++;
-                            if (i == 3)
-                                continue;
-                        }
-                        synagoguesFragment.updateSynagogues(synagogues);
-
-                        return true;
-                    }
-                    return false;
+                public void onErrorResponse(Result<ErrorData> error) {
+                    error.getData().getMessage();
                 }
-            };
-            cjsobj.setmJsonRequestHandler(analyzer);
-            cjsobj.addToRequestQueue(VolleyRequestQueueSingleton.getInstance(this));
-            //synagogues = SynagougeFictiveData.getFictiveSynagouges(location);
-            //updateAdapter();
-
+            });
 
         }
+    }
+
+    private long calculateDistance(LatLng location1, LatLng location2) {
+        double dLat = Math.toRadians(location1.latitude - location2.latitude);
+        double dLon = Math.toRadians(location1.longitude - location2.longitude);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(location2.latitude))
+                * Math.cos(Math.toRadians(location1.latitude)) * Math.sin(dLon / 2)
+                * Math.sin(dLon / 2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        long distanceInMeters = Math.round(6371000 * c);
+        return distanceInMeters;
     }
 
     public void getDistance(final double lat1, final double lon1, final double lat2, final double lon2, final int i) {
@@ -308,7 +345,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onMarkerClick(int position) {
         // TODO: CR david - change boolean for tag
-        if ( isShowSynagoguesFragment) {
+        if (isShowSynagoguesFragment) {
 
             synagoguesFragment.scrollToSynagoguePosition(position);
 

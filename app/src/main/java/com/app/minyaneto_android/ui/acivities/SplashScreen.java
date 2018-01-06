@@ -19,8 +19,14 @@ public class SplashScreen extends AppCompatActivity implements Alerts.OnCancelDi
 
         setContentView(R.layout.activity_splash_screen);
 
-        init();
+      //  init();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        init();
     }
 
     private void init() {

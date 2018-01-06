@@ -28,6 +28,10 @@ public enum PrayType {
             case "minha":
             case "מנחה":
                 return PrayType.AFTER_NOON;
+            case "maariv":
+            case "arvit":
+            case "ערבית":
+                return PrayType.EVENING;
         }
         throw new Exception(string);
     }

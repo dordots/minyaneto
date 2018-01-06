@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,9 +15,8 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.ui.acivities.MainActivity;
-import com.app.minyaneto_android.ui.adapters.MinyanAdapter;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
+import com.app.minyaneto_android.ui.adapters.MinyanAdapter;
 
 
 public class SynagogueDetailsFragment extends DialogFragment {
@@ -107,10 +105,10 @@ public class SynagogueDetailsFragment extends DialogFragment {
         tvAddressSynagogue.setText(mSynagogue.getAddress());
         tvCommentsSynagogue.setText(mSynagogue.getComments());
         tvNosachSynagogue.setText(getResources().getString(R.string.nosach) + " " + mSynagogue.getNosach());
-        cbLessons.setChecked(mSynagogue.isClasses());
-        cbParking.setChecked(mSynagogue.isParking());
-        cbSefer_tora.setChecked(mSynagogue.isSefer_tora());
-        cbWheelchair_accessible.setChecked(mSynagogue.isWheelchair_accessible());
+        cbLessons.setChecked(mSynagogue.getClasses());
+        cbParking.setChecked(mSynagogue.getParking());
+        cbSefer_tora.setChecked(mSynagogue.getSeferTora());
+        cbWheelchair_accessible.setChecked(mSynagogue.getWheelchairAccessible());
         mRecyclerViewMinyans.setAdapter(new MinyanAdapter(mSynagogue.getMinyans()));
         btnAddMinyan.setOnClickListener(new View.OnClickListener() {
             @Override

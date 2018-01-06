@@ -1,13 +1,14 @@
 package com.app.minyaneto_android.restApi;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.app.minyaneto_android.models.geo.Geocoded;
 import com.app.minyaneto_android.models.minyan.Minyan;
+import com.app.minyaneto_android.models.synagogue.SynagogueArray;
+import com.google.android.gms.maps.model.LatLng;
 
 import ravtech.co.il.httpclient.AppQueue;
 import ravtech.co.il.httpclient.ErrorResponse;
@@ -80,6 +81,23 @@ public class RequestHelper {
                 errorResponse
         );
 
+
+        setRetryPolicy(request);
+
+        AppQueue.getInstance(context).addToRequestQueue(request);
+    }
+
+    public static void getSynagogues(Context context, LatLng latLng,
+                                     Response.Listener<SynagogueArray> responseListener,
+                                     ErrorResponse.ErrorListener errorListener) {
+
+        GenericRequest<SynagogueArray> request = new GenericRequest<>(
+                URL.getUrlSynagogues(latLng),
+                SynagogueArray.class,
+                responseListener,
+                new ErrorResponse(errorListener),
+                Headers.getHeaders()
+        );
 
         setRetryPolicy(request);
 

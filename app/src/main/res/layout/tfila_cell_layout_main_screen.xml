@@ -7,103 +7,98 @@
     app:contentPaddingBottom="1dp">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:weightSum="1"
         android:id="@+id/row_linrLayout"
-
-        android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="1">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:padding="10dp"
-            android:orientation="vertical"
             android:layout_weight="0.2"
-            >
+            android:orientation="vertical"
+            android:padding="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:weightSum="1"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="1">
 
                 <TextView
                     android:id="@+id/synagogue_name"
                     android:layout_width="wrap_content"
-                    android:layout_weight="0.5"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_weight="0.5"
+                    android:textStyle="bold"
                     android:text="@string/name_synagogue"
                     android:textSize="20dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="  " />
-
-                <TextView
-                    android:layout_weight="0.5"
-                    android:id="@+id/prayer_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-
-                    android:text="@string/time_of_tfila" />
-
-
             </LinearLayout>
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/prayer_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="center"
-
-                    android:src="@drawable/ic_directions_walk_black_18dp" />
-
-                <TextView
-                    android:id="@+id/synagogue_walking_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" | "
-                    android:textSize="20dp" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_directions_car_black_18dp" />
-
-                <TextView
-                    android:id="@+id/synagogue_driving_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" | "
-                    android:textSize="20dp" />
-
-                <TextView
-                    android:id="@+id/synagogue_distance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/distance" />
+                android:layout_weight="0.5"
+                android:textDirection="locale"
+                android:text="@string/time_of_tfila" />
 
 
-            </LinearLayout>
+            <!--  <LinearLayout
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal">
+
+                  <ImageView
+                      android:layout_width="20dp"
+                      android:layout_height="20dp"
+                      android:layout_gravity="center"
+
+                      android:src="@drawable/ic_directions_walk_black_18dp" />
+
+                  <TextView
+                      android:id="@+id/synagogue_walking_time"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content" />
+
+
+                  <TextView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text=" | "
+                      android:textSize="20dp" />
+
+                  <ImageView
+                      android:layout_width="20dp"
+                      android:layout_height="20dp"
+
+                      android:layout_gravity="center"
+                      android:src="@drawable/ic_directions_car_black_18dp" />
+
+                  <TextView
+                      android:id="@+id/synagogue_driving_time"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content" />
+
+                  <TextView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text=" | "
+                      android:textSize="20dp" />
+
+
+                  <TextView
+                      android:id="@+id/synagogue_distance"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="@string/distance" />
+
+
+              </LinearLayout>-->
 
             <!--  <LinearLayout
                   android:layout_width="match_parent"
@@ -155,12 +150,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_weight="0.8"
-            android:layout_gravity="center"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-         >
-
+            android:layout_gravity="center"
+            android:layout_weight="0.8"
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/synagogue_details"
@@ -170,13 +163,30 @@
                 android:background="@drawable/selector_row"
                 android:src="@drawable/ic_more_info" />
 
-            <ImageView
-                android:id="@+id/go_waze"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:background="@drawable/selector_row"
-                android:src="@drawable/ic_navigation_icon" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/go_waze"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/selector_row"
+                    android:src="@drawable/ic_navigation_icon" />
+
+                <TextView
+                    android:id="@+id/synagogue_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/distance"
+                    android:textSize="10dp" />
+            </LinearLayout>
+
+
         </LinearLayout>
         <!-- <ImageView
               android:id="@+id/tfila_menu"

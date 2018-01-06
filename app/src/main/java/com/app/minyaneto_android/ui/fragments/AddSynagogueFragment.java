@@ -17,7 +17,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.ui.acivities.MainActivity;
+import com.app.minyaneto_android.models.synagogue.Geo;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -135,12 +135,12 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
 
         s.setParking(cbParking.isChecked());
 
-        s.setSefer_tora(cbSefer_tora.isChecked());
+       // s.setSefer_tora(cbSefer_tora.isChecked());
 
-        s.setWheelchair_accessible(cbWheelchair_accessible.isChecked());
+        //s.setWheelchair_accessible(cbWheelchair_accessible.isChecked());
 
         if (mLatLng != null)
-            s.setGeo(mLatLng);
+            s.setGeo(new Geo(mLatLng.latitude,mLatLng.longitude));
 
         //TODO add synagogue to server
 

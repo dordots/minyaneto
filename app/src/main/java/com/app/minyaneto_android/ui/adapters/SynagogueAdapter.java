@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.models.minyan.Minyan;
-import com.app.minyaneto_android.models.minyan.WeekDay;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
+import com.app.minyaneto_android.models.minyan.WeekDay;
 
 
 import java.text.SimpleDateFormat;
@@ -62,8 +62,8 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
     public void onBindViewHolder(SynagogueViewHolder holder, final int position) {
         Synagogue synagogue = synagogues.get(position);
         holder.nameTextView.setText(synagogue.getName());
-        holder.walkingTime.setText(synagogue.getWalking_time()+"");
-        holder.drivigTime.setText(synagogue.getDriving_time()+"");
+       // holder.walkingTime.setText(synagogue.getWalking_time()+"");
+       // holder.drivigTime.setText(synagogue.getDriving_time()+"");
 
 
         if (synagogue.getMinyans().size() > 0) {
@@ -71,7 +71,11 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
             holder.prayerTimeTextView.setText(getTime(position));
             //holder.prayTypeTextView.setText(synagogue.getMinyans().get(0).getPrayType().toString().charAt(0)+"");
         }
-        holder.distanceSynagogueTextView.setText(synagogue.getDistanceFromLocation()+"");
+        if(synagogue.getDistanceFromLocation()<1000)
+            holder.distanceSynagogueTextView.setText(String.format("%.2f ",synagogue.getDistanceFromLocation())+"מ'");
+        else
+            holder.distanceSynagogueTextView.setText(String.format("%.2f ",synagogue.getDistanceFromLocation()/1000)+"ק'מ");
+
 
         if(row_index==position)
             holder.row_linearlayout.setBackgroundColor(Color.LTGRAY);
@@ -87,9 +91,10 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
         for (Minyan minyan: synagogue.getMinyans()){
             Date f=minyan.getTime().toDate(WeekDay.values()[minyan.getPrayDayType().ordinal()]);
             if(f.after(new Date()))
-                result=" ,"+format.format(f)+result;
+                result=format.format(f)+", "+result;
         }
         //TODO return time in good format
+
         //TODO choose the best time from all minyans
         return result;
     }
@@ -100,8 +105,8 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
         TextView nameTextView;
         TextView prayerTimeTextView;
         TextView distanceSynagogueTextView;
-        TextView drivigTime;
-        TextView walkingTime;
+//        TextView drivigTime;
+//        TextView walkingTime;
         LinearLayout row_linearlayout;
         ImageView go;
         ImageView details;
@@ -113,8 +118,8 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
             prayerTimeTextView = (TextView) itemView.findViewById(R.id.prayer_time);
             distanceSynagogueTextView = (TextView) itemView.findViewById(R.id.synagogue_distance);
             row_linearlayout=(LinearLayout)itemView.findViewById(R.id.row_linrLayout);
-            drivigTime=(TextView)itemView.findViewById(R.id.synagogue_driving_time);
-            walkingTime=(TextView)itemView.findViewById(R.id.synagogue_walking_time);
+//            drivigTime=(TextView)itemView.findViewById(R.id.synagogue_driving_time);
+//            walkingTime=(TextView)itemView.findViewById(R.id.synagogue_walking_time);
             //menu=(ImageView)itemView.findViewById(R.id.tfila_menu) ;
             go=(ImageView)itemView.findViewById(R.id.go_waze) ;
             details=(ImageView)itemView.findViewById(R.id.synagogue_details) ;
@@ -136,6 +141,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
                         myClickListener.onRouteClick(getAdapterPosition());
                 }
             });
+
             details.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -46,8 +46,10 @@ public enum PrayDayType{
             case "saturday":
             case "שבת":
                 return SATURDAY;
+            default:
+                return THURSDAY; //TODO return the right value for spacial cases like -rosh-hodesh..
         }
-        throw new Exception(str);
+       // throw new Exception(str);
     }
 
     PrayDayType(int stringId){

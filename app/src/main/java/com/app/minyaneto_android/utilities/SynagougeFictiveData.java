@@ -1,16 +1,9 @@
 package com.app.minyaneto_android.utilities;
 
-import com.app.minyaneto_android.models.minyan.ExactTime;
-import com.app.minyaneto_android.models.minyan.Minyan;
-import com.app.minyaneto_android.models.minyan.RelativeTime;
-import com.app.minyaneto_android.models.minyan.RelativeTimeType;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
-import com.app.minyaneto_android.models.minyan.PrayDayType;
-import com.app.minyaneto_android.models.minyan.PrayType;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by משה on 25/08/2017.

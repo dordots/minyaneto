@@ -1,57 +1,74 @@
+
 package com.app.minyaneto_android.models.minyan;
 
-import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.ui.acivities.MainActivity;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * Created by User on 15/08/2017.
- */
-
 public class Minyan {
-    private String id;
+
+    @SerializedName("day")
+    @Expose
+    private String day;
+    @SerializedName("name")
+    @Expose
+    private String name;
+    @SerializedName("time")
+    @Expose
+    private String time;
+
     private PrayType prayType;
-    private Time time;
+    private Time the_time;
     private PrayDayType prayDayType;
     private Date lastUpdate;
 
-    public Minyan() {
+    public String getDay() {
+        return day;
     }
 
-    public Minyan(PrayType prayType, Time time, PrayDayType prayDayType) {
-        this.prayType = prayType;
+    public void setDay(String day) {
+        this.day = day;
+        setPrayDayType(day);
+    }
+
+    private void setPrayDayType(String day) {
+        try {
+            prayDayType = PrayDayType.getType(day);
+        }
+        catch (Exception ex){
+            //TODO something
+        }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+        setPrayType(name);
+    }
+
+    private void setPrayType(String name) {
+        try {
+            prayType = PrayType.getType(name);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*public String getTime() {
+        return time;
+    }*/
+
+    public void setTime(String time) {
         this.time = time;
-        this.prayDayType = prayDayType;
-    }
-
-    public Minyan(JSONObject object) throws JSONException, ParseException ,Exception{
-
-            this.prayType=PrayType.getType(object.getString("name"));
-            this.prayDayType=PrayDayType.getType(object.getString("day"));
-            String m_time=object.getString("time");
-            if(m_time.split(":").length>1) {
-                SimpleDateFormat format =  new SimpleDateFormat("HH:mm");
-
-                this.time = new ExactTime(format.parse(m_time).getHours(),format.parse(m_time).getMinutes());
-            }
-            else
-            {
-                this.time=new RelativeTime(RelativeTimeType.valueOf(m_time.split(" ")[0]), Integer.parseInt(m_time.split(" ")[1], 0));
-            }
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+        String[] parts = time.split(":");
+        if (parts.length>=2){
+            ExactTime exactTime = new ExactTime(Integer.parseInt(parts[0]),Integer.parseInt(parts[1]));
+            this.the_time=exactTime;
+        }
     }
 
     public PrayType getPrayType() {
@@ -63,11 +80,11 @@ public class Minyan {
     }
 
     public Time getTime() {
-        return time;
+        return the_time;
     }
 
     public void setTime(Time time) {
-        this.time = time;
+        this.the_time = time;
     }
 
     public PrayDayType getPrayDayType() {
@@ -93,7 +110,7 @@ public class Minyan {
 
         // TODO: CR david
 
-        String nounPray = "תפילת" ;
+        String nounPray = "תפילת";
 
         String nounInDays = "ביום";
 
@@ -102,30 +119,18 @@ public class Minyan {
                 nounInDays, prayDayType.name(), time.toString());
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Minyan)) return false;
-
-        Minyan minyan = (Minyan) o;
-
-        if (id != null ? !id.equals(minyan.id) : minyan.id != null) return false;
-        if (prayType != minyan.prayType) return false;
-        if (!time.equals(minyan.time)) return false;
-        return prayDayType.equals(minyan.prayDayType);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + prayType.hashCode();
-        result = 31 * result + time.hashCode();
-        result = 31 * result + prayDayType.hashCode();
-        return result;
-    }
-
     public boolean isValid() {
         return true;
+    }
+
+    public void refreshData() {
+        String[] parts = time.split(":");
+        if (parts.length>=2){
+            ExactTime exactTime = new ExactTime(Integer.parseInt(parts[0]),Integer.parseInt(parts[1]));
+            this.the_time=exactTime;
+        }
+
+        setPrayDayType(day);
+        setPrayType(name);
     }
 }
