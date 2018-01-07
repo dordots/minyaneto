@@ -7,6 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.app.minyaneto_android.models.geo.Geocoded;
 import com.app.minyaneto_android.models.minyan.Minyan;
+import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.app.minyaneto_android.models.synagogue.SynagogueArray;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -61,6 +62,41 @@ public class RequestHelper {
 
     }
 
+    public static void addSynagogue(Context context, Synagogue synagogue, Response.Listener<Synagogue> mResponseListener,
+                                    Response.ErrorListener errorResponse) {
+
+        GenericRequest<Synagogue> request = new GenericRequest<>(
+                Request.Method.POST,
+                URL.getAddSynagogue(),
+                Synagogue.class,
+                synagogue,
+                mResponseListener,
+                errorResponse,
+                Headers.getHeaders()
+        );
+
+        setRetryPolicy(request);
+
+        AppQueue.getInstance(context).addToRequestQueue(request);
+
+    }
+    public static void updateSynagogue(Context context,String id, Synagogue synagogue, Response.Listener<String> mResponseListener, Response.ErrorListener errorResponse) {
+
+        GenericRequest<String> request = new GenericRequest<>(
+                Request.Method.PUT,
+                URL.getUpdateSynagogue(id),
+                Synagogue.class,
+                synagogue,
+                mResponseListener,
+                errorResponse,
+                Headers.getHeaders()
+        );
+
+        setRetryPolicy(request);
+
+        AppQueue.getInstance(context).addToRequestQueue(request);
+
+    }
     private static void setRetryPolicy(GenericRequest<?> request) {
         request.setRetryPolicy(new DefaultRetryPolicy(
                 MY_SOCKET_TIMEOUT_MS,

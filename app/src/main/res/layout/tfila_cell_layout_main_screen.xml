@@ -33,7 +33,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="0.5"
-                    android:textStyle="bold"
                     android:text="@string/name_synagogue"
                     android:textSize="20dp" />
 

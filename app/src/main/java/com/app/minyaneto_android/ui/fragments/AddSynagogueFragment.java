@@ -16,15 +16,21 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.volley.Response;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.models.synagogue.Geo;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
+import com.app.minyaneto_android.restApi.RequestHelper;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
+
+import ravtech.co.il.httpclient.ErrorResponse;
+import ravtech.co.il.httpclient.model.ErrorData;
+import ravtech.co.il.httpclient.model.Result;
 
 
 public class AddSynagogueFragment extends Fragment implements View.OnClickListener {
@@ -93,6 +99,8 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
 
         etAddressSynagogue.setOnClickListener(this);
 
+        btnAddSynagogue.setOnClickListener(this);
+
     }
 
     private void getAddress() {
@@ -121,7 +129,7 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
             Toast.makeText(getContext(), getResources().getString(R.string.check), Toast.LENGTH_SHORT).show();
             return;
         }
-        Synagogue s = new Synagogue();
+        final Synagogue s = new Synagogue();
 
         s.setName(etNameSynagogue.getText().toString());
 
@@ -135,16 +143,28 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
 
         s.setParking(cbParking.isChecked());
 
-       // s.setSefer_tora(cbSefer_tora.isChecked());
+        // s.setSefer_tora(cbSefer_tora.isChecked());
 
         //s.setWheelchair_accessible(cbWheelchair_accessible.isChecked());
 
         if (mLatLng != null)
-            s.setGeo(new Geo(mLatLng.latitude,mLatLng.longitude));
+            s.setGeo(new Geo(mLatLng.latitude, mLatLng.longitude));
 
         //TODO add synagogue to server
+//POST /v1/synagogues/
 
-        mListener.onShowSynagogueDetails(s);
+        RequestHelper.addSynagogue(getContext(), s, new Response.Listener<Synagogue>() {
+            @Override
+            public void onResponse(Synagogue response) {
+                s.setId(response.getId());
+                mListener.onShowSynagogueDetails(s);
+            }
+        }, new ErrorResponse(new ErrorResponse.ErrorListener() {
+            @Override
+            public void onErrorResponse(Result<ErrorData> error) {
+                error.getData().getMessage();
+            }
+        }));
     }
 
 
@@ -168,6 +188,9 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
                 updateSynagogueAddress(place.getAddress().toString());
 
                 mListener.onUpdateMarker(place);
+
+                updateLatLng(place.getLatLng());
+
             }
         }
     }

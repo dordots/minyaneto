@@ -47,7 +47,6 @@ public class SynagogueDetailsFragment extends DialogFragment {
     FloatingActionButton btnAddMinyan;
 
 
-
     public static SynagogueDetailsFragment newInstance(Synagogue synagogue) {
 
         SynagogueDetailsFragment fragment = new SynagogueDetailsFragment();
@@ -60,8 +59,6 @@ public class SynagogueDetailsFragment extends DialogFragment {
 
         return fragment;
     }
-
-
 
 
     @Override
@@ -105,10 +102,10 @@ public class SynagogueDetailsFragment extends DialogFragment {
         tvAddressSynagogue.setText(mSynagogue.getAddress());
         tvCommentsSynagogue.setText(mSynagogue.getComments());
         tvNosachSynagogue.setText(getResources().getString(R.string.nosach) + " " + mSynagogue.getNosach());
-        cbLessons.setChecked(mSynagogue.getClasses());
-        cbParking.setChecked(mSynagogue.getParking());
-        cbSefer_tora.setChecked(mSynagogue.getSeferTora());
-        cbWheelchair_accessible.setChecked(mSynagogue.getWheelchairAccessible());
+        cbLessons.setChecked(mSynagogue.getClasses() != null ? mSynagogue.getClasses() : false);
+        cbParking.setChecked(mSynagogue.getParking() != null ? mSynagogue.getParking() : false);
+        cbSefer_tora.setChecked(mSynagogue.getSeferTora() != null ? mSynagogue.getSeferTora() : false);
+        cbWheelchair_accessible.setChecked(mSynagogue.getWheelchairAccessible() != null? mSynagogue.getWheelchairAccessible():false);
         mRecyclerViewMinyans.setAdapter(new MinyanAdapter(mSynagogue.getMinyans()));
         btnAddMinyan.setOnClickListener(new View.OnClickListener() {
             @Override

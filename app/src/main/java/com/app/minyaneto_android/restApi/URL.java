@@ -25,6 +25,15 @@ public class URL {
         return BASE_URL + "/user";
     }
 
+     public static String getAddSynagogue(){
+
+         return BASE_URL + "synagogues/";
+     }
+
+    public static  String getUpdateSynagogue(String id){
+        return BASE_URL +"synagogues/"+id;
+    }
+
     public static String getUser(int id) {
 
         return getUrlOrders() + "/" + id;

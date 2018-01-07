@@ -215,84 +215,18 @@ public class MainActivity extends AppCompatActivity implements
     public void onUpdateSynagogues(final LatLng latLng) {
 
         if (isShowSynagoguesFragment) {
-            //map.getBounds().getSouthWest().lng()
-            // TODO: לשלוח שאילתה לשרת לפי מיקום ולקבל רשימת בתי כנסת
-//            LatLngBounds latLngBounds = new LatLngBounds.Builder().include(latLng).include().build();
-
-
-//            String url = "http://minyaneto.startach.com/v1/synagogues/?max_hits=20&top_left=" + 33.2326675 + "," + 34.0780113 +
-//                    "&bottom_right=" + 29.3842887 + "," + 35.8924053;
-//            CustomJSONObjectRequest<String> cjsobj = new CustomJSONObjectRequest<String>(Request.Method.GET, url, null);
-//
-//            JSONObjectRequestHandlerInterface<String> analyzer = new JSONObjectRequestHandlerInterface<String>() {
-//                @Override
-//                public boolean isProcessReceivedDataImplemented() {
-//                    return true;
-//                }
-//
-//                @Override
-//                public boolean isExecuteCommandsImplemented() {
-//                    return true;
-//                }
-//
-//                @Override
-//                public String processReceivedData(JSONObject jsObj) {
-//                    Log.d("json_subtree", "processReceivedData");
-//                    synagogues = new ArrayList<>();
-//                    try {
-//                        List<JSONObject> listObjs = HelpJsonParser.parseJsonData(jsObj, "synagogues");
-//
-//                        for (JSONObject obj : listObjs) {
-//                            try {
-//                                synagogues.add(new Synagogue(obj));
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                        return "Done";
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                    return "Error";
-//                }
-//
-//                @Override
-//                public boolean executeCommands(String processedData) {
-//                    Log.d("json_subtree", "executeCommands");
-//                    if (processedData == "Done") {
-//                        int i = 0;
-//                        for (Synagogue synagogue : synagogues) {
-//                            getDistance(synagogue.getGeo().latitude, synagogue.getGeo().longitude,
-//                                    mapFragment.getLastLocation().getLatitude(), mapFragment.getLastLocation().getLongitude(), i);
-//                            i++;
-//                            if (i == 3)
-//                                continue;
-//                        }
-//                        synagoguesFragment.updateSynagogues(synagogues);
-//
-//                        return true;
-//                    }
-//                    return false;
-//                }
-//            };
-//            cjsobj.setmJsonRequestHandler(analyzer);
-//            cjsobj.addToRequestQueue(VolleyRequestQueueSingleton.getInstance(this));
-//            //synagogues = SynagougeFictiveData.getFictiveSynagouges(location);
-//            //updateAdapter();
-
-
             RequestHelper.getSynagogues(this, latLng, new Response.Listener<SynagogueArray>() {
                 @Override
                 public void onResponse(SynagogueArray response) {
 
                     for (Synagogue s : new ArrayList<Synagogue>(response.getSynagogues())) {
                         s.refreshData();
-                        s.setDistanceFromLocation(calculateDistance(s.getGeo(),latLng));
-                        if(s.getMinyans().size()==0){
+                        s.setDistanceFromLocation(calculateDistance(s.getGeo(), latLng));
+                        if (s.getMinyans().size() == 0) {
                             response.getSynagogues().remove(s);
                         }
                     }
-                    synagogues=response.getSynagogues();
+                    synagogues = response.getSynagogues();
                     synagoguesFragment.updateSynagogues(synagogues);
 
                 }
