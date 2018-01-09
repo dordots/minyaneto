@@ -111,7 +111,7 @@ public class SynagogueDetailsFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (mListener != null)
-                    mListener.onWantToAddAMinyan();
+                    mListener.onWantToAddAMinyan(mSynagogue);
             }
         });
     }
@@ -143,7 +143,7 @@ public class SynagogueDetailsFragment extends DialogFragment {
 
     public interface WantCahngeFragmentListener {
 
-        void onWantToAddAMinyan();
+        void onWantToAddAMinyan(Synagogue synagogue);
 
         void onSetActionBarTitle(String string);
     }

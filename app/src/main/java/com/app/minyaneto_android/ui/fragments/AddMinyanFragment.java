@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.android.volley.Response;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.models.minyan.ExactTime;
 import com.app.minyaneto_android.models.minyan.Minyan;
@@ -27,8 +29,14 @@ import com.app.minyaneto_android.models.minyan.PrayType;
 import com.app.minyaneto_android.models.minyan.RelativeTime;
 import com.app.minyaneto_android.models.minyan.RelativeTimeType;
 import com.app.minyaneto_android.models.minyan.Time;
+import com.app.minyaneto_android.models.synagogue.Synagogue;
+import com.app.minyaneto_android.restApi.RequestHelper;
 
 import java.util.ArrayList;
+
+import ravtech.co.il.httpclient.ErrorResponse;
+import ravtech.co.il.httpclient.model.ErrorData;
+import ravtech.co.il.httpclient.model.Result;
 
 public class AddMinyanFragment extends Fragment {
 
@@ -48,12 +56,14 @@ public class AddMinyanFragment extends Fragment {
     private LinearLayout linearLayoutRelativeTime;
     boolean inRelativeTimeMode;
     private AddMinyanListener mListener;
+    private static Synagogue mSynagogue;
 
     public AddMinyanFragment() {
         // Required empty public constructor
     }
 
-    public static AddMinyanFragment newInstance() {
+    public static AddMinyanFragment newInstance(Synagogue synagogue) {
+        mSynagogue = synagogue;
         AddMinyanFragment fragment = new AddMinyanFragment();
         return fragment;
     }
@@ -122,7 +132,7 @@ public class AddMinyanFragment extends Fragment {
             time = new RelativeTime((RelativeTimeType) spinnerRelativeTimeType.getSelectedItem(), Integer.parseInt(etMinutes.getText().toString()));
         } else {
 
-            if (Build.VERSION.SDK_INT >= 23 )
+            if (Build.VERSION.SDK_INT >= 23)
                 time = new ExactTime(timePicker.getHour(), timePicker.getMinute());
             else
                 time = new ExactTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute());
@@ -151,17 +161,28 @@ public class AddMinyanFragment extends Fragment {
             days.add(PrayDayType.SATURDAY);
         }
 
-
         Minyan minyan = new Minyan();
         minyan.setPrayType((PrayType) spinnerPrayType.getSelectedItem());
         minyan.setTime(time);
-        //TODO sent new minyan to server for all the days
         minyan.setPrayDayType(days.get(0));
+        for (PrayDayType day : days) {
+            minyan.setPrayDayType(day);
+            mSynagogue.addMinyan(minyan);
+        }
 
-        //TODO add  minyan to server
-
-        //TODO return to back fragment
-        // getActivity().onBackPressed();
+        RequestHelper.updateSynagogue(getContext(), mSynagogue.getId(), mSynagogue, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) { //response = null
+                //TODO some message to user?
+                //TODO return to back fragment
+                getActivity().onBackPressed();
+            }
+        }, new ErrorResponse(new ErrorResponse.ErrorListener() {
+            @Override
+            public void onErrorResponse(Result<ErrorData> error) {
+                error.getData().getMessage();
+            }
+        }));
     }
 
     @Override

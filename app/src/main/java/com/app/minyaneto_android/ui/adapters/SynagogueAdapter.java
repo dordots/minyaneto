@@ -68,8 +68,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
 
         if (synagogue.getMinyans().size() > 0) {
             //TODO real time from minyans
-            holder.prayerTimeTextView.setText(getTime(position));
-            //holder.prayTypeTextView.setText(synagogue.getMinyans().get(0).getPrayType().toString().charAt(0)+"");
+            holder.prayerTimeTextView.setText(synagogue.getMinyansAsString());//getTime(position));
         }
         if(synagogue.getDistanceFromLocation()<1000)
             holder.distanceSynagogueTextView.setText(String.format("%.2f ",synagogue.getDistanceFromLocation())+"מ'");
@@ -83,21 +82,21 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
             holder.row_linearlayout.setBackgroundColor(Color.WHITE);
     }
 
-    private String getTime(int position) {
-        //TODO calculate real time
-        Synagogue synagogue = synagogues.get(position);
-        SimpleDateFormat format =  new SimpleDateFormat("HH:mm");
-        String result="";
-        for (Minyan minyan: synagogue.getMinyans()){
-            Date f=minyan.getTime().toDate(WeekDay.values()[minyan.getPrayDayType().ordinal()]);
-            if(f.after(new Date()))
-                result=format.format(f)+", "+result;
-        }
-        //TODO return time in good format
-
-        //TODO choose the best time from all minyans
-        return result;
-    }
+//    private String getTime(int position) {
+//        //TODO calculate real time
+//        Synagogue synagogue = synagogues.get(position);
+//        SimpleDateFormat format =  new SimpleDateFormat("HH:mm");
+//        String result="";
+//        for (Minyan minyan: synagogue.getMinyans()){
+//            Date f=minyan.getTime().toDate(WeekDay.values()[minyan.getPrayDayType().ordinal()+1]);
+//            if(f.after(new Date()))
+//                result=format.format(f)+", "+result;
+//        }
+//        //TODO return time in good format
+//
+//        //TODO choose the best time from all minyans
+//        return result;
+//    }
 
 
     public class SynagogueViewHolder extends RecyclerView.ViewHolder {

@@ -55,6 +55,16 @@ public class Synagogue implements Parcelable {
 
     private LatLng latLng;
 
+    private String minyansAsString;
+
+    public String getMinyansAsString() {
+        return minyansAsString;
+    }
+
+    public void setMinyansAsString(String minyansAsString) {
+        this.minyansAsString = minyansAsString;
+    }
+
     public String getAddress() {
         return address;
     }
@@ -149,6 +159,10 @@ public class Synagogue implements Parcelable {
         this.wheelchairAccessible = wheelchairAccessible;
     }
 
+    public void addMinyan(Minyan minyan){
+        this.minyans.add(minyan);
+    }
+
     public double getDistanceFromLocation() {
         return distanceFromLocation;
     }
@@ -219,9 +233,7 @@ public class Synagogue implements Parcelable {
         for (Minyan m : new ArrayList<>(minyans)) {
             try {
                 m.refreshData();
-                if(m.getPrayDayType().ordinal()!=new Date().getDay()){
-                    minyans.remove(m);
-                }
+
             } catch (Exception ex) {
                 minyans.remove(m);
             }

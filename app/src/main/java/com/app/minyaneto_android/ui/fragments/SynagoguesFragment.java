@@ -160,7 +160,7 @@ public class SynagoguesFragment extends Fragment {
             public void onShowDetailsClick(int position) {
                 if (position == -1) return;
 
-                mListener.onShowSynagogueDetails(mSynagogues.get(position));
+                mListener.onShowSynagogueDetails(mSynagogues.get(position).getId());
 
             }
         });
@@ -191,6 +191,6 @@ public class SynagoguesFragment extends Fragment {
 
         void onOpenRoute(LatLng geo);
 
-        void onShowSynagogueDetails(Synagogue synagogue);
+        void onShowSynagogueDetails(String id);
     }
 }

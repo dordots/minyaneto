@@ -149,15 +149,13 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
 
         if (mLatLng != null)
             s.setGeo(new Geo(mLatLng.latitude, mLatLng.longitude));
-
-        //TODO add synagogue to server
-//POST /v1/synagogues/
+            s.setGeo(new Geo(mLatLng.latitude, mLatLng.longitude));
 
         RequestHelper.addSynagogue(getContext(), s, new Response.Listener<Synagogue>() {
             @Override
             public void onResponse(Synagogue response) {
                 s.setId(response.getId());
-                mListener.onShowSynagogueDetails(s);
+                mListener.onShowSynagogueDetails(s.getId());
             }
         }, new ErrorResponse(new ErrorResponse.ErrorListener() {
             @Override
@@ -238,7 +236,7 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
 
     public interface AddSynagogueListener {
 
-        void onShowSynagogueDetails(Synagogue synagogue);
+        void onShowSynagogueDetails(String id);
 
         void onSetActionBarTitle(String title);
 

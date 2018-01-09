@@ -80,7 +80,8 @@ public class RequestHelper {
         AppQueue.getInstance(context).addToRequestQueue(request);
 
     }
-    public static void updateSynagogue(Context context,String id, Synagogue synagogue, Response.Listener<String> mResponseListener, Response.ErrorListener errorResponse) {
+    public static void updateSynagogue(Context context,String id, Synagogue synagogue, Response.Listener<String> mResponseListener,
+                                       Response.ErrorListener errorResponse) {
 
         GenericRequest<String> request = new GenericRequest<>(
                 Request.Method.PUT,
