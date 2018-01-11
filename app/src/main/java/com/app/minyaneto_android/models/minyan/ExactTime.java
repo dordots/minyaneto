@@ -52,7 +52,7 @@ public class ExactTime implements Time {
 
     private Calendar toCalendar(WeekDay weekDay) {
         Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.DAY_OF_WEEK, weekDay.ordinal());
+        cal.set(Calendar.DAY_OF_WEEK, weekDay.ordinal()+1);
         cal.set(Calendar.HOUR_OF_DAY, hour);
         cal.set(Calendar.MINUTE, minute);
         return cal;

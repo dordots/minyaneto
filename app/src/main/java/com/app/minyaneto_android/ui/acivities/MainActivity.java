@@ -251,7 +251,8 @@ public class MainActivity extends AppCompatActivity implements
         RequestHelper.getSynagogues(this, latLng, new Response.Listener<SynagogueArray>() {
             @Override
             public void onResponse(SynagogueArray response) {
-                origionSynagogues = response.getSynagogues();
+                origionSynagogues =    (ArrayList<Synagogue>)response.getSynagogues().clone();
+
 
                 for (Synagogue s : new ArrayList<>(response.getSynagogues())) {
                     s.refreshData();

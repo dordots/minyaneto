@@ -116,7 +116,7 @@ public class Synagogue implements Parcelable {
     }
 
     public void setMinyans(ArrayList<Minyan> minyans) {
-        this.minyans = minyans;
+        this.minyans = new ArrayList<>(minyans);
     }
 
     public String getName() {
