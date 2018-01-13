@@ -195,6 +195,7 @@ public class Synagogue implements Parcelable {
     public Synagogue(){
         this.minyans = new ArrayList<Minyan>();
     }
+
     protected Synagogue(Parcel in) {
         this.id = in.readString();
         this.address = in.readString();

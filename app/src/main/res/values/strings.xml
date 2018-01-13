@@ -90,6 +90,12 @@
     <string name="pray_type_after_noon">מנחה</string>
     <string name="pray_type_evening">ערבית</string>
 
+    <string-array name="tfila_name">
+        <item>@string/pray_type_morning</item>
+        <item>@string/pray_type_after_noon</item>
+        <item>@string/pray_type_evening</item>
+    </string-array>
+
     <!--Pray Day Type-->
     <string name="pray_day_type_s">ראשון</string>
     <string name="pray_day_type_m">שני</string>
@@ -148,4 +154,13 @@
     <string name="no_gps_connection" />
     <string name="message_alert_no_gps">For use with this app the GPS is required</string>
     <string name="no_address">כתובת לא חוקית</string>
+    <string name="search_synagogue_fragment">חיפוש בית כנסת</string>
+    <string name="enter_your_address">הכנס את המיקום המבוקש</string>
+    <string name="check_search">יש למלא את השדות לפני ביצוע החיפוש</string>
+    <string name="search_by_nosach">חפש לפי נוסח</string>
+    <string name="sidebar_searchSynagogue">חפש</string>
+    <string name="search">חפש</string>
+    <string name="choose_a_date">בחר תאריך</string>
+    <string name="choose_a_time">בחר זמן ביום</string>
+    <string name="choose_name_synagogue">תפילת</string>
 </resources>

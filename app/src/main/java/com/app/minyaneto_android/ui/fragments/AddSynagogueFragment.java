@@ -143,13 +143,14 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
 
         s.setParking(cbParking.isChecked());
 
-        // s.setSefer_tora(cbSefer_tora.isChecked());
+        s.setSeferTora(cbSefer_tora.isChecked());
 
-        //s.setWheelchair_accessible(cbWheelchair_accessible.isChecked());
+        s.setWheelchairAccessible(cbWheelchair_accessible.isChecked());
 
         if (mLatLng != null)
             s.setGeo(new Geo(mLatLng.latitude, mLatLng.longitude));
-            s.setGeo(new Geo(mLatLng.latitude, mLatLng.longitude));
+        else
+            return; //TODO - what do if there is not latlng?
 
         RequestHelper.addSynagogue(getContext(), s, new Response.Listener<Synagogue>() {
             @Override

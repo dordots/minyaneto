@@ -16,6 +16,7 @@ import ravtech.co.il.httpclient.ErrorResponse;
 import ravtech.co.il.httpclient.model.ErrorData;
 import ravtech.co.il.httpclient.model.Result;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,6 +29,7 @@ import com.app.minyaneto_android.models.geo.Geocoded;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.minyan.PrayDayType;
 import com.app.minyaneto_android.models.minyan.PrayType;
+import com.app.minyaneto_android.models.minyan.Time;
 import com.app.minyaneto_android.models.minyan.WeekDay;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.app.minyaneto_android.models.synagogue.SynagogueArray;
@@ -36,6 +38,7 @@ import com.app.minyaneto_android.ui.fragments.AddMinyanFragment;
 import com.app.minyaneto_android.ui.fragments.MapFragment;
 import com.app.minyaneto_android.ui.fragments.AboutFragment;
 import com.app.minyaneto_android.ui.fragments.AddSynagogueFragment;
+import com.app.minyaneto_android.ui.fragments.SearchFragment;
 import com.app.minyaneto_android.ui.fragments.SynagogueDetailsFragment;
 import com.app.minyaneto_android.ui.fragments.SynagoguesFragment;
 import com.app.minyaneto_android.utilities.fragment.ActivityRunning;
@@ -44,17 +47,10 @@ import com.app.minyaneto_android.utilities.user.Alerts;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-
-import ravtech.co.il.httpclient.ErrorResponse;
-import ravtech.co.il.httpclient.model.ErrorData;
-import ravtech.co.il.httpclient.model.Result;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -64,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements
         AddSynagogueFragment.AddSynagogueListener,
         SynagogueDetailsFragment.WantCahngeFragmentListener,
         SynagoguesFragment.OnSynagoguesListener,
-        AboutFragment.AboutListener, AddMinyanFragment.AddMinyanListener {
+        AboutFragment.AboutListener, AddMinyanFragment.AddMinyanListener, SearchFragment.SearchListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -84,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements
 
     public ArrayList<Synagogue> synagogues;
 
-    public ArrayList<Synagogue> origionSynagogues;
+    public ArrayList<Synagogue> originSynagogues;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements
         if (synagoguesFragment == null)
 
             synagoguesFragment = SynagoguesFragment.newInstance();
+
         mFragmentHelper.replaceFragment(R.id.MA_container, synagoguesFragment, SynagoguesFragment.TAG, null);
 
     }
@@ -164,6 +161,13 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onMenuSelectSearchSynagogue() {
+
+        mFragmentHelper.replaceFragment(R.id.MA_container, SearchFragment.getInstance(), SearchFragment.TAG, null);
+
+    }
+
+    @Override
     public void onMenuSelectAbout() {
 
         mFragmentHelper.addFragment(R.id.MA_main_container, AboutFragment.getInstance(), AboutFragment.TAG, AboutFragment.TAG);
@@ -174,12 +178,12 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onShowSynagogueDetails(String id) {
 
-        if (null == origionSynagogues)
+        if (null == originSynagogues)
             return;
 
         Synagogue synagogue = null;
 
-        for (Synagogue s : origionSynagogues) {
+        for (Synagogue s : originSynagogues) {
 
             if (s.getId().equals(id)) {
 
@@ -251,9 +255,12 @@ public class MainActivity extends AppCompatActivity implements
         RequestHelper.getSynagogues(this, latLng, new Response.Listener<SynagogueArray>() {
             @Override
             public void onResponse(SynagogueArray response) {
-                origionSynagogues =    (ArrayList<Synagogue>)response.getSynagogues().clone();
+                originSynagogues = (ArrayList<Synagogue>) response.getSynagogues().clone();
 
-
+                for (Synagogue s : originSynagogues) {
+                    s.setMinyans(new ArrayList<Minyan>(s.getMinyans()));
+                    s.refreshData();
+                }
                 for (Synagogue s : new ArrayList<>(response.getSynagogues())) {
                     s.refreshData();
                     s.setDistanceFromLocation(calculateDistance(s.getGeo(), latLng));
@@ -269,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements
                             s.getMinyans().remove(m);
                         }
                     }
-                    String msg = getTimes(s.getMinyans());
+                    String msg = getTimes(s.getMinyans(), date);
                     s.setMinyansAsString(msg);
                     if (s.getMinyansAsString() == "") {
                         response.getSynagogues().remove(s);
@@ -289,20 +296,29 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private String getTimes(ArrayList<Minyan> minyans, Date date) {
-        //TODO calculate real time -like rosh hodesh..
+        if (null == date) {
+            date = new Date();
+        }
         SimpleDateFormat format = new SimpleDateFormat("HH:mm");
         String result = "";
         for (Minyan minyan : minyans) {
-            Date f = minyan.getTime().toDate(WeekDay.values()[minyan.getPrayDayType().ordinal()]);
+            Time time = minyan.getTime();
+            //TODO calculate real time -like rosh hodesh..
+            //Date f = minyan.getTime().toDate(WeekDay.values()[minyan.getPrayDayType().ordinal()]);
+            Calendar cal = Calendar.getInstance();
+            Log.d("-------------",cal.getTime().toString());
+            cal.setTime(date);
+            cal.set(Calendar.DAY_OF_WEEK, minyan.getPrayDayType().ordinal());
+            cal.set(Calendar.HOUR_OF_DAY, time.getHour());
+            cal.set(Calendar.MINUTE, time.getMinutes());
+            Log.d("-------------",cal.getTime().toString());
+
+            Date f = cal.getTime();
             if (f.after(date))
-                result = format.format(f) + ", " + result;
+                result = result + " ," + format.format(f);
         }
 
         return result;
-    }
-
-    private String getTimes(ArrayList<Minyan> minyans) {
-        return getTimes(minyans, new Date());
     }
 
     private long calculateDistance(LatLng location1, LatLng location2) {
@@ -474,4 +490,15 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
+    @Override
+    public void onSearch(LatLng latLng, Date date, PrayType prayType, String nosach) {
+
+
+        mFragmentHelper.replaceFragment(R.id.MA_container, synagoguesFragment, SynagoguesFragment.TAG, null);
+
+        isShowSynagoguesFragment = true;
+
+        updateSynagogues(latLng, date, prayType, nosach);
+
+    }
 }
