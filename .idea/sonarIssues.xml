@@ -163,6 +163,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../OperatorsApp/app/src/main/java/com/operatorsapp/adapters/ShiftLogAdapter.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../OperatorsApp/app/src/main/java/com/operatorsapp/adapters/StopSubReasonAdapter.java">
           <value>
             <set />
@@ -574,6 +579,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/app/src/main/res/layout/main_activity.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/app/src/main/res/menu/nav_menu.xml">
           <value>
             <set />
           </value>

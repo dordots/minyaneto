@@ -71,8 +71,8 @@ public class MainActivity extends AppCompatActivity implements
 
     public SynagoguesFragment synagoguesFragment;
 
-    private boolean isShowSynagoguesFragment = true;
     public ArrayList<Synagogue> synagogues;
+    public AddSynagogueFragment addSynagogueFragment;
 
 
     @Override
@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements
         if (synagoguesFragment == null)
 
             synagoguesFragment = SynagoguesFragment.newInstance();
+
         mFragmentHelper.replaceFragment(R.id.MA_container, synagoguesFragment, SynagoguesFragment.TAG, null);
 
     }
@@ -127,9 +128,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onMenuSelectHome() {
 
-        isShowSynagoguesFragment = true;
-
         invalidateOptionsMenu();
+
+        returnToMain();
 
         initSynagoguesFragment();
 
@@ -144,11 +145,21 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onMenuSelectAddSynagogue() {
 
-        isShowSynagoguesFragment = false;
+        returnToMain();
 
-        // TODO: 20/12/2017 change to add
+        if (addSynagogueFragment == null)
 
-        mFragmentHelper.replaceFragment(R.id.MA_container, AddSynagogueFragment.getInstance(), AddSynagogueFragment.TAG, null);
+            addSynagogueFragment = AddSynagogueFragment.getInstance();
+
+        mFragmentHelper.replaceFragment(R.id.MA_container, addSynagogueFragment, AddSynagogueFragment.TAG, AddSynagogueFragment.TAG);
+
+    }
+
+    private void returnToMain() {
+
+        if (mFragmentHelper.isContains(AboutFragment.TAG))
+
+            mFragmentHelper.removeFragment(AboutFragment.TAG, true);
 
     }
 
@@ -170,9 +181,19 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onSetActionBarTitle(String title) {
 
-        if (getSupportActionBar() != null)
+        if (title != null && getSupportActionBar() != null)
 
             getSupportActionBar().setTitle(title);
+
+        else if (mFragmentHelper.isContains(SynagoguesFragment.TAG)) {
+
+            onSetActionBarTitle(getResources().getString(R.string.main_screen_fragment));
+
+        } else if (mFragmentHelper.isContains(AddSynagogueFragment.TAG)) {
+
+            onSetActionBarTitle(getResources().getString(R.string.add_synagogue_fragment));
+        }
+
 
     }
 
@@ -211,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onUpdateSynagogues(LatLng latLng) {
 
-        if (isShowSynagoguesFragment) {
+        if (mFragmentHelper.isContains(SynagoguesFragment.TAG)) {
             //map.getBounds().getSouthWest().lng()
 
             // TODO: לשלוח שאילתה לשרת לפי מיקום ולקבל רשימת בתי כנסת
@@ -307,8 +328,8 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onMarkerClick(int position) {
-        // TODO: CR david - change boolean for tag
-        if ( isShowSynagoguesFragment) {
+
+        if (mFragmentHelper.isContains(SynagoguesFragment.TAG)) {
 
             synagoguesFragment.scrollToSynagoguePosition(position);
 
@@ -318,7 +339,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onGetDistanse(double meters, String drivingTime) {
 
-        if (isShowSynagoguesFragment) {
+        if (mFragmentHelper.isContains(SynagoguesFragment.TAG)) {
 
 // TODO: 20/12/2017
         }
@@ -336,7 +357,7 @@ public class MainActivity extends AppCompatActivity implements
 
         if (!mNavigationHelper.closeDrawer()) {
 
-            if (mFragmentHelper.getFragmentsSize() > 2) {
+            if (mFragmentHelper.isContains(AddSynagogueFragment.TAG) || mFragmentHelper.getFragmentsSize() > 2) {
 
                 super.onBackPressed();
 

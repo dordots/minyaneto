@@ -49,6 +49,8 @@ public class AboutFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
 
+        mListener.onSetActionBarTitle(null);
+
         mListener =null;
     }
 
