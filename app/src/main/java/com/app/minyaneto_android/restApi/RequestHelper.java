@@ -124,12 +124,12 @@ public class RequestHelper {
         AppQueue.getInstance(context).addToRequestQueue(request);
     }
 
-    public static void getSynagogues(Context context, LatLng latLng,
+    public static void getSynagogues(Context context,LatLng northeast, LatLng southwest,
                                      Response.Listener<SynagogueArray> responseListener,
                                      ErrorResponse.ErrorListener errorListener) {
 
         GenericRequest<SynagogueArray> request = new GenericRequest<>(
-                URL.getUrlSynagogues(latLng),
+                URL.getUrlSynagogues(northeast,southwest),
                 SynagogueArray.class,
                 responseListener,
                 new ErrorResponse(errorListener),

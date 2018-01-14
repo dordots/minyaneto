@@ -50,6 +50,9 @@ import com.google.android.gms.maps.model.LatLng;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 
@@ -244,15 +247,22 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onUpdateSynagogues(final LatLng latLng) {
-
-        if (isShowSynagoguesFragment) {
-            updateSynagogues(latLng, new Date(), null, null);
+    public void onUpdateSynagogues(final LatLng latLngCenter) {
+        //TODO- choose the name of Tfilla - according to this time
+        if (null != mapFragment) {
+            LatLng[] myBounds = mapFragment.onGetBounds();
+            if (myBounds.length == 2) {
+                if (isShowSynagoguesFragment) {
+                    updateSynagogues(latLngCenter, myBounds[0], myBounds[1], new Date(), null, null);
+                }
+            }
         }
+
     }
 
-    private void updateSynagogues(final LatLng latLng, final Date date, final PrayType name, final String nosach) {
-        RequestHelper.getSynagogues(this, latLng, new Response.Listener<SynagogueArray>() {
+    private void updateSynagogues(final LatLng latLngCenter, LatLng northeast, LatLng southwest,
+                                  final Date date, final PrayType name, final String nosach) {
+        RequestHelper.getSynagogues(this, northeast, southwest, new Response.Listener<SynagogueArray>() {
             @Override
             public void onResponse(SynagogueArray response) {
                 originSynagogues = (ArrayList<Synagogue>) response.getSynagogues().clone();
@@ -263,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
                 for (Synagogue s : new ArrayList<>(response.getSynagogues())) {
                     s.refreshData();
-                    s.setDistanceFromLocation(calculateDistance(s.getGeo(), latLng));
+                    s.setDistanceFromLocation(calculateDistance(s.getGeo(), latLngCenter));
                     if ((s.getMinyans().size() == 0) ||
                             (nosach != null && s.getNosach() != nosach)) {
                         response.getSynagogues().remove(s);
@@ -278,7 +288,7 @@ public class MainActivity extends AppCompatActivity implements
                     }
                     String msg = getTimes(s.getMinyans(), date);
                     s.setMinyansAsString(msg);
-                    if (s.getMinyansAsString() == "") {
+                    if (s.getMinyansAsString().equals("")) {
                         response.getSynagogues().remove(s);
                     }
                 }
@@ -301,24 +311,43 @@ public class MainActivity extends AppCompatActivity implements
         }
         SimpleDateFormat format = new SimpleDateFormat("HH:mm");
         String result = "";
+        ArrayList<String> myResult = new ArrayList<>();
         for (Minyan minyan : minyans) {
             Time time = minyan.getTime();
             //TODO calculate real time -like rosh hodesh..
             //Date f = minyan.getTime().toDate(WeekDay.values()[minyan.getPrayDayType().ordinal()]);
             Calendar cal = Calendar.getInstance();
-            Log.d("-------------",cal.getTime().toString());
+            Log.d("-------------", cal.getTime().toString());
             cal.setTime(date);
-            cal.set(Calendar.DAY_OF_WEEK, minyan.getPrayDayType().ordinal());
+            if (date.getDay() != minyan.getPrayDayType().ordinal())
+                continue;
+            cal.set(Calendar.DAY_OF_WEEK, minyan.getPrayDayType().ordinal() + 1);
             cal.set(Calendar.HOUR_OF_DAY, time.getHour());
             cal.set(Calendar.MINUTE, time.getMinutes());
-            Log.d("-------------",cal.getTime().toString());
-
+            Log.d("-------------", cal.getTime().toString());
             Date f = cal.getTime();
-            if (f.after(date))
+            if (f.after(date)) {
                 result = result + " ," + format.format(f);
+                myResult.add(format.format(f));
+            }
         }
+        Log.d("------------", myResult.toString());
+        Collections.sort(myResult, new Comparator<String>() {
+            public int compare(String o1, String o2) {
+                Date date1 = new Date();
+                date1.setHours(Integer.parseInt(o1.split(":")[0]));
+                date1.setMinutes(Integer.parseInt(o1.split(":")[1]));
 
-        return result;
+                Date date2 = new Date();
+                date2.setHours(Integer.parseInt(o2.split(":")[0]));
+                date2.setMinutes(Integer.parseInt(o2.split(":")[1]));
+
+                if (date1.equals(date2))
+                    return 0;
+                return date1.before(date2) ? -1 : 1;
+            }
+        });
+        return myResult.toString().substring(1, myResult.toString().length() - 1);//result;
     }
 
     private long calculateDistance(LatLng location1, LatLng location2) {
@@ -491,14 +520,19 @@ public class MainActivity extends AppCompatActivity implements
 
 
     @Override
-    public void onSearch(LatLng latLng, Date date, PrayType prayType, String nosach) {
-
+    public void onSearch(LatLng latLngCenter, Date date, PrayType prayType, String nosach) {
 
         mFragmentHelper.replaceFragment(R.id.MA_container, synagoguesFragment, SynagoguesFragment.TAG, null);
 
         isShowSynagoguesFragment = true;
 
-        updateSynagogues(latLng, date, prayType, nosach);
-
+        if (null != mapFragment) {
+            LatLng[] myBounds = mapFragment.onGetBounds();
+            if (myBounds.length == 2) {
+                if (isShowSynagoguesFragment) {
+                    updateSynagogues(latLngCenter, myBounds[0], myBounds[1], date, prayType, nosach);
+                }
+            }
+        }
     }
 }

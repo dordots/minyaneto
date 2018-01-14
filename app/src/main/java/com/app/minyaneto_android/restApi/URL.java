@@ -13,10 +13,12 @@ public class URL {
     public static String BASE_URL = "http://minyaneto.startach.com/v1/";
 
 
-    public static String getUrlSynagogues(LatLng latLng) {
+    public static String getUrlSynagogues(LatLng northeast, LatLng southwest) {
 
-        return BASE_URL + "synagogues/?max_hits=20&top_left=" + 33.2326675 + "," + 34.0780113 +
-                "&bottom_right=" + 29.3842887 + "," + 35.8924053;
+//        return BASE_URL + "synagogues/?max_hits=20&top_left=" + 33.2326675 + "," + 34.0780113 +
+//                "&bottom_right=" + 29.3842887 + "," + 35.8924053;
+        return BASE_URL + "synagogues/?max_hits=20&top_left=" + northeast.latitude + "," + northeast.longitude +
+                "&bottom_right=" + southwest.latitude + "," +southwest.longitude;
     }
 
 
@@ -25,13 +27,13 @@ public class URL {
         return BASE_URL + "/user";
     }
 
-     public static String getAddSynagogue(){
+    public static String getAddSynagogue() {
 
-         return BASE_URL + "synagogues/";
-     }
+        return BASE_URL + "synagogues/";
+    }
 
-    public static  String getUpdateSynagogue(String id){
-        return BASE_URL +"synagogues/"+id;
+    public static String getUpdateSynagogue(String id) {
+        return BASE_URL + "synagogues/" + id;
     }
 
     public static String getUser(int id) {

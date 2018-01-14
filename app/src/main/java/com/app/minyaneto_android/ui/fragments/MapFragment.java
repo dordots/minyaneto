@@ -149,6 +149,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     }
 
+    public LatLng[] onGetBounds(){
+        LatLng[] latLngs=new LatLng[2];
+
+        latLngBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+        latLngs[0]=latLngBounds.northeast;
+        latLngs[1]= latLngBounds.southwest;
+        return  latLngs;
+    }
+
 
     private void init(View view) {
 
@@ -204,6 +213,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         void onMarkerClick(int position);
 
         void onGetDistanse(double meters, String drivingTime);
+
     }
 
 
@@ -238,7 +248,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         checkPlayServices();
 
         // Resuming the periodic location updates
-        if (mGoogleApiClient !=null && mGoogleApiClient.isConnected() && mRequestingLocationUpdates) {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && mRequestingLocationUpdates) {
             startLocationUpdates();
         }
 
@@ -271,8 +281,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         mMap.setOnMarkerClickListener(this);
 
-        latLngBounds = googleMap.getProjection().getVisibleRegion().latLngBounds;
-
         mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
 
             @Override
@@ -303,7 +311,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
                     lastLatLng = pos;
 
-                    //  updateSynagogues(pos);
+                    //updateSynagogues(pos);
                 }
             }
 
@@ -424,7 +432,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     private void updateCurrentLocation(LatLng mLocation) {
 
-        if (mLocation == null) return;
+        if (mLocation == null || mLocation.equals(lastLatLng)) return;
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(mLocation)      // Sets the center of the map to Mountain View
