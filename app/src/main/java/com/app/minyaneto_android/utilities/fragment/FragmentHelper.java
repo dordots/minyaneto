@@ -148,7 +148,7 @@ public class FragmentHelper {
 
         if (mActivityRunning.isRunning()) {
 
-            Log.d(TAG ," removeFragment  mActivityRunning");
+            Log.d(TAG, " removeFragment  mActivityRunning");
 
             Fragment fragment =
                     mFragmentActivity.getSupportFragmentManager().findFragmentByTag(tag);
@@ -164,7 +164,7 @@ public class FragmentHelper {
 
         } else {
 
-            Log.d(TAG ," ! removeFragment  ! mActivityRunning");
+            Log.d(TAG, " ! removeFragment  ! mActivityRunning");
 
             addToListCommit(0, null, tag, popBackStack, null, AddFragment.Action.REMOVE);
 
@@ -177,7 +177,7 @@ public class FragmentHelper {
 
         if (fragment != null) {
 
-            Log.d(TAG , "removeFragment");
+            Log.d(TAG, "removeFragment");
 
             FragmentTransaction fragmentTransaction =
                     this.mFragmentActivity.getSupportFragmentManager().beginTransaction();
@@ -185,9 +185,9 @@ public class FragmentHelper {
             fragmentTransaction.remove(fragment)
 
                     .commit();
-        }else {
+        } else {
 
-            Log.d(TAG , "! removeFragment");
+            Log.d(TAG, "! removeFragment");
 
         }
 
@@ -296,6 +296,25 @@ public class FragmentHelper {
     }
 
 
+    public Fragment getCurrent() {
+
+        if (mFragmentActivity != null && mFragmentActivity.getSupportFragmentManager() != null &&
+                mFragmentActivity.getSupportFragmentManager().getFragments() != null) {
+
+            int size = mFragmentActivity.getSupportFragmentManager().getFragments().size();
+
+            if (size > 0) {
+
+                return mFragmentActivity.getSupportFragmentManager().getFragments().get(size - 1);
+
+            }
+        }
+
+        return null;
+
+    }
+
+
     public boolean isContains(String tag) {
 
         if (mFragmentActivity.getSupportFragmentManager().getFragments() != null) {
@@ -304,7 +323,7 @@ public class FragmentHelper {
 
                 if (fragment != null && fragment.getTag() != null && fragment.getTag().equals(tag)) {
 
-                    return true ;
+                    return true;
 
                 }
 
@@ -312,7 +331,7 @@ public class FragmentHelper {
 
         }
 
-        return false ;
+        return false;
 
     }
 
@@ -323,9 +342,9 @@ public class FragmentHelper {
 
     }
 
-    public int getFragmentsSize(){
+    public int getFragmentsSize() {
 
-        int size = 0 ;
+        int size = 0;
 
         if (mFragmentActivity.getSupportFragmentManager().getFragments() != null) {
 

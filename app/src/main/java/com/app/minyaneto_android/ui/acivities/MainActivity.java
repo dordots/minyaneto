@@ -83,7 +83,10 @@ public class MainActivity extends AppCompatActivity implements
 
     public ArrayList<Synagogue> synagogues;
 
+    public AddSynagogueFragment addSynagogueFragment;
+
     public ArrayList<Synagogue> originSynagogues;
+    public SearchFragment mSearchFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,9 +141,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onMenuSelectHome() {
 
-        isShowSynagoguesFragment = true;
-
         invalidateOptionsMenu();
+
+        returnToMain();
 
         initSynagoguesFragment();
 
@@ -155,18 +158,31 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onMenuSelectAddSynagogue() {
 
-        isShowSynagoguesFragment = false;
+        returnToMain();
 
-        // TODO: 20/12/2017 change to add
+        if (addSynagogueFragment == null)
 
-        mFragmentHelper.replaceFragment(R.id.MA_container, AddSynagogueFragment.getInstance(), AddSynagogueFragment.TAG, null);
+            addSynagogueFragment = AddSynagogueFragment.getInstance();
+
+        mFragmentHelper.replaceFragment(R.id.MA_container, addSynagogueFragment, AddSynagogueFragment.TAG, AddSynagogueFragment.TAG);
+
+    }
+
+    private void returnToMain() {
+
+        if (mFragmentHelper.isContains(AboutFragment.TAG))
+
+            mFragmentHelper.removeFragment(AboutFragment.TAG, true);
 
     }
 
     @Override
     public void onMenuSelectSearchSynagogue() {
 
-        mFragmentHelper.replaceFragment(R.id.MA_container, SearchFragment.getInstance(), SearchFragment.TAG, null);
+        if (mSearchFragment == null)
+            mSearchFragment = SearchFragment.getInstance();
+
+        mFragmentHelper.replaceFragment(R.id.MA_container, mSearchFragment, SearchFragment.TAG, SearchFragment.TAG);
 
     }
 
@@ -208,9 +224,19 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onSetActionBarTitle(String title) {
 
-        if (getSupportActionBar() != null)
+        if (title != null && getSupportActionBar() != null)
 
             getSupportActionBar().setTitle(title);
+
+        else if (mFragmentHelper.isContains(SynagoguesFragment.TAG)) {
+
+            onSetActionBarTitle(getResources().getString(R.string.main_screen_fragment));
+
+        } else if (mFragmentHelper.isContains(AddSynagogueFragment.TAG)) {
+
+            onSetActionBarTitle(getResources().getString(R.string.add_synagogue_fragment));
+        }
+
 
     }
 
@@ -249,15 +275,16 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onUpdateSynagogues(final LatLng latLngCenter) {
         //TODO- choose the name of Tfilla - according to this time
-        if (null != mapFragment) {
-            LatLng[] myBounds = mapFragment.onGetBounds();
-            if (myBounds.length == 2) {
-                if (isShowSynagoguesFragment) {
-                    updateSynagogues(latLngCenter, myBounds[0], myBounds[1], new Date(), null, null);
+        if (mFragmentHelper.isContains(SynagoguesFragment.TAG)) {
+            if (null != mapFragment) {
+                LatLng[] myBounds = mapFragment.onGetBounds();
+                if (myBounds.length == 2) {
+                    if (isShowSynagoguesFragment) {
+                        updateSynagogues(latLngCenter, myBounds[0], myBounds[1], new Date(), null, null);
+                    }
                 }
             }
         }
-
     }
 
     private void updateSynagogues(final LatLng latLngCenter, LatLng northeast, LatLng southwest,
@@ -388,8 +415,8 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onMarkerClick(int position) {
-        // TODO: CR david - change boolean for tag
-        if (isShowSynagoguesFragment) {
+
+        if (mFragmentHelper.isContains(SynagoguesFragment.TAG)) {
 
             synagoguesFragment.scrollToSynagoguePosition(position);
 
@@ -399,7 +426,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onGetDistanse(double meters, String drivingTime) {
 
-        if (isShowSynagoguesFragment) {
+        if (mFragmentHelper.isContains(SynagoguesFragment.TAG)) {
 
 // TODO: 20/12/2017
         }
@@ -417,7 +444,7 @@ public class MainActivity extends AppCompatActivity implements
 
         if (!mNavigationHelper.closeDrawer()) {
 
-            if (mFragmentHelper.getFragmentsSize() > 2) {
+            if (mFragmentHelper.isContains(AddSynagogueFragment.TAG) || mFragmentHelper.isContains(SearchFragment.TAG) || mFragmentHelper.getFragmentsSize() > 2) {
 
                 super.onBackPressed();
 
