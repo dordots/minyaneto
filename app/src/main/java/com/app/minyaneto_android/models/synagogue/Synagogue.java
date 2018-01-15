@@ -9,11 +9,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Synagogue implements Parcelable {
+public class Synagogue implements Parcelable ,Cloneable{
 
     public static final String TAG = Synagogue.class.getName();
 
@@ -34,7 +35,7 @@ public class Synagogue implements Parcelable {
     private String id;
     @SerializedName("minyans")
     @Expose
-    private ArrayList<Minyan> minyans = null;
+    private ArrayList<Minyan> minyans;
     @SerializedName("name")
     @Expose
     private String name;
@@ -116,7 +117,7 @@ public class Synagogue implements Parcelable {
     }
 
     public void setMinyans(ArrayList<Minyan> minyans) {
-        this.minyans = new ArrayList<>(minyans);
+        this.minyans =minyans;
     }
 
     public String getName() {

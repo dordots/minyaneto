@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements
 
     public AddSynagogueFragment addSynagogueFragment;
 
-    public ArrayList<Synagogue> originSynagogues;
+    public ArrayList<Synagogue> originSynagogues = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -272,14 +272,15 @@ public class MainActivity extends AppCompatActivity implements
     public void onUpdateSynagogues(final LatLng latLngCenter) {
         //TODO- choose the name of Tfilla - according to this time
         if (mFragmentHelper.isContains(SynagoguesFragment.TAG)) {
-        if (null != mapFragment) {
-            LatLng[] myBounds = mapFragment.onGetBounds();
-            if (myBounds.length == 2) {
-                if (isShowSynagoguesFragment) {
-                    updateSynagogues(latLngCenter, myBounds[0], myBounds[1], new Date(), null, null);
+            if (null != mapFragment) {
+                LatLng[] myBounds = mapFragment.onGetBounds();
+                if (myBounds.length == 2) {
+                    if (isShowSynagoguesFragment) {
+                        updateSynagogues(latLngCenter, myBounds[0], myBounds[1], new Date(), null, null);
+                    }
                 }
             }
-        }}
+        }
     }
 
     private void updateSynagogues(final LatLng latLngCenter, LatLng northeast, LatLng southwest,
@@ -287,10 +288,23 @@ public class MainActivity extends AppCompatActivity implements
         RequestHelper.getSynagogues(this, northeast, southwest, new Response.Listener<SynagogueArray>() {
             @Override
             public void onResponse(SynagogueArray response) {
-                originSynagogues = (ArrayList<Synagogue>) response.getSynagogues().clone();
+
+                originSynagogues.clear();
+
+                for (int i = 0;i<response.getSynagogues().size(); i++) {
+
+                    ArrayList<Minyan> minyens = new ArrayList<Minyan>();
+
+                    for (Minyan minyan : response.getSynagogues().get(i).getMinyans()) {
+                        minyens.add(minyan);
+                    }
+                    originSynagogues.add(response.getSynagogues().get(i));
+                    originSynagogues.get(i).setMinyans(minyens);
+                }
+
 
                 for (Synagogue s : originSynagogues) {
-                    s.setMinyans(new ArrayList<Minyan>(s.getMinyans()));
+                    //    s.setMinyans(new ArrayList<Minyan>(s.getMinyans()));
                     s.refreshData();
                 }
                 for (Synagogue s : new ArrayList<>(response.getSynagogues())) {
