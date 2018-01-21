@@ -107,6 +107,12 @@ public class NavigationHelper implements NavigationView.OnNavigationItemSelected
                 mListener.onMenuSelectAbout();
 
                 break;
+
+            case R.id.sidebar_zmanim:
+
+                mListener.onMenuSelectZmanim();
+
+                break;
         }
 
         closeDrawer();
@@ -125,5 +131,6 @@ public class NavigationHelper implements NavigationView.OnNavigationItemSelected
 
         void onMenuSelectHome();
 
+        void onMenuSelectZmanim();
     }
 }

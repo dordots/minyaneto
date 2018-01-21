@@ -2,20 +2,13 @@ package com.app.minyaneto_android.ui.acivities;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-
-import ravtech.co.il.httpclient.ErrorResponse;
-import ravtech.co.il.httpclient.model.ErrorData;
-import ravtech.co.il.httpclient.model.Result;
-
+import android.support.v7.view.menu.ActionMenuItemView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,37 +16,40 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.app.minyaneto_android.R;
-
 import com.app.minyaneto_android.models.geo.Geocoded;
 import com.app.minyaneto_android.models.minyan.Minyan;
-import com.app.minyaneto_android.models.minyan.PrayDayType;
 import com.app.minyaneto_android.models.minyan.PrayType;
 import com.app.minyaneto_android.models.minyan.Time;
-import com.app.minyaneto_android.models.minyan.WeekDay;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.app.minyaneto_android.models.synagogue.SynagogueArray;
 import com.app.minyaneto_android.restApi.RequestHelper;
-import com.app.minyaneto_android.ui.fragments.AddMinyanFragment;
-import com.app.minyaneto_android.ui.fragments.MapFragment;
 import com.app.minyaneto_android.ui.fragments.AboutFragment;
+import com.app.minyaneto_android.ui.fragments.AddMinyanFragment;
 import com.app.minyaneto_android.ui.fragments.AddSynagogueFragment;
+import com.app.minyaneto_android.ui.fragments.MapFragment;
 import com.app.minyaneto_android.ui.fragments.SearchFragment;
 import com.app.minyaneto_android.ui.fragments.SynagogueDetailsFragment;
 import com.app.minyaneto_android.ui.fragments.SynagoguesFragment;
 import com.app.minyaneto_android.utilities.fragment.ActivityRunning;
 import com.app.minyaneto_android.utilities.fragment.FragmentHelper;
 import com.app.minyaneto_android.utilities.user.Alerts;
+import com.app.minyaneto_android.zmanim.ZmanimFragment;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+
+import ravtech.co.il.httpclient.ErrorResponse;
+import ravtech.co.il.httpclient.model.ErrorData;
+import ravtech.co.il.httpclient.model.Result;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -66,26 +62,16 @@ public class MainActivity extends AppCompatActivity implements
         AboutFragment.AboutListener, AddMinyanFragment.AddMinyanListener, SearchFragment.SearchListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-
-    private ArrayList<Fragment> liveFragments = new ArrayList<>();
-
-    private NavigationHelper mNavigationHelper;
-
-    private boolean doubleBackToExitPressedOnce = false;
-
-    private FragmentHelper mFragmentHelper;
-
     public MapFragment mapFragment;
-
     public SynagoguesFragment synagoguesFragment;
-
-    private boolean isShowSynagoguesFragment = true;
-
     public ArrayList<Synagogue> synagogues;
-
     public AddSynagogueFragment addSynagogueFragment;
-
     public ArrayList<Synagogue> originSynagogues;
+    private ArrayList<Fragment> liveFragments = new ArrayList<>();
+    private NavigationHelper mNavigationHelper;
+    private boolean doubleBackToExitPressedOnce = false;
+    private FragmentHelper mFragmentHelper;
+    private boolean isShowSynagoguesFragment = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,6 +139,11 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    public void onMenuSelectZmanim() {
+        returnToMain();
+        mFragmentHelper.addFragment(R.id.MA_main_container, new ZmanimFragment(), ZmanimFragment.TAG, ZmanimFragment.TAG);
+    }
 
     @Override
     public void onMenuSelectAddSynagogue() {
@@ -172,6 +163,10 @@ public class MainActivity extends AppCompatActivity implements
         if (mFragmentHelper.isContains(AboutFragment.TAG))
 
             mFragmentHelper.removeFragment(AboutFragment.TAG, true);
+
+        if (mFragmentHelper.isContains(ZmanimFragment.TAG))
+
+            mFragmentHelper.removeFragment(ZmanimFragment.TAG, true);
 
     }
 
@@ -272,14 +267,15 @@ public class MainActivity extends AppCompatActivity implements
     public void onUpdateSynagogues(final LatLng latLngCenter) {
         //TODO- choose the name of Tfilla - according to this time
         if (mFragmentHelper.isContains(SynagoguesFragment.TAG)) {
-        if (null != mapFragment) {
-            LatLng[] myBounds = mapFragment.onGetBounds();
-            if (myBounds.length == 2) {
-                if (isShowSynagoguesFragment) {
-                    updateSynagogues(latLngCenter, myBounds[0], myBounds[1], new Date(), null, null);
+            if (null != mapFragment) {
+                LatLng[] myBounds = mapFragment.onGetBounds();
+                if (myBounds.length == 2) {
+                    if (isShowSynagoguesFragment) {
+                        updateSynagogues(latLngCenter, myBounds[0], myBounds[1], new Date(), null, null);
+                    }
                 }
             }
-        }}
+        }
     }
 
     private void updateSynagogues(final LatLng latLngCenter, LatLng northeast, LatLng southwest,
