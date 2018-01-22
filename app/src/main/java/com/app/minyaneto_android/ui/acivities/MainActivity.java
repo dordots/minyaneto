@@ -22,6 +22,7 @@ import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.models.geo.Geocoded;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.minyan.PrayType;
+import com.app.minyaneto_android.models.minyan.RelativeTime;
 import com.app.minyaneto_android.models.minyan.Time;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.app.minyaneto_android.models.synagogue.SynagogueArray;
@@ -286,7 +287,8 @@ public class MainActivity extends AppCompatActivity implements
                 originSynagogues = (ArrayList<Synagogue>) response.getSynagogues().clone();
 
                 for (Synagogue s : originSynagogues) {
-                    s.setMinyans(new ArrayList<Minyan>(s.getMinyans()));
+                    // The following line is the weirdest code line Iv'e ever seen
+                    s.setMinyans(new ArrayList<>(s.getMinyans()));
                     s.refreshData();
                 }
                 for (Synagogue s : new ArrayList<>(response.getSynagogues())) {
@@ -298,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements
                         continue;
                     }
 
-                    for (Minyan m : new ArrayList<Minyan>(s.getMinyans())) {
+                    for (Minyan m : new ArrayList<>(s.getMinyans())) {
                         if ((m.getPrayDayType().ordinal() != date.getDay()) ||
                                 (name != null && m.getPrayType() != name)) {
                             s.getMinyans().remove(m);
@@ -306,7 +308,7 @@ public class MainActivity extends AppCompatActivity implements
                     }
                     String msg = getTimes(s.getMinyans(), date);
                     s.setMinyansAsString(msg);
-                    if (s.getMinyansAsString().equals("")) {
+                    if ("".equals(s.getMinyansAsString())) {
                         response.getSynagogues().remove(s);
                     }
                 }
@@ -332,6 +334,8 @@ public class MainActivity extends AppCompatActivity implements
         ArrayList<String> myResult = new ArrayList<>();
         for (Minyan minyan : minyans) {
             Time time = minyan.getTime();
+            if (time instanceof RelativeTime)
+                System.out.println("I FOUND ONE!!!!!!!!!!!");
             //TODO calculate real time -like rosh hodesh..
             //Date f = minyan.getTime().toDate(WeekDay.values()[minyan.getPrayDayType().ordinal()]);
             Calendar cal = Calendar.getInstance();
