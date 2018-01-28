@@ -40,6 +40,8 @@ import ravtech.co.il.httpclient.model.Result;
 public class AddMinyanFragment extends Fragment {
 
     public static final String TAG = AddMinyanFragment.class.getSimpleName();
+    private static Synagogue mSynagogue;
+    boolean inRelativeTimeMode;
     private Spinner spinnerPrayType;
     private EditText etMinutes;
     private Spinner spinnerRelativeTimeType;
@@ -53,9 +55,7 @@ public class AddMinyanFragment extends Fragment {
     private CheckBox cbSaterday;
     private Button btnAddMinyn;
     private LinearLayout linearLayoutRelativeTime;
-    boolean inRelativeTimeMode;
     private AddMinyanListener mListener;
-    private static Synagogue mSynagogue;
 
     public AddMinyanFragment() {
         // Required empty public constructor
@@ -128,7 +128,7 @@ public class AddMinyanFragment extends Fragment {
                 Toast.makeText(getContext(), getResources().getString(R.string.check), Toast.LENGTH_SHORT).show();
                 return;
             }
-            time = new RelativeTime((RelativeTimeType) spinnerRelativeTimeType.getSelectedItem(), Integer.parseInt(etMinutes.getText().toString()));
+            time = new RelativeTime((RelativeTimeType) spinnerRelativeTimeType.getSelectedItem(), Integer.parseInt(etMinutes.getText().toString()), getContext());
         } else {
 
             if (Build.VERSION.SDK_INT >= 23)

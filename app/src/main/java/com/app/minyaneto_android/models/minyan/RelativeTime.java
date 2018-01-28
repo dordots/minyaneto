@@ -1,5 +1,6 @@
 package com.app.minyaneto_android.models.minyan;
 
+import android.content.Context;
 import android.location.Location;
 import android.support.annotation.NonNull;
 
@@ -35,6 +36,10 @@ public class RelativeTime implements Time {
 
     public RelativeTime(RelativeTimeType relativeTimeType, int offset) {
         this(relativeTimeType, offset, Injection.getLocationProvider().getLocation().getValue());
+    }
+
+    public RelativeTime(RelativeTimeType relativeTimeType, int offset, Context context) {
+        this(relativeTimeType, offset, Injection.getLocationProvider(context).getLocation().getValue());
     }
 
     public RelativeTimeType getRelativeTimeType() {
