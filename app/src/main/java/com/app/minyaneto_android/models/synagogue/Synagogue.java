@@ -228,8 +228,7 @@ public class Synagogue implements Parcelable {
         try {
             latLng =new LatLng(Double.parseDouble(geo.getLat()), Double.parseDouble(geo.getLon()));
         }
-        catch (Exception ex){
-
+        catch (Exception ignored){
         }
         for (Minyan m : new ArrayList<>(minyans)) {
             try {

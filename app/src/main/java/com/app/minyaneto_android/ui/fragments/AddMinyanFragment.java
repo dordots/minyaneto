@@ -116,8 +116,8 @@ public class AddMinyanFragment extends Fragment {
             }
         });
 
-        spinnerRelativeTimeType.setAdapter(new ArrayAdapter<RelativeTimeType>(getContext(), R.layout.support_simple_spinner_dropdown_item, RelativeTimeType.values()));
-        spinnerPrayType.setAdapter(new ArrayAdapter<PrayType>(getContext(), R.layout.support_simple_spinner_dropdown_item, PrayType.values()));
+        spinnerRelativeTimeType.setAdapter(new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, RelativeTimeType.values()));
+        spinnerPrayType.setAdapter(new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, PrayType.values()));
     }
 
 

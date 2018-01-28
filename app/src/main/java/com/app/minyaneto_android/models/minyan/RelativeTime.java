@@ -3,6 +3,7 @@ package com.app.minyaneto_android.models.minyan;
 import android.location.Location;
 import android.support.annotation.NonNull;
 
+import com.app.minyaneto_android.Injection;
 import com.app.minyaneto_android.zmanim.ZmanimCalendarProvider;
 
 import net.sourceforge.zmanim.ComplexZmanimCalendar;
@@ -33,7 +34,15 @@ public class RelativeTime implements Time {
     }
 
     public RelativeTime(RelativeTimeType relativeTimeType, int offset) {
-        this(relativeTimeType, offset, null);
+        this(relativeTimeType, offset, Injection.getLocationProvider().getLocation().getValue());
+    }
+
+    public RelativeTimeType getRelativeTimeType() {
+        return relativeTimeType;
+    }
+
+    public int getOffset() {
+        return offset;
     }
 
     @Override

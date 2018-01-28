@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.menu.ActionMenuItemView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,11 +17,11 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.app.minyaneto_android.Injection;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.models.geo.Geocoded;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.minyan.PrayType;
-import com.app.minyaneto_android.models.minyan.RelativeTime;
 import com.app.minyaneto_android.models.minyan.Time;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.app.minyaneto_android.models.synagogue.SynagogueArray;
@@ -76,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        Injection.setContext(getApplicationContext());
 
         getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LOCALE);
 
@@ -295,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements
                     s.refreshData();
                     s.setDistanceFromLocation(calculateDistance(s.getGeo(), latLngCenter));
                     if ((s.getMinyans().size() == 0) ||
-                            (nosach != null && s.getNosach() != nosach)) {
+                            (nosach != null && !nosach.equals(s.getNosach()))) {
                         response.getSynagogues().remove(s);
                         continue;
                     }
@@ -334,8 +335,6 @@ public class MainActivity extends AppCompatActivity implements
         ArrayList<String> myResult = new ArrayList<>();
         for (Minyan minyan : minyans) {
             Time time = minyan.getTime();
-            if (time instanceof RelativeTime)
-                System.out.println("I FOUND ONE!!!!!!!!!!!");
             //TODO calculate real time -like rosh hodesh..
             //Date f = minyan.getTime().toDate(WeekDay.values()[minyan.getPrayDayType().ordinal()]);
             Calendar cal = Calendar.getInstance();

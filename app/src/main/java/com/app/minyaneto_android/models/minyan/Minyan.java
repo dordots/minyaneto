@@ -1,4 +1,3 @@
-
 package com.app.minyaneto_android.models.minyan;
 
 import com.google.gson.annotations.Expose;
@@ -35,8 +34,7 @@ public class Minyan {
     private void setPrayDayType(String day) {
         try {
             prayDayType = PrayDayType.getType(day);
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             //TODO something
         }
     }
@@ -58,16 +56,15 @@ public class Minyan {
         }
     }
 
-    /*public String getTime() {
-        return time;
-    }*/
-
     public void setTime(String time) {
         this.time = time;
-        String[] parts = time.split(":");
-        if (parts.length>=2){
-            ExactTime exactTime = new ExactTime(Integer.parseInt(parts[0]),Integer.parseInt(parts[1]));
-            this.the_time=exactTime;
+        String[] parts;
+        if (time.contains(":")) {
+            parts = time.split(":");
+            this.the_time = new ExactTime(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
+        } else if (time.contains("#")) {
+            parts = time.split("#");
+            this.the_time = new RelativeTime(RelativeTimeType.valueOf(parts[0]), Integer.parseInt(parts[1]));
         }
     }
 
@@ -85,6 +82,11 @@ public class Minyan {
 
     public void setTime(Time time) {
         this.the_time = time;
+        if (the_time instanceof RelativeTime) {
+            this.time = ((RelativeTime) the_time).getRelativeTimeType().name() + "#" + ((RelativeTime) the_time).getOffset();
+        } else {
+            this.time = the_time.getHour() + ":" + the_time.getMinutes();
+        }
     }
 
     public PrayDayType getPrayDayType() {
@@ -124,12 +126,7 @@ public class Minyan {
     }
 
     public void refreshData() {
-        String[] parts = time.split(":");
-        if (parts.length>=2){
-            ExactTime exactTime = new ExactTime(Integer.parseInt(parts[0]),Integer.parseInt(parts[1]));
-            this.the_time=exactTime;
-        }
-
+        setTime(time);
         setPrayDayType(day);
         setPrayType(name);
     }
