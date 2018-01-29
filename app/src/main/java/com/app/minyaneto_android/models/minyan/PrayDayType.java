@@ -1,13 +1,8 @@
 package com.app.minyaneto_android.models.minyan;
 
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.ui.acivities.MainActivity;
 
-/**
- * Created by משה on 25/08/2017.
- */
-
-public enum PrayDayType{
+public enum PrayDayType {
 
     // TODO: CR david
 
@@ -23,8 +18,12 @@ public enum PrayDayType{
 
     private int stringId;
 
+    PrayDayType(int stringId) {
+        this.stringId = stringId;
+    }
+
     public static PrayDayType getType(String str) throws Exception {
-        switch (str){
+        switch (str) {
             case "sunday":
             case "ראשון":
                 return SUNDAY;
@@ -49,11 +48,6 @@ public enum PrayDayType{
             default:
                 return THURSDAY; //TODO return the right value for spacial cases like -rosh-hodesh..
         }
-       // throw new Exception(str);
-    }
-
-    PrayDayType(int stringId){
-        this.stringId = stringId;
     }
 
 

@@ -5,7 +5,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +40,8 @@ import ravtech.co.il.httpclient.model.Result;
 public class AddMinyanFragment extends Fragment {
 
     public static final String TAG = AddMinyanFragment.class.getSimpleName();
+    private static Synagogue mSynagogue;
+    boolean inRelativeTimeMode;
     private Spinner spinnerPrayType;
     private EditText etMinutes;
     private Spinner spinnerRelativeTimeType;
@@ -54,9 +55,7 @@ public class AddMinyanFragment extends Fragment {
     private CheckBox cbSaterday;
     private Button btnAddMinyn;
     private LinearLayout linearLayoutRelativeTime;
-    boolean inRelativeTimeMode;
     private AddMinyanListener mListener;
-    private static Synagogue mSynagogue;
 
     public AddMinyanFragment() {
         // Required empty public constructor
@@ -117,19 +116,19 @@ public class AddMinyanFragment extends Fragment {
             }
         });
 
-        spinnerRelativeTimeType.setAdapter(new ArrayAdapter<RelativeTimeType>(getContext(), R.layout.support_simple_spinner_dropdown_item, RelativeTimeType.values()));
-        spinnerPrayType.setAdapter(new ArrayAdapter<PrayType>(getContext(), R.layout.support_simple_spinner_dropdown_item, PrayType.values()));
+        spinnerRelativeTimeType.setAdapter(new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, RelativeTimeType.values()));
+        spinnerPrayType.setAdapter(new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, PrayType.values()));
     }
 
 
     private void addMinyan() {
-        Time time = null;
+        Time time;
         if (inRelativeTimeMode) {
             if (etMinutes.getText().toString().equals("")) {
                 Toast.makeText(getContext(), getResources().getString(R.string.check), Toast.LENGTH_SHORT).show();
                 return;
             }
-            time = new RelativeTime((RelativeTimeType) spinnerRelativeTimeType.getSelectedItem(), Integer.parseInt(etMinutes.getText().toString()));
+            time = new RelativeTime((RelativeTimeType) spinnerRelativeTimeType.getSelectedItem(), Integer.parseInt(etMinutes.getText().toString()), getContext());
         } else {
 
             if (Build.VERSION.SDK_INT >= 23)
