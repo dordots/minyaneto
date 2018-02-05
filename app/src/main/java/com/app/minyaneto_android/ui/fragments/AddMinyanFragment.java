@@ -20,6 +20,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.android.volley.Response;
+import com.app.minyaneto_android.Injection;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.models.minyan.ExactTime;
 import com.app.minyaneto_android.models.minyan.Minyan;
@@ -126,7 +127,7 @@ public class AddMinyanFragment extends Fragment {
                 Toast.makeText(getContext(), getResources().getString(R.string.check), Toast.LENGTH_SHORT).show();
                 return;
             }
-            time = new RelativeTime((RelativeTimeType) spinnerRelativeTimeType.getSelectedItem(), Integer.parseInt(etMinutes.getText().toString()), getContext());
+            time = new RelativeTime((RelativeTimeType) spinnerRelativeTimeType.getSelectedItem(), Integer.parseInt(etMinutes.getText().toString()), Injection.getLocationProvider(getContext()).getLocation().getValue());
         } else {
 
             if (Build.VERSION.SDK_INT >= 23)
