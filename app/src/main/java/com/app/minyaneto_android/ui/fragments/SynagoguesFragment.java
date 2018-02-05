@@ -128,7 +128,7 @@ public class SynagoguesFragment extends Fragment {
     public void scrollToSynagoguePosition(int position) {
 
         mSynagoguesView.scrollToPosition(position);
-
+        mAdapter.setSelectedListPosition(position);
     }
 
     private void updateAdapter() {
