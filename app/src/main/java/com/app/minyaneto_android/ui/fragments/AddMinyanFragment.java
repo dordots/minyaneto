@@ -53,7 +53,6 @@ public class AddMinyanFragment extends Fragment {
     private CheckBox cbThursday;
     private CheckBox cbFriday;
     private CheckBox cbSaterday;
-    private Button btnAddMinyn;
     private LinearLayout linearLayoutRelativeTime;
     private AddMinyanListener mListener;
 
@@ -63,32 +62,31 @@ public class AddMinyanFragment extends Fragment {
 
     public static AddMinyanFragment newInstance(Synagogue synagogue) {
         mSynagogue = synagogue;
-        AddMinyanFragment fragment = new AddMinyanFragment();
-        return fragment;
+        return new AddMinyanFragment();
     }
 
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        spinnerPrayType = (Spinner) view.findViewById(R.id.add_minyan_pray_type_spinner);
-        etMinutes = (EditText) view.findViewById(R.id.add_minyan_minutes);
-        spinnerRelativeTimeType = (Spinner) view.findViewById(R.id.add_minyan_day_times);
-        cbSunday = (CheckBox) view.findViewById(R.id.add_minyan_sunday);
-        cbMonday = (CheckBox) view.findViewById(R.id.add_minyan_monday);
-        cbTuesday = (CheckBox) view.findViewById(R.id.add_minyan_tuesday);
-        cbWednesday = (CheckBox) view.findViewById(R.id.add_minyan_wednesday);
-        cbThursday = (CheckBox) view.findViewById(R.id.add_minyan_thursday);
-        cbFriday = (CheckBox) view.findViewById(R.id.add_minyan_friday);
-        cbSaterday = (CheckBox) view.findViewById(R.id.add_minyan_saterday);
-        btnAddMinyn = (Button) view.findViewById(R.id.add_minyan_btn);
-        timePicker = (TimePicker) view.findViewById(R.id.timePicker);
-        linearLayoutRelativeTime = (LinearLayout) view.findViewById(R.id.liner_layout_relative_time);
+        spinnerPrayType = view.findViewById(R.id.add_minyan_pray_type_spinner);
+        etMinutes = view.findViewById(R.id.add_minyan_minutes);
+        spinnerRelativeTimeType = view.findViewById(R.id.add_minyan_day_times);
+        cbSunday = view.findViewById(R.id.add_minyan_sunday);
+        cbMonday = view.findViewById(R.id.add_minyan_monday);
+        cbTuesday = view.findViewById(R.id.add_minyan_tuesday);
+        cbWednesday = view.findViewById(R.id.add_minyan_wednesday);
+        cbThursday = view.findViewById(R.id.add_minyan_thursday);
+        cbFriday = view.findViewById(R.id.add_minyan_friday);
+        cbSaterday = view.findViewById(R.id.add_minyan_saterday);
+        Button btnAddMinyn = view.findViewById(R.id.add_minyan_btn);
+        timePicker = view.findViewById(R.id.timePicker);
+        linearLayoutRelativeTime = view.findViewById(R.id.liner_layout_relative_time);
 
         timePicker.setVisibility(View.INVISIBLE);
         timePicker.setIs24HourView(true);
         linearLayoutRelativeTime.setVisibility(View.INVISIBLE);
-        RadioGroup f = (RadioGroup) view.findViewById(R.id.radio_group_add_minyan);
+        RadioGroup f = view.findViewById(R.id.radio_group_add_minyan);
         f.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {

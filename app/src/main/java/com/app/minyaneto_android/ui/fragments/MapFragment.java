@@ -126,7 +126,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
-        init(view);
+        init();
 
         return view;
     }
@@ -159,7 +159,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
 
-    private void init(View view) {
+    private void init() {
 
         mMapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.FM_map);
 

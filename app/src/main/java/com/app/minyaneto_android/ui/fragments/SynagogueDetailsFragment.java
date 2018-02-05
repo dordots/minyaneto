@@ -82,16 +82,16 @@ public class SynagogueDetailsFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        tvNameSynagogue = (TextView) view.findViewById(R.id.synagogoe_details_name);
-        tvAddressSynagogue = (TextView) view.findViewById(R.id.synagogoe_details_address);
-        tvCommentsSynagogue = (TextView) view.findViewById(R.id.add_synagogue_comments);
-        tvNosachSynagogue = (TextView) view.findViewById(R.id.synagogoe_details_nosach);
-        cbParking = (CheckBox) view.findViewById(R.id.synagogoe_details_parking);
-        cbSefer_tora = (CheckBox) view.findViewById(R.id.synagogoe_details_sefer_tora);
-        cbWheelchair_accessible = (CheckBox) view.findViewById(R.id.synagogoe_details_accessible);
-        cbLessons = (CheckBox) view.findViewById(R.id.synagogoe_details_lessons);
-        btnAddMinyan = (FloatingActionButton) view.findViewById(R.id.synagogoe_details_add_minyan);
-        mRecyclerViewMinyans = (RecyclerView) view.findViewById(R.id.synagogoe_details_recycler_minyans);
+        tvNameSynagogue = view.findViewById(R.id.synagogoe_details_name);
+        tvAddressSynagogue = view.findViewById(R.id.synagogoe_details_address);
+        tvCommentsSynagogue = view.findViewById(R.id.add_synagogue_comments);
+        tvNosachSynagogue = view.findViewById(R.id.synagogoe_details_nosach);
+        cbParking = view.findViewById(R.id.synagogoe_details_parking);
+        cbSefer_tora = view.findViewById(R.id.synagogoe_details_sefer_tora);
+        cbWheelchair_accessible = view.findViewById(R.id.synagogoe_details_accessible);
+        cbLessons = view.findViewById(R.id.synagogoe_details_lessons);
+        btnAddMinyan = view.findViewById(R.id.synagogoe_details_add_minyan);
+        mRecyclerViewMinyans = view.findViewById(R.id.synagogoe_details_recycler_minyans);
         mRecyclerViewMinyans.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
