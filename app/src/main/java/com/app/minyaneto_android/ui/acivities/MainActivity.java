@@ -81,8 +81,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        Injection.setContext(getApplicationContext());
-
         getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LOCALE);
 
         super.onCreate(savedInstanceState);

@@ -86,21 +86,21 @@ public class SearchFragment extends Fragment implements
 
         date = new Date();
 
-        etSearchAddress = (EditText) view.findViewById(R.id.search_synagogoe_address);
+        etSearchAddress = view.findViewById(R.id.search_synagogoe_address);
 
-        spinnerNosachSynagogue = (Spinner) view.findViewById(R.id.search_nosach);
+        spinnerNosachSynagogue = view.findViewById(R.id.search_nosach);
 
-        spinnerNameTfila = (Spinner) view.findViewById(R.id.search_synagogoe_name);
+        spinnerNameTfila = view.findViewById(R.id.search_synagogoe_name);
 
-        cbSearchByNosach = (CheckBox) view.findViewById(R.id.seach_by_nosach);
+        cbSearchByNosach = view.findViewById(R.id.seach_by_nosach);
 
-        choose_nosach = (LinearLayout) view.findViewById(R.id.search_by_nosach_true);
+        choose_nosach = view.findViewById(R.id.search_by_nosach_true);
 
-        btnChooseADate = (Button) view.findViewById(R.id.search_choose_date);
+        btnChooseADate = view.findViewById(R.id.search_choose_date);
 
-        btnChooseATime = (Button) view.findViewById(R.id.search_choose_time);
+        btnChooseATime = view.findViewById(R.id.search_choose_time);
 
-        btnSearchSynagogue = (Button) view.findViewById(R.id.search_synagogoe_btn_search);
+        btnSearchSynagogue = view.findViewById(R.id.search_synagogoe_btn_search);
 
 
         etSearchAddress.setOnClickListener(this);

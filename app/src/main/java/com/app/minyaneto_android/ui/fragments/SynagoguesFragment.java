@@ -50,9 +50,6 @@ public class SynagoguesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
     }
 
     @Override
@@ -69,7 +66,7 @@ public class SynagoguesFragment extends Fragment {
 
         mSynagogues = new ArrayList<>();
 
-        mSynagoguesView = (RecyclerView) view.findViewById(R.id.FS_synagogues);
+        mSynagoguesView = view.findViewById(R.id.FS_synagogues);
 
         mSynagoguesView.setHasFixedSize(true);
 
