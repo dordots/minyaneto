@@ -1,5 +1,9 @@
 package com.app.minyaneto_android.models.minyan;
 
+import com.app.minyaneto_android.models.time.ExactTime;
+import com.app.minyaneto_android.models.time.RelativeTime;
+import com.app.minyaneto_android.models.time.PrayTime;
+import com.app.minyaneto_android.models.time.RelativeTimeType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -15,10 +19,10 @@ public class Minyan {
     private String name;
     @SerializedName("time")
     @Expose
-    private String time;
+    private String stringTime;
 
     private PrayType prayType;
-    private Time the_time;
+    private PrayTime prayTime;
     private PrayDayType prayDayType;
     private Date lastUpdate;
 
@@ -34,8 +38,8 @@ public class Minyan {
     private void setPrayDayType(String day) {
         try {
             prayDayType = PrayDayType.getType(day);
-        } catch (Exception ex) {
-            //TODO something
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -56,18 +60,6 @@ public class Minyan {
         }
     }
 
-    public void setTime(String time) {
-        this.time = time;
-        String[] parts;
-        if (time.contains(":")) {
-            parts = time.split(":");
-            this.the_time = new ExactTime(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
-        } else if (time.contains("#")) {
-            parts = time.split("#");
-            this.the_time = new RelativeTime(RelativeTimeType.valueOf(parts[0]), Integer.parseInt(parts[1]));
-        }
-    }
-
     public PrayType getPrayType() {
         return prayType;
     }
@@ -76,16 +68,15 @@ public class Minyan {
         this.prayType = prayType;
     }
 
-    public Time getTime() {
-        return the_time;
-    }
-
-    public void setTime(Time time) {
-        this.the_time = time;
-        if (the_time instanceof RelativeTime) {
-            this.time = ((RelativeTime) the_time).getRelativeTimeType().name() + "#" + ((RelativeTime) the_time).getOffset();
-        } else {
-            this.time = the_time.getHour() + ":" + the_time.getMinutes();
+    public void setTime(String stringTime) {
+        this.stringTime = stringTime;
+        String[] parts;
+        if (stringTime.contains(":")) {
+            parts = stringTime.split(":");
+            this.prayTime = new PrayTime(new ExactTime(Integer.parseInt(parts[0]), Integer.parseInt(parts[1])));
+        } else if (stringTime.contains("#")) {
+            parts = stringTime.split("#");
+            this.prayTime = new PrayTime(new RelativeTime(RelativeTimeType.valueOf(parts[0]), Integer.parseInt(parts[1])));
         }
     }
 
@@ -107,27 +98,29 @@ public class Minyan {
 
     @Override
     public String toString() {
-        if (!isValid())
-            return "Minyan is not valid!";
-
-        // TODO: CR david
-
         String nounPray = "תפילת";
-
         String nounInDays = "ביום";
-
-
         return String.format("%s %s %s %s %s", nounPray, prayType.name(),
-                nounInDays, prayDayType.name(), time.toString());
-    }
-
-    public boolean isValid() {
-        return true;
+                nounInDays, prayDayType.name(), stringTime);
     }
 
     public void refreshData() {
-        setTime(time);
+        setTime(stringTime);
         setPrayDayType(day);
         setPrayType(name);
+    }
+
+    public void setRelativeTime(RelativeTime time) {
+        this.prayTime = new PrayTime(time);
+        this.stringTime = time.getRelativeTimeType().name() + "#" + time.getOffset();
+    }
+
+    public void setExactTime(ExactTime time) {
+        this.prayTime = new PrayTime(time);
+        this.stringTime = time.getHour() + ":" + time.getMinutes();
+    }
+
+    public PrayTime getPrayTime() {
+        return prayTime;
     }
 }

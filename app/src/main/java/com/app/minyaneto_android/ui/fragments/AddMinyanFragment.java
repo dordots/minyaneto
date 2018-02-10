@@ -20,16 +20,14 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.android.volley.Response;
-import com.app.minyaneto_android.Injection;
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.models.minyan.ExactTime;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.minyan.PrayDayType;
 import com.app.minyaneto_android.models.minyan.PrayType;
-import com.app.minyaneto_android.models.minyan.RelativeTime;
-import com.app.minyaneto_android.models.minyan.RelativeTimeType;
-import com.app.minyaneto_android.models.minyan.Time;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
+import com.app.minyaneto_android.models.time.ExactTime;
+import com.app.minyaneto_android.models.time.RelativeTime;
+import com.app.minyaneto_android.models.time.RelativeTimeType;
 import com.app.minyaneto_android.restApi.RequestHelper;
 
 import java.util.ArrayList;
@@ -121,19 +119,21 @@ public class AddMinyanFragment extends Fragment {
 
 
     private void addMinyan() {
-        Time time;
+        Minyan minyan = new Minyan();
         if (inRelativeTimeMode) {
             if (etMinutes.getText().toString().equals("")) {
                 Toast.makeText(getContext(), getResources().getString(R.string.check), Toast.LENGTH_SHORT).show();
                 return;
             }
-            time = new RelativeTime((RelativeTimeType) spinnerRelativeTimeType.getSelectedItem(), Integer.parseInt(etMinutes.getText().toString()), Injection.getLocationProvider(getContext()).getLocation().getValue());
+            minyan.setRelativeTime(new RelativeTime(
+                    (RelativeTimeType) spinnerRelativeTimeType.getSelectedItem(),
+                    Integer.parseInt(etMinutes.getText().toString())));
         } else {
-
-            if (Build.VERSION.SDK_INT >= 23)
-                time = new ExactTime(timePicker.getHour(), timePicker.getMinute());
-            else
-                time = new ExactTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute());
+            if (Build.VERSION.SDK_INT >= 23) {
+                minyan.setExactTime(new ExactTime(timePicker.getHour(), timePicker.getMinute()));
+            } else {
+                minyan.setExactTime(new ExactTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute()));
+            }
         }
         ArrayList<PrayDayType> days = new ArrayList<>();
 
@@ -159,9 +159,7 @@ public class AddMinyanFragment extends Fragment {
             days.add(PrayDayType.SATURDAY);
         }
 
-        Minyan minyan = new Minyan();
         minyan.setPrayType((PrayType) spinnerPrayType.getSelectedItem());
-        minyan.setTime(time);
         minyan.setPrayDayType(days.get(0));
         for (PrayDayType day : days) {
             minyan.setPrayDayType(day);
