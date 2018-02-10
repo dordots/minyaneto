@@ -18,7 +18,7 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.location.AndroidLocationProvider;
+import com.app.minyaneto_android.location.LocationRepository;
 import com.app.minyaneto_android.models.geo.Geocoded;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.minyan.PrayType;
@@ -338,7 +338,7 @@ public class MainActivity extends AppCompatActivity implements
             if (date.getDay() != minyan.getPrayDayType().ordinal())
                 continue;
             cal.set(Calendar.DAY_OF_WEEK, minyan.getPrayDayType().ordinal() + 1);
-            ExactTime exactTime = TimeUtility.extractSpecificTime(minyan.getPrayTime(), new AndroidLocationProvider(this).getLocation().getValue());
+            ExactTime exactTime = TimeUtility.extractSpecificTime(minyan.getPrayTime(), LocationRepository.getInstance().getLastKnownLocation());
             cal.set(Calendar.HOUR_OF_DAY, exactTime.getHour());
             cal.set(Calendar.MINUTE, exactTime.getMinutes());
             Log.d("-------------", cal.getTime().toString());
