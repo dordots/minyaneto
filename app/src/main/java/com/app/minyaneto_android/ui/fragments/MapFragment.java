@@ -14,7 +14,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.minyan.WeekDay;
@@ -58,7 +57,7 @@ import java.util.List;
 public class MapFragment extends Fragment implements OnMapReadyCallback,
         ActivityCompat.OnRequestPermissionsResultCallback,
         GoogleMap.OnMarkerClickListener, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleMap.OnMapLongClickListener {
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
@@ -100,6 +99,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     public SupportMapFragment mMapFragment;
 
+    private Marker mAddSynagogueMarker;
 
     public static MapFragment newInstance() {
 
@@ -149,13 +149,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     }
 
-    public LatLng[] onGetBounds(){
-        LatLng[] latLngs=new LatLng[2];
+    public LatLng[] onGetBounds() {
+        LatLng[] latLngs = new LatLng[2];
 
         latLngBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
-        latLngs[0]=latLngBounds.northeast;
-        latLngs[1]= latLngBounds.southwest;
-        return  latLngs;
+        latLngs[0] = latLngBounds.northeast;
+        latLngs[1] = latLngBounds.southwest;
+        return latLngs;
     }
 
 
@@ -189,22 +189,34 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         mListener = null;
     }
 
-    public void updateMarker(Place place) {
+    public void updateMarker(LatLng latLng, String title) {
+        if (mAddSynagogueMarker != null) {
+            mAddSynagogueMarker.remove();
+        }
 
-        mMap.addMarker(new MarkerOptions().position(
+        mAddSynagogueMarker = mMap.addMarker(new MarkerOptions().position(
 
-                place.getLatLng())
+                latLng)
 
-                .title(place.getName().toString())
+                .title(title)
 
                 .draggable(true)
 
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
 
-        moveCamera(place.getLatLng());
-
+        moveCamera(latLng);
     }
 
+    public void updateMarker(Place place) {
+        updateMarker(place.getLatLng(), place.getName().toString());
+    }
+
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+        if (mListener != null) {
+            mListener.onMapLongClick(latLng);
+        }
+    }
 
     public interface OnFragmentInteractionListener {
 
@@ -214,6 +226,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         void onGetDistanse(double meters, String drivingTime);
 
+        void onMapLongClick(LatLng latLng);
     }
 
 
@@ -280,6 +293,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         mMap = googleMap;
 
         mMap.setOnMarkerClickListener(this);
+
+        mMap.setOnMapLongClickListener(this);
 
         mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
 

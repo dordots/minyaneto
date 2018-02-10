@@ -33,6 +33,7 @@ import com.app.minyaneto_android.ui.fragments.MapFragment;
 import com.app.minyaneto_android.ui.fragments.SearchFragment;
 import com.app.minyaneto_android.ui.fragments.SynagogueDetailsFragment;
 import com.app.minyaneto_android.ui.fragments.SynagoguesFragment;
+import com.app.minyaneto_android.utilities.LocationHelper;
 import com.app.minyaneto_android.utilities.fragment.ActivityRunning;
 import com.app.minyaneto_android.utilities.fragment.FragmentHelper;
 import com.app.minyaneto_android.utilities.user.Alerts;
@@ -157,7 +158,6 @@ public class MainActivity extends AppCompatActivity implements
             addSynagogueFragment = AddSynagogueFragment.getInstance();
 
         mFragmentHelper.replaceFragment(R.id.MA_container, addSynagogueFragment, AddSynagogueFragment.TAG, AddSynagogueFragment.TAG);
-
     }
 
     private void returnToMain() {
@@ -423,6 +423,20 @@ public class MainActivity extends AppCompatActivity implements
         if (mFragmentHelper.isContains(SynagoguesFragment.TAG)) {
 
 // TODO: 20/12/2017
+        }
+    }
+
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+        if (!mFragmentHelper.isContains(AddSynagogueFragment.TAG)) {
+            return;
+        }
+
+        String addressLine = LocationHelper.getAddressLineFromLatLng(this, latLng);
+        mapFragment.updateMarker(latLng, addressLine);
+
+        if (addSynagogueFragment != null) {
+            addSynagogueFragment.updateSynagogueAddress(addressLine);
         }
     }
 
