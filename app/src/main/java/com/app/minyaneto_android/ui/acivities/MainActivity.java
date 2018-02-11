@@ -17,14 +17,15 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.app.minyaneto_android.Injection;
 import com.app.minyaneto_android.R;
+import com.app.minyaneto_android.location.LocationRepository;
 import com.app.minyaneto_android.models.geo.Geocoded;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.minyan.PrayType;
-import com.app.minyaneto_android.models.minyan.Time;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.app.minyaneto_android.models.synagogue.SynagogueArray;
+import com.app.minyaneto_android.models.time.ExactTime;
+import com.app.minyaneto_android.models.time.TimeUtility;
 import com.app.minyaneto_android.restApi.RequestHelper;
 import com.app.minyaneto_android.ui.fragments.AboutFragment;
 import com.app.minyaneto_android.ui.fragments.AddMinyanFragment;
@@ -46,6 +47,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Locale;
 
 import ravtech.co.il.httpclient.ErrorResponse;
 import ravtech.co.il.httpclient.model.ErrorData;
@@ -212,9 +214,6 @@ public class MainActivity extends AppCompatActivity implements
 
             mFragmentHelper.replaceFragment(R.id.MA_main_container, SynagogueDetailsFragment.newInstance(synagogue), SynagogueDetailsFragment.TAG, SynagogueDetailsFragment.TAG);
 
-        else {
-            //TODO - show error message?
-        }
     }
 
     @Override
@@ -350,21 +349,20 @@ public class MainActivity extends AppCompatActivity implements
         if (null == date) {
             date = new Date();
         }
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm", Locale.getDefault());
         String result = "";
         ArrayList<String> myResult = new ArrayList<>();
         for (Minyan minyan : minyans) {
-            Time time = minyan.getTime();
             //TODO calculate real time -like rosh hodesh..
-            //Date f = minyan.getTime().toDate(WeekDay.values()[minyan.getPrayDayType().ordinal()]);
             Calendar cal = Calendar.getInstance();
             Log.d("-------------", cal.getTime().toString());
             cal.setTime(date);
             if (date.getDay() != minyan.getPrayDayType().ordinal())
                 continue;
             cal.set(Calendar.DAY_OF_WEEK, minyan.getPrayDayType().ordinal() + 1);
-            cal.set(Calendar.HOUR_OF_DAY, time.getHour());
-            cal.set(Calendar.MINUTE, time.getMinutes());
+            ExactTime exactTime = TimeUtility.extractSpecificTime(minyan.getPrayTime(), LocationRepository.getInstance().getLastKnownLocation());
+            cal.set(Calendar.HOUR_OF_DAY, exactTime.getHour());
+            cal.set(Calendar.MINUTE, exactTime.getMinutes());
             Log.d("-------------", cal.getTime().toString());
             Date f = cal.getTime();
             if (f.after(date)) {

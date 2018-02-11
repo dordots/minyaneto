@@ -4,9 +4,11 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
 
-import com.app.minyaneto_android.models.minyan.RelativeTime;
-import com.app.minyaneto_android.models.minyan.RelativeTimeType;
-import com.app.minyaneto_android.models.minyan.Time;
+import com.app.minyaneto_android.models.time.ExactTime;
+import com.app.minyaneto_android.models.time.RelativeTime;
+import com.app.minyaneto_android.models.time.PrayTime;
+import com.app.minyaneto_android.models.time.RelativeTimeType;
+import com.app.minyaneto_android.models.time.TimeUtility;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +18,7 @@ import org.robolectric.RobolectricTestRunner;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
-public class RelativeTimeTest {
+public class TimeUtilityTest {
 
     private Location location;
     private MockZmanimCalendarProvider calendarProvider;
@@ -32,7 +34,7 @@ public class RelativeTimeTest {
 
     @Test
     public void dawn() throws Exception {
-        Time time = createRelativeTime(RelativeTimeType.DAWN, -10);
+        ExactTime time = extractSpecificTime(RelativeTimeType.DAWN, -10);
 
         int hour = time.getHour();
         int minutes = time.getMinutes();
@@ -44,7 +46,7 @@ public class RelativeTimeTest {
 
     @Test
     public void sunrise() throws Exception {
-        Time time = createRelativeTime(RelativeTimeType.SUNRISE, 13);
+        ExactTime time = extractSpecificTime(RelativeTimeType.SUNRISE, 13);
 
         int hour = time.getHour();
         int minutes = time.getMinutes();
@@ -56,7 +58,7 @@ public class RelativeTimeTest {
 
     @Test
     public void sunset() throws Exception {
-        Time time = createRelativeTime(RelativeTimeType.SUNSET, 75);
+        ExactTime time = extractSpecificTime(RelativeTimeType.SUNSET, 75);
 
         int hour = time.getHour();
         int minutes = time.getMinutes();
@@ -68,7 +70,7 @@ public class RelativeTimeTest {
 
     @Test
     public void starsOut() throws Exception {
-        Time time = createRelativeTime(RelativeTimeType.STARS_OUT, -150);
+        ExactTime time = extractSpecificTime(RelativeTimeType.STARS_OUT, -150);
 
         int hour = time.getHour();
         int minutes = time.getMinutes();
@@ -79,7 +81,8 @@ public class RelativeTimeTest {
     }
 
     @NonNull
-    private RelativeTime createRelativeTime(RelativeTimeType relativeTimeType, int offset) {
-        return new RelativeTime(relativeTimeType, offset, calendarProvider, location);
+    private ExactTime extractSpecificTime(RelativeTimeType relativeTimeType, int offset) {
+        PrayTime prayTime = new PrayTime(new RelativeTime(relativeTimeType, offset));
+        return TimeUtility.extractSpecificTime(prayTime, calendarProvider, location);
     }
 }
