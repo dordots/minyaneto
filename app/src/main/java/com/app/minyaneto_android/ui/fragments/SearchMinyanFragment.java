@@ -77,7 +77,7 @@ public class SearchMinyanFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        return inflater.inflate(R.layout.fragment_search_minyan, container, false);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class SearchMinyanFragment extends Fragment implements
 
         date = new Date();
 
-        etSearchAddress = view.findViewById(R.id.search_synagogoe_address);
+        etSearchAddress = view.findViewById(R.id.search_minyan_address);
 
         spinnerNosachSynagogue = view.findViewById(R.id.search_nosach);
 
@@ -100,7 +100,7 @@ public class SearchMinyanFragment extends Fragment implements
 
         btnChooseATime = view.findViewById(R.id.search_choose_time);
 
-        btnSearchSynagogue = view.findViewById(R.id.search_synagogoe_btn_search);
+        btnSearchSynagogue = view.findViewById(R.id.search_minyan_btn_search);
 
 
         etSearchAddress.setOnClickListener(this);
@@ -231,13 +231,13 @@ public class SearchMinyanFragment extends Fragment implements
 
         switch (v.getId()) {
 
-            case R.id.search_synagogoe_btn_search:
+            case R.id.search_minyan_btn_search:
 
                 searchSynagogues();
 
                 break;
 
-            case R.id.search_synagogoe_address:
+            case R.id.search_minyan_address:
 
                 getAddress();
 

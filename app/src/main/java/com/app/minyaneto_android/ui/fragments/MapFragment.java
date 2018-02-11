@@ -431,7 +431,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             Marker m = mMap.addMarker(new MarkerOptions().position(
                     synagogue.getGeo())
                     .title(synagogue.getName() + " - " + synagogue.getNosach())
-                    .snippet(synagogue.getMinyans().size() > 0 ? format.format(getCurrentMinyan(synagogue.getMinyans())) : "")
+                    //.snippet(synagogue.getMinyans().size() > 0 ? format.format(getCurrentMinyan(synagogue.getMinyans())) : "")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
             synagoguesMarkers.add(m);
         }

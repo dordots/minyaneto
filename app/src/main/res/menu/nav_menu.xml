@@ -7,6 +7,11 @@
             android:title="@string/sidebar_home"
             />
         <item
+            android:id="@+id/sidebar_searchMinyan"
+            android:icon="@drawable/ic_sidebar_add_minyan"
+            android:title="@string/sidebar_searchMinyan"
+            />
+        <item
             android:id="@+id/sidebar_searchSynagogue"
             android:icon="@drawable/ic_sidebar_add_minyan"
             android:title="@string/sidebar_searchSynagogue"
