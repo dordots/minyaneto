@@ -79,23 +79,23 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        etNameSynagogue = (EditText) view.findViewById(R.id.add_synagogoe_name);
+        etNameSynagogue = view.findViewById(R.id.add_synagogoe_name);
 
-        etAddressSynagogue = (EditText) view.findViewById(R.id.add_synagogoe_address);
+        etAddressSynagogue = view.findViewById(R.id.add_synagogoe_address);
 
-        etCommentsSynagogue = (EditText) view.findViewById(R.id.add_synagogue_comments);
+        etCommentsSynagogue = view.findViewById(R.id.add_synagogue_comments);
 
-        spinnerNosachSynagogue = (Spinner) view.findViewById(R.id.add_synagogoe_nosach);
+        spinnerNosachSynagogue = view.findViewById(R.id.add_synagogoe_nosach);
 
-        cbParking = (CheckBox) view.findViewById(R.id.add_synagogoe_parking);
+        cbParking = view.findViewById(R.id.add_synagogoe_parking);
 
-        cbSefer_tora = (CheckBox) view.findViewById(R.id.add_synagogoe_sefer_tora);
+        cbSefer_tora = view.findViewById(R.id.add_synagogoe_sefer_tora);
 
-        cbWheelchair_accessible = (CheckBox) view.findViewById(R.id.add_synagogoe_accessible);
+        cbWheelchair_accessible = view.findViewById(R.id.add_synagogoe_accessible);
 
-        cbLessons = (CheckBox) view.findViewById(R.id.add_synagogoe_lessons);
+        cbLessons = view.findViewById(R.id.add_synagogoe_lessons);
 
-        btnAddSynagogue = (Button) view.findViewById(R.id.add_synagogoe_btn_add);
+        btnAddSynagogue = view.findViewById(R.id.add_synagogoe_btn_add);
 
         etAddressSynagogue.setOnClickListener(this);
 
@@ -156,7 +156,7 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
             @Override
             public void onResponse(Synagogue response) {
                 s.setId(response.getId());
-                mListener.onShowSynagogueDetails(s.getId());
+                mListener.onAddSynagogue(s);
             }
         }, new ErrorResponse(new ErrorResponse.ErrorListener() {
             @Override
@@ -237,7 +237,7 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
 
     public interface AddSynagogueListener {
 
-        void onShowSynagogueDetails(String id);
+        void onAddSynagogue(Synagogue synagogue);
 
         void onSetActionBarTitle(String title);
 

@@ -5,7 +5,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,14 +21,13 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.models.minyan.ExactTime;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.minyan.PrayDayType;
 import com.app.minyaneto_android.models.minyan.PrayType;
-import com.app.minyaneto_android.models.minyan.RelativeTime;
-import com.app.minyaneto_android.models.minyan.RelativeTimeType;
-import com.app.minyaneto_android.models.minyan.Time;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
+import com.app.minyaneto_android.models.time.ExactTime;
+import com.app.minyaneto_android.models.time.RelativeTime;
+import com.app.minyaneto_android.models.time.RelativeTimeType;
 import com.app.minyaneto_android.restApi.RequestHelper;
 
 import java.util.ArrayList;
@@ -41,6 +39,8 @@ import ravtech.co.il.httpclient.model.Result;
 public class AddMinyanFragment extends Fragment {
 
     public static final String TAG = AddMinyanFragment.class.getSimpleName();
+    private static Synagogue mSynagogue;
+    boolean inRelativeTimeMode;
     private Spinner spinnerPrayType;
     private EditText etMinutes;
     private Spinner spinnerRelativeTimeType;
@@ -52,11 +52,8 @@ public class AddMinyanFragment extends Fragment {
     private CheckBox cbThursday;
     private CheckBox cbFriday;
     private CheckBox cbSaterday;
-    private Button btnAddMinyn;
     private LinearLayout linearLayoutRelativeTime;
-    boolean inRelativeTimeMode;
     private AddMinyanListener mListener;
-    private static Synagogue mSynagogue;
 
     public AddMinyanFragment() {
         // Required empty public constructor
@@ -64,32 +61,31 @@ public class AddMinyanFragment extends Fragment {
 
     public static AddMinyanFragment newInstance(Synagogue synagogue) {
         mSynagogue = synagogue;
-        AddMinyanFragment fragment = new AddMinyanFragment();
-        return fragment;
+        return new AddMinyanFragment();
     }
 
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        spinnerPrayType = (Spinner) view.findViewById(R.id.add_minyan_pray_type_spinner);
-        etMinutes = (EditText) view.findViewById(R.id.add_minyan_minutes);
-        spinnerRelativeTimeType = (Spinner) view.findViewById(R.id.add_minyan_day_times);
-        cbSunday = (CheckBox) view.findViewById(R.id.add_minyan_sunday);
-        cbMonday = (CheckBox) view.findViewById(R.id.add_minyan_monday);
-        cbTuesday = (CheckBox) view.findViewById(R.id.add_minyan_tuesday);
-        cbWednesday = (CheckBox) view.findViewById(R.id.add_minyan_wednesday);
-        cbThursday = (CheckBox) view.findViewById(R.id.add_minyan_thursday);
-        cbFriday = (CheckBox) view.findViewById(R.id.add_minyan_friday);
-        cbSaterday = (CheckBox) view.findViewById(R.id.add_minyan_saterday);
-        btnAddMinyn = (Button) view.findViewById(R.id.add_minyan_btn);
-        timePicker = (TimePicker) view.findViewById(R.id.timePicker);
-        linearLayoutRelativeTime = (LinearLayout) view.findViewById(R.id.liner_layout_relative_time);
+        spinnerPrayType = view.findViewById(R.id.add_minyan_pray_type_spinner);
+        etMinutes = view.findViewById(R.id.add_minyan_minutes);
+        spinnerRelativeTimeType = view.findViewById(R.id.add_minyan_day_times);
+        cbSunday = view.findViewById(R.id.add_minyan_sunday);
+        cbMonday = view.findViewById(R.id.add_minyan_monday);
+        cbTuesday = view.findViewById(R.id.add_minyan_tuesday);
+        cbWednesday = view.findViewById(R.id.add_minyan_wednesday);
+        cbThursday = view.findViewById(R.id.add_minyan_thursday);
+        cbFriday = view.findViewById(R.id.add_minyan_friday);
+        cbSaterday = view.findViewById(R.id.add_minyan_saterday);
+        Button btnAddMinyn = view.findViewById(R.id.add_minyan_btn);
+        timePicker = view.findViewById(R.id.timePicker);
+        linearLayoutRelativeTime = view.findViewById(R.id.liner_layout_relative_time);
 
         timePicker.setVisibility(View.INVISIBLE);
         timePicker.setIs24HourView(true);
         linearLayoutRelativeTime.setVisibility(View.INVISIBLE);
-        RadioGroup f = (RadioGroup) view.findViewById(R.id.radio_group_add_minyan);
+        RadioGroup f = view.findViewById(R.id.radio_group_add_minyan);
         f.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -117,25 +113,27 @@ public class AddMinyanFragment extends Fragment {
             }
         });
 
-        spinnerRelativeTimeType.setAdapter(new ArrayAdapter<RelativeTimeType>(getContext(), R.layout.support_simple_spinner_dropdown_item, RelativeTimeType.values()));
-        spinnerPrayType.setAdapter(new ArrayAdapter<PrayType>(getContext(), R.layout.support_simple_spinner_dropdown_item, PrayType.values()));
+        spinnerRelativeTimeType.setAdapter(new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, RelativeTimeType.values()));
+        spinnerPrayType.setAdapter(new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, PrayType.values()));
     }
 
 
     private void addMinyan() {
-        Time time = null;
+        Minyan minyan = new Minyan();
         if (inRelativeTimeMode) {
             if (etMinutes.getText().toString().equals("")) {
                 Toast.makeText(getContext(), getResources().getString(R.string.check), Toast.LENGTH_SHORT).show();
                 return;
             }
-            time = new RelativeTime((RelativeTimeType) spinnerRelativeTimeType.getSelectedItem(), Integer.parseInt(etMinutes.getText().toString()));
+            minyan.setRelativeTime(new RelativeTime(
+                    (RelativeTimeType) spinnerRelativeTimeType.getSelectedItem(),
+                    Integer.parseInt(etMinutes.getText().toString())));
         } else {
-
-            if (Build.VERSION.SDK_INT >= 23)
-                time = new ExactTime(timePicker.getHour(), timePicker.getMinute());
-            else
-                time = new ExactTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute());
+            if (Build.VERSION.SDK_INT >= 23) {
+                minyan.setExactTime(new ExactTime(timePicker.getHour(), timePicker.getMinute()));
+            } else {
+                minyan.setExactTime(new ExactTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute()));
+            }
         }
         ArrayList<PrayDayType> days = new ArrayList<>();
 
@@ -161,9 +159,7 @@ public class AddMinyanFragment extends Fragment {
             days.add(PrayDayType.SATURDAY);
         }
 
-        Minyan minyan = new Minyan();
         minyan.setPrayType((PrayType) spinnerPrayType.getSelectedItem());
-        minyan.setTime(time);
         minyan.setPrayDayType(days.get(0));
         for (PrayDayType day : days) {
             minyan.setPrayDayType(day);
@@ -174,7 +170,6 @@ public class AddMinyanFragment extends Fragment {
             @Override
             public void onResponse(String response) { //response = null
                 //TODO some message to user?
-                //TODO return to back fragment
                 getActivity().onBackPressed();
             }
         }, new ErrorResponse(new ErrorResponse.ErrorListener() {
