@@ -31,7 +31,7 @@ import com.app.minyaneto_android.ui.fragments.AboutFragment;
 import com.app.minyaneto_android.ui.fragments.AddMinyanFragment;
 import com.app.minyaneto_android.ui.fragments.AddSynagogueFragment;
 import com.app.minyaneto_android.ui.fragments.MapFragment;
-import com.app.minyaneto_android.ui.fragments.SearchFragment;
+import com.app.minyaneto_android.ui.fragments.SearchMinyanFragment;
 import com.app.minyaneto_android.ui.fragments.SynagogueDetailsFragment;
 import com.app.minyaneto_android.ui.fragments.SynagoguesFragment;
 import com.app.minyaneto_android.utilities.fragment.ActivityRunning;
@@ -61,24 +61,20 @@ public class MainActivity extends AppCompatActivity implements
         AddSynagogueFragment.AddSynagogueListener,
         SynagogueDetailsFragment.WantCahngeFragmentListener,
         SynagoguesFragment.OnSynagoguesListener,
-        AboutFragment.AboutListener, AddMinyanFragment.AddMinyanListener, SearchFragment.SearchListener {
+        AboutFragment.AboutListener, AddMinyanFragment.AddMinyanListener, SearchMinyanFragment.SearchListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     public MapFragment mapFragment;
     public SynagoguesFragment synagoguesFragment;
     public ArrayList<Synagogue> synagogues;
     public AddSynagogueFragment addSynagogueFragment;
-<<<<<<< HEAD
 
     public ArrayList<Synagogue> originSynagogues = new ArrayList<>();
-=======
-    public ArrayList<Synagogue> originSynagogues;
     private ArrayList<Fragment> liveFragments = new ArrayList<>();
     private NavigationHelper mNavigationHelper;
     private boolean doubleBackToExitPressedOnce = false;
     private FragmentHelper mFragmentHelper;
     private boolean isShowSynagoguesFragment = true;
->>>>>>> master
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onMenuSelectSearchSynagogue() {
 
-        mFragmentHelper.replaceFragment(R.id.MA_container, SearchFragment.getInstance(), SearchFragment.TAG, null);
+        mFragmentHelper.replaceFragment(R.id.MA_container, SearchMinyanFragment.getInstance(), SearchMinyanFragment.TAG, null);
 
     }
 
@@ -189,6 +185,11 @@ public class MainActivity extends AppCompatActivity implements
 
         mFragmentHelper.addFragment(R.id.MA_main_container, AboutFragment.getInstance(), AboutFragment.TAG, AboutFragment.TAG);
 
+    }
+
+    @Override
+    public void onAddSynagogue(Synagogue synagogue) {
+        mFragmentHelper.replaceFragment(R.id.MA_main_container, SynagogueDetailsFragment.newInstance(synagogue), SynagogueDetailsFragment.TAG, SynagogueDetailsFragment.TAG);
     }
 
 
@@ -272,25 +273,23 @@ public class MainActivity extends AppCompatActivity implements
         //TODO- choose the name of Tfilla - according to this time
         if (mFragmentHelper.isContains(SynagoguesFragment.TAG)) {
             if (null != mapFragment) {
-                LatLng[] myBounds = mapFragment.onGetBounds();
-                if (myBounds.length == 2) {
-                    if (isShowSynagoguesFragment) {
-                        updateSynagogues(latLngCenter, myBounds[0], myBounds[1], new Date(), null, null);
-                    }
+                if (isShowSynagoguesFragment) {
+                    updateSynagogues(latLngCenter, new Date(), null, null);
+
                 }
             }
         }
     }
 
-    private void updateSynagogues(final LatLng latLngCenter, LatLng northeast, LatLng southwest,
+    private void updateSynagogues(final LatLng latLngCenter,
                                   final Date date, final PrayType name, final String nosach) {
-        RequestHelper.getSynagogues(this, northeast, southwest, new Response.Listener<SynagogueArray>() {
+        RequestHelper.getSynagogues(this, latLngCenter, new Response.Listener<SynagogueArray>() {
             @Override
             public void onResponse(SynagogueArray response) {
 
                 originSynagogues.clear();
 
-                for (int i = 0;i<response.getSynagogues().size(); i++) {
+                for (int i = 0; i < response.getSynagogues().size(); i++) {
 
                     ArrayList<Minyan> minyens = new ArrayList<Minyan>();
 
@@ -303,12 +302,8 @@ public class MainActivity extends AppCompatActivity implements
 
 
                 for (Synagogue s : originSynagogues) {
-<<<<<<< HEAD
                     //    s.setMinyans(new ArrayList<Minyan>(s.getMinyans()));
-=======
-                    // The following line is the weirdest code line Iv'e ever seen
-                    s.setMinyans(new ArrayList<>(s.getMinyans()));
->>>>>>> master
+
                     s.refreshData();
                 }
                 for (Synagogue s : new ArrayList<>(response.getSynagogues())) {
@@ -566,11 +561,9 @@ public class MainActivity extends AppCompatActivity implements
         isShowSynagoguesFragment = true;
 
         if (null != mapFragment) {
-            LatLng[] myBounds = mapFragment.onGetBounds();
-            if (myBounds.length == 2) {
-                if (isShowSynagoguesFragment) {
-                    updateSynagogues(latLngCenter, myBounds[0], myBounds[1], date, prayType, nosach);
-                }
+           if (isShowSynagoguesFragment) {
+                    updateSynagogues(latLngCenter, date, prayType, nosach);
+
             }
         }
     }

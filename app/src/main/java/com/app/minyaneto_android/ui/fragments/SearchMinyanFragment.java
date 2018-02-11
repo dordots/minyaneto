@@ -35,7 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class SearchFragment extends Fragment implements
+public class SearchMinyanFragment extends Fragment implements
         View.OnClickListener,
         CompoundButton.OnCheckedChangeListener,
         DatePickerDialog.OnDateSetListener,
@@ -43,7 +43,7 @@ public class SearchFragment extends Fragment implements
 
     private final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
 
-    public static final String TAG = SearchFragment.class.getSimpleName();
+    public static final String TAG = SearchMinyanFragment.class.getSimpleName();
 
     private SearchListener mListener;
 
@@ -67,9 +67,9 @@ public class SearchFragment extends Fragment implements
 
     Date date;
 
-    public static SearchFragment getInstance() {
+    public static SearchMinyanFragment getInstance() {
 
-        return new SearchFragment();
+        return new SearchMinyanFragment();
     }
 
 

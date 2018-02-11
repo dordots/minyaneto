@@ -13,12 +13,16 @@ public class URL {
     public static String BASE_URL = "http://minyaneto.startach.com/v1/";
 
 
-    public static String getUrlSynagogues(LatLng northeast, LatLng southwest) {
+    public static String getUrlSynagogues(LatLng center) {
 
 //        return BASE_URL + "synagogues/?max_hits=20&top_left=" + 33.2326675 + "," + 34.0780113 +
 //                "&bottom_right=" + 29.3842887 + "," + 35.8924053;
-        return BASE_URL + "synagogues/?max_hits=20&top_left=" + northeast.latitude + "," + northeast.longitude +
-                "&bottom_right=" + southwest.latitude + "," +southwest.longitude;
+
+//        http://minyaneto.startach.com/v1/synagogues/?max_hits=1000&center=32.80462387123734,35.061328982421855&radius=30km
+
+        return BASE_URL + "synagogues/?max_hits=20&center=" + center.latitude + "," + center.longitude +
+               "&radius=30km";
+//        return "http://minyaneto.startach.com/v1/synagogues/?max_hits=1000&center=32.80462387123734,35.061328982421855&radius=10km";
     }
 
 
