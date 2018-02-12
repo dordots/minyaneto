@@ -21,7 +21,7 @@ public class URL {
 //        http://minyaneto.startach.com/v1/synagogues/?max_hits=1000&center=32.80462387123734,35.061328982421855&radius=30km
 
         return BASE_URL + "synagogues/?max_hits=20&center=" + center.latitude + "," + center.longitude +
-               "&radius=30km";
+               "&radius=0.3km";
 //        return "http://minyaneto.startach.com/v1/synagogues/?max_hits=1000&center=32.80462387123734,35.061328982421855&radius=10km";
     }
 

@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements
         AboutFragment.AboutListener,
         AddMinyanFragment.AddMinyanListener,
         SearchMinyanFragment.SearchListener,
-        SearchSynagogueFragment.SearchListener {
+        SearchSynagogueFragment.SearchListener, ErrorResponse.ErrorListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     public MapFragment mapFragment;
@@ -281,6 +281,23 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onGetTheSynagoguesAround(LatLng lng) {
+
+        RequestHelper.getSynagogues(this, lng, new Response.Listener<SynagogueArray>() {
+            @Override
+            public void onResponse(SynagogueArray response) {
+
+                if (response != null && response.getSynagogues() != null && response.getSynagogues().size() > 0)
+
+                    Toast.makeText(MainActivity.this, R.string.attention_alert, Toast.LENGTH_SHORT).show();
+
+                    mapFragment.updateMarkers(response.getSynagogues());
+
+            }
+        }, this);
+    }
+
+    @Override
     public void onUpdateSynagogues(final LatLng latLngCenter) {
         //TODO- choose the name of Tfilla - according to this time
         if (mFragmentHelper.isContains(SynagoguesFragment.TAG)) {
@@ -342,12 +359,7 @@ public class MainActivity extends AppCompatActivity implements
                 synagoguesFragment.updateSynagogues(synagogues);
 
             }
-        }, new ErrorResponse.ErrorListener() {
-            @Override
-            public void onErrorResponse(Result<ErrorData> error) {
-                error.getData().getMessage();
-            }
-        });
+        }, this);
     }
 
     private String getTimes(ArrayList<Minyan> minyans, Date date) {
@@ -370,7 +382,7 @@ public class MainActivity extends AppCompatActivity implements
             cal.set(Calendar.MINUTE, exactTime.getMinutes());
             Log.d("-------------", cal.getTime().toString());
             Date f = cal.getTime();
-            if (minyan.getPrayDayType().ordinal() == date.getDay()&& f.after(date)) {
+            if (minyan.getPrayDayType().ordinal() == date.getDay() && f.after(date)) {
                 result = result + " ," + format.format(f);
                 myResult.add(format.format(f));
             }
@@ -563,7 +575,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onSearchSynagogue(final LatLng latLng){
+    public void onSearchSynagogue(final LatLng latLng) {
 
         mFragmentHelper.replaceFragment(R.id.MA_container, synagoguesFragment, SynagoguesFragment.TAG, null);
 
@@ -593,16 +605,7 @@ public class MainActivity extends AppCompatActivity implements
                         synagoguesFragment.updateSynagogues(synagogues);
                     }
 
-                }, new ErrorResponse.ErrorListener() {
-
-                    @Override
-
-                    public void onErrorResponse(Result<ErrorData> error) {
-
-                        error.getData().getMessage();
-
-                    }
-                });
+                }, this);
         }
 
     }
@@ -616,10 +619,17 @@ public class MainActivity extends AppCompatActivity implements
         isShowSynagoguesFragment = true;
 
         if (null != mapFragment) {
-           if (isShowSynagoguesFragment) {
-                    updateSynagogues(latLngCenter, date, prayType, nosach);
+            if (isShowSynagoguesFragment) {
+                updateSynagogues(latLngCenter, date, prayType, nosach);
 
             }
         }
+    }
+
+    @Override
+    public void onErrorResponse(Result<ErrorData> error) {
+        // TODO: 2/12/2018  add error dialog David
+
+        Toast.makeText(this, "Try again", Toast.LENGTH_SHORT).show();
     }
 }

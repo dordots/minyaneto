@@ -428,6 +428,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         for (Synagogue synagogue : synagogues) {
 
+            synagogue.refreshData();
             Marker m = mMap.addMarker(new MarkerOptions().position(
                     synagogue.getGeo())
                     .title(synagogue.getName() + " - " + synagogue.getNosach())

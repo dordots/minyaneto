@@ -115,6 +115,7 @@ public class Synagogue implements Parcelable ,Cloneable{
     }
 
     public LatLng getGeo() {
+
         return latLng;
     }
 

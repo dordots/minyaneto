@@ -188,6 +188,8 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
 
                 mListener.onUpdateMarker(place);
 
+                mListener.onGetTheSynagoguesAround(place.getLatLng());
+
                 updateLatLng(place.getLatLng());
 
             }
@@ -242,5 +244,7 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
         void onSetActionBarTitle(String title);
 
         void onUpdateMarker(Place place);
+
+        void onGetTheSynagoguesAround(LatLng lng);
     }
 }
