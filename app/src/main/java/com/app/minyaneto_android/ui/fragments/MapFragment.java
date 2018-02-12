@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
@@ -68,7 +69,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private static final int UPDATE_INTERVAL = 10000; // 10 sec
     private static final int FATEST_INTERVAL = 5000; // 5 sec
     private static final int DISPLACEMENT = 10; // 10 meters
-    public SupportMapFragment mMapFragment;
     LatLngBounds latLngBounds;
     private Location mLastLocation;
     private GoogleApiClient mGoogleApiClient;
@@ -686,15 +686,5 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         for (Marker m : synagoguesMarkers) {
             m.setVisible(isVisible);
         }
-    }
-
-    public interface OnFragmentInteractionListener {
-
-        void onUpdateSynagogues(LatLng latLng);
-
-        void onMarkerClick(int position);
-
-        void onGetDistanse(double meters, String drivingTime);
-
     }
 }
