@@ -156,7 +156,7 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
             @Override
             public void onResponse(Synagogue response) {
                 s.setId(response.getId());
-                mListener.onShowSynagogueDetails(s.getId());
+                mListener.onAddSynagogue(s);
             }
         }, new ErrorResponse(new ErrorResponse.ErrorListener() {
             @Override
@@ -237,7 +237,7 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
 
     public interface AddSynagogueListener {
 
-        void onShowSynagogueDetails(String id);
+        void onAddSynagogue(Synagogue synagogue);
 
         void onSetActionBarTitle(String title);
 

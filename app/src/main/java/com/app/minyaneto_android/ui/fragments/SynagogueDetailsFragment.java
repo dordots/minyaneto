@@ -106,7 +106,7 @@ public class SynagogueDetailsFragment extends DialogFragment {
         cbParking.setChecked(mSynagogue.getParking() != null ? mSynagogue.getParking() : false);
         cbSefer_tora.setChecked(mSynagogue.getSeferTora() != null ? mSynagogue.getSeferTora() : false);
         cbWheelchair_accessible.setChecked(mSynagogue.getWheelchairAccessible() != null? mSynagogue.getWheelchairAccessible():false);
-        mRecyclerViewMinyans.setAdapter(new MinyanAdapter(mSynagogue.getMinyans()));
+        mRecyclerViewMinyans.setAdapter(new MinyanAdapter(mSynagogue.getMinyans(), getContext()));
         btnAddMinyan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

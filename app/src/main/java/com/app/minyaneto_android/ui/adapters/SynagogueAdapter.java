@@ -23,21 +23,12 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
     private Context context;
 
 
-    public interface SynagogueClickListener {
-        void onItemClick(int position);
-
-        void onRouteClick(int position);
-
-        void onShowDetailsClick(int position);
+    public SynagogueAdapter(List<Synagogue> synagogues, Context context) {
+        this.synagogues = synagogues;
     }
 
     public void setMyClickListener(SynagogueClickListener listener) {
         this.myClickListener = listener;
-        return;
-    }
-
-    public SynagogueAdapter(List<Synagogue> synagogues, Context context) {
-        this.synagogues = synagogues;
         this.context = context;
     }
 
@@ -63,7 +54,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
 
         if (synagogue.getMinyans().size() > 0) {
             //TODO real time from minyans
-            holder.prayerTimeTextView.setText(synagogue.getMinyansAsString());//getTime(position));
+            holder.prayerTimeTextView.setText(synagogue.getMinyansAsString());
         }
         if (synagogue.getDistanceFromLocation() < 1000)
             holder.distanceSynagogueTextView.setText(String.format("%.2f ", synagogue.getDistanceFromLocation()) + "מ'");
@@ -77,30 +68,19 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
             holder.row_linearlayout.setBackgroundColor(Color.WHITE);
     }
 
-//    private String getTime(int position) {
-//        //TODO calculate real time
-//        Synagogue synagogue = synagogues.get(position);
-//        SimpleDateFormat format =  new SimpleDateFormat("HH:mm");
-//        String result="";
-//        for (Minyan minyan: synagogue.getMinyans()){
-//            Date f=minyan.getTime().toDate(WeekDay.values()[minyan.getPrayDayType().ordinal()+1]);
-//            if(f.after(new Date()))
-//                result=format.format(f)+", "+result;
-//        }
-//        //TODO return time in good format
-//
-//        //TODO choose the best time from all minyans
-//        return result;
-//    }
+    public interface SynagogueClickListener {
+        void onItemClick(int position);
 
+        void onRouteClick(int position);
+
+        void onShowDetailsClick(int position);
+    }
 
     public class SynagogueViewHolder extends RecyclerView.ViewHolder {
 
         TextView nameTextView;
         TextView prayerTimeTextView;
         TextView distanceSynagogueTextView;
-        //        TextView drivigTime;
-//        TextView walkingTime;
         LinearLayout row_linearlayout;
         ImageView go;
         ImageView details;
@@ -108,15 +88,12 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
 
         public SynagogueViewHolder(View itemView) {
             super(itemView);
-            nameTextView = (TextView) itemView.findViewById(R.id.synagogue_name);
-            prayerTimeTextView = (TextView) itemView.findViewById(R.id.prayer_time);
-            distanceSynagogueTextView = (TextView) itemView.findViewById(R.id.synagogue_distance);
-            row_linearlayout = (LinearLayout) itemView.findViewById(R.id.row_linrLayout);
-//            drivigTime=(TextView)itemView.findViewById(R.id.synagogue_driving_time);
-//            walkingTime=(TextView)itemView.findViewById(R.id.synagogue_walking_time);
-            //menu=(ImageView)itemView.findViewById(R.id.tfila_menu) ;
-            go = (ImageView) itemView.findViewById(R.id.go_waze);
-            details = (ImageView) itemView.findViewById(R.id.synagogue_details);
+            nameTextView = itemView.findViewById(R.id.synagogue_name);
+            prayerTimeTextView = itemView.findViewById(R.id.prayer_time);
+            distanceSynagogueTextView = itemView.findViewById(R.id.synagogue_distance);
+            row_linearlayout = itemView.findViewById(R.id.row_linrLayout);
+            go = itemView.findViewById(R.id.go_waze);
+            details = itemView.findViewById(R.id.synagogue_details);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

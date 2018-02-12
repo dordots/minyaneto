@@ -16,8 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.models.minyan.Minyan;
-import com.app.minyaneto_android.models.minyan.WeekDay;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
+import com.app.minyaneto_android.models.time.DateUtility;
 import com.app.minyaneto_android.utilities.Permissions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -59,42 +59,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleMap.OnMapLongClickListener {
 
-    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-
-    private static final int PERMISSIONS_REQUEST_RESOLUTION_REQUIRED = 123;
-
-    private static final int MAX_DISTANCE_FROM_LAST_LOCATION = 2000;
-
-    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
-
     public static final String TAG = MapFragment.class.getSimpleName();
-
-    private Location mLastLocation;
-
-    private GoogleApiClient mGoogleApiClient;
-
-    // boolean flag to toggle periodic location updates
-    private boolean mRequestingLocationUpdates = false;
-
-    private LocationRequest mLocationRequest;
-
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private static final int PERMISSIONS_REQUEST_RESOLUTION_REQUIRED = 123;
+    private static final int MAX_DISTANCE_FROM_LAST_LOCATION = 2000;
+    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
     // Location updates intervals in sec
     private static final int UPDATE_INTERVAL = 10000; // 10 sec
-
     private static final int FATEST_INTERVAL = 5000; // 5 sec
-
     private static final int DISPLACEMENT = 10; // 10 meters
-
-    private GoogleMap mMap;
-
-    private List<Marker> synagoguesMarkers;
-
-    private double lastZoom = -1;
-
+    public SupportMapFragment mMapFragment;
     LatLngBounds latLngBounds;
-
+    private Location mLastLocation;
+    private GoogleApiClient mGoogleApiClient;
+    // boolean flag to toggle periodic location updates
+    private boolean mRequestingLocationUpdates = false;
+    private LocationRequest mLocationRequest;
+    private GoogleMap mMap;
+    private List<Marker> synagoguesMarkers;
+    private double lastZoom = -1;
     private LatLng lastLatLng = null;
-
     private OnFragmentInteractionListener mListener;
 
     public SupportMapFragment mMapFragment;
@@ -286,7 +270,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
@@ -370,7 +353,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
-
     private void handleLocationSetting() {
 
         if (!Permissions.checkPermissionForGPS(getActivity()))
@@ -391,7 +373,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             displayLocationSettingsRequest(getActivity());
         }
     }
-
 
     private void displayLocationSettingsRequest(Context context) {
 
@@ -466,7 +447,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         mListener.onUpdateSynagogues(mLocation);
     }
 
-
     public void updateMarkers(ArrayList<Synagogue> synagogues) {
         if (mMap == null) return;
 
@@ -476,35 +456,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         SimpleDateFormat format = new SimpleDateFormat("HH:mm");
 
-        for (Synagogue sy : synagogues) {
+        for (Synagogue synagogue : synagogues) {
 
             Marker m = mMap.addMarker(new MarkerOptions().position(
-                    sy.getGeo())
-                    .title(sy.getName() + " - " + sy.getNosach())
-                    .snippet(sy.getMinyans().size() > 0 ? format.format(getCurrentMinyan(sy.getMinyans())) : "")
+                    synagogue.getGeo())
+                    .title(synagogue.getName() + " - " + synagogue.getNosach())
+                    //.snippet(synagogue.getMinyans().size() > 0 ? format.format(getCurrentMinyan(synagogue.getMinyans())) : "")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
             synagoguesMarkers.add(m);
         }
 
     }
 
-    private Date getCurrentMinyan(ArrayList<Minyan> myMinyans) {
-
-        if (myMinyans.size() == 0) {
-            return null;
-        }
-
-
-        Collections.sort(myMinyans, new Comparator<Minyan>() {
-            public int compare(Minyan o1, Minyan o2) {
-                Date date1 = o1.getTime().toDate(WeekDay.values()[o1.getPrayDayType().ordinal()]);
-                Date date2 = o2.getTime().toDate(WeekDay.values()[o2.getPrayDayType().ordinal()]);
-                if (date1.equals(date2))
-                    return 0;
-                return date1.before(date2) ? -1 : 1;
+    private Date getCurrentMinyan(ArrayList<Minyan> minyans) {
+        Collections.sort(minyans, new Comparator<Minyan>() {
+            public int compare(Minyan minyan1, Minyan minyan2) {
+                Date date1 = DateUtility.getDate(minyan1, getContext());
+                Date date2 = DateUtility.getDate(minyan2, getContext());
+                return date1.compareTo(date2);
             }
         });
-        return myMinyans.get(0).getTime().toDate(WeekDay.values()[new Date().getDay()]);
+        return DateUtility.getDate(minyans.get(0), getContext());
     }
 
     private long calculateDistance(LatLng location1, LatLng location2) {
@@ -538,7 +510,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         }
         return false;
     }
-
 
     private void enableMyLocationIcon() {
         if (mMap == null)
@@ -581,7 +552,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             startLocationUpdates();
         }
     }
-
 
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(getContext())
@@ -716,5 +686,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         for (Marker m : synagoguesMarkers) {
             m.setVisible(isVisible);
         }
+    }
+
+    public interface OnFragmentInteractionListener {
+
+        void onUpdateSynagogues(LatLng latLng);
+
+        void onMarkerClick(int position);
+
+        void onGetDistanse(double meters, String drivingTime);
+
     }
 }
