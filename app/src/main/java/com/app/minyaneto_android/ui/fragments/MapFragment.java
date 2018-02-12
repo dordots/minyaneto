@@ -58,7 +58,7 @@ import java.util.List;
 public class MapFragment extends Fragment implements OnMapReadyCallback,
         ActivityCompat.OnRequestPermissionsResultCallback,
         GoogleMap.OnMarkerClickListener, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleMap.OnMapLongClickListener {
 
     public static final String TAG = MapFragment.class.getSimpleName();
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -69,7 +69,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private static final int UPDATE_INTERVAL = 10000; // 10 sec
     private static final int FATEST_INTERVAL = 5000; // 5 sec
     private static final int DISPLACEMENT = 10; // 10 meters
-    public SupportMapFragment mMapFragment;
     LatLngBounds latLngBounds;
     private Location mLastLocation;
     private GoogleApiClient mGoogleApiClient;
@@ -81,6 +80,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private double lastZoom = -1;
     private LatLng lastLatLng = null;
     private OnFragmentInteractionListener mListener;
+
+    public SupportMapFragment mMapFragment;
+
+    private Marker mAddSynagogueMarker;
 
     public static MapFragment newInstance() {
 
@@ -170,21 +173,46 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         mListener = null;
     }
 
-    public void updateMarker(Place place) {
+    public void updateMarker(LatLng latLng, String title) {
+        if (mAddSynagogueMarker != null) {
+            mAddSynagogueMarker.remove();
+        }
 
-        mMap.addMarker(new MarkerOptions().position(
+        mAddSynagogueMarker = mMap.addMarker(new MarkerOptions().position(
 
-                place.getLatLng())
+                latLng)
 
-                .title(place.getName().toString())
+                .title(title)
 
                 .draggable(true)
 
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
 
-        moveCamera(place.getLatLng());
-
+        moveCamera(latLng);
     }
+
+    public void updateMarker(Place place) {
+        updateMarker(place.getLatLng(), place.getName().toString());
+    }
+
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+        if (mListener != null) {
+            mListener.onMapLongClick(latLng);
+        }
+    }
+
+    public interface OnFragmentInteractionListener {
+
+        void onUpdateSynagogues(LatLng latLng);
+
+        void onMarkerClick(int position);
+
+        void onGetDistanse(double meters, String drivingTime);
+
+        void onMapLongClick(LatLng latLng);
+    }
+
 
     @Override
     public void onStart() {
@@ -248,6 +276,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         mMap = googleMap;
 
         mMap.setOnMarkerClickListener(this);
+
+        mMap.setOnMapLongClickListener(this);
 
         mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
 
@@ -657,15 +687,5 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         for (Marker m : synagoguesMarkers) {
             m.setVisible(isVisible);
         }
-    }
-
-    public interface OnFragmentInteractionListener {
-
-        void onUpdateSynagogues(LatLng latLng);
-
-        void onMarkerClick(int position);
-
-        void onGetDistanse(double meters, String drivingTime);
-
     }
 }

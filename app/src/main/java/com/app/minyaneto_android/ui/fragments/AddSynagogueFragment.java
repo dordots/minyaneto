@@ -107,7 +107,7 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
 
         try {
 
-            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(getActivity());
+            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).zzim(etAddressSynagogue.getText().toString()).build(getActivity());
 
             startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
 
