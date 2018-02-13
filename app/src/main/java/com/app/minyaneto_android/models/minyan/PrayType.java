@@ -1,5 +1,7 @@
 package com.app.minyaneto_android.models.minyan;
 
+import android.content.Context;
+
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.ui.acivities.MainActivity;
 
@@ -34,6 +36,12 @@ public enum PrayType {
                 return PrayType.EVENING;
         }
         throw new Exception(string);
+    }
+
+    public static void getName(Context context,PrayType prayType){
+
+
+
     }
 
 

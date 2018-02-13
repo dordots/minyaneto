@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -128,15 +129,17 @@ public class SynagoguesFragment extends Fragment {
     public void scrollToSynagoguePosition(int position) {
 
         mSynagoguesView.scrollToPosition(position);
-
+        mAdapter.setSelectedListPosition(position);
     }
 
     private void updateAdapter() {
 
         sortSynagoguesByLocation();
 
-        mListener.onUpdateMarkers(mSynagogues);
+        if(mListener!= null) {
 
+            mListener.onUpdateMarkers(mSynagogues);
+        }
         mAdapter.setMyClickListener(new SynagogueAdapter.SynagogueClickListener() {
             @Override
             public void onItemClick(int position) {

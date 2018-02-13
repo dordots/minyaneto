@@ -17,7 +17,7 @@
     <string name="accessible">נגישות</string>
 
     <!-- add synagogue -->
-    <string name="enter_name_synagogue">הכנס שם בית כנסת</string>
+    <string name="enter_name_synagogue">שם בית כנסת</string>
     <string name="enter_address_synagogue">כתובת בית כנסת</string>
     <string name="choose_nosach_synagogue">בחר נוסח</string>
     <string name="choose_address_synagogue">מצא כתובת</string>
@@ -157,12 +157,14 @@
     <string name="message_alert_no_gps">For use with this app the GPS is required</string>
     <string name="no_address">כתובת לא חוקית</string>
     <string name="search_synagogue_fragment">חיפוש בית כנסת</string>
-    <string name="enter_your_address">הכנס את המיקום המבוקש</string>
+    <string name="enter_your_address">כתובת</string>
     <string name="check_search">יש למלא את השדות לפני ביצוע החיפוש</string>
     <string name="search_by_nosach">חפש לפי נוסח</string>
-    <string name="sidebar_searchSynagogue">חפש</string>
+    <string name="sidebar_searchSynagogue">חפש בית כנסת</string>
     <string name="search">חפש</string>
     <string name="choose_a_date">בחר תאריך</string>
     <string name="choose_a_time">בחר זמן ביום</string>
     <string name="choose_name_synagogue">תפילת</string>
+    <string name="sidebar_searchMinyan">חפש מניין</string>
+    <string name="attention_alert">שים לב שקיימים בתי כנסת בסביבה</string>
 </resources>

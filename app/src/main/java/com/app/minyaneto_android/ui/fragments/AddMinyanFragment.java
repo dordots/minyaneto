@@ -170,7 +170,6 @@ public class AddMinyanFragment extends Fragment {
             @Override
             public void onResponse(String response) { //response = null
                 //TODO some message to user?
-                //TODO return to back fragment
                 getActivity().onBackPressed();
             }
         }, new ErrorResponse(new ErrorResponse.ErrorListener() {

@@ -35,7 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class SearchFragment extends Fragment implements
+public class SearchMinyanFragment extends Fragment implements
         View.OnClickListener,
         CompoundButton.OnCheckedChangeListener,
         DatePickerDialog.OnDateSetListener,
@@ -43,7 +43,7 @@ public class SearchFragment extends Fragment implements
 
     private final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
 
-    public static final String TAG = SearchFragment.class.getSimpleName();
+    public static final String TAG = SearchMinyanFragment.class.getSimpleName();
 
     private SearchListener mListener;
 
@@ -67,9 +67,9 @@ public class SearchFragment extends Fragment implements
 
     Date date;
 
-    public static SearchFragment getInstance() {
+    public static SearchMinyanFragment getInstance() {
 
-        return new SearchFragment();
+        return new SearchMinyanFragment();
     }
 
 
@@ -77,7 +77,7 @@ public class SearchFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        return inflater.inflate(R.layout.fragment_search_minyan, container, false);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class SearchFragment extends Fragment implements
 
         date = new Date();
 
-        etSearchAddress = view.findViewById(R.id.search_synagogoe_address);
+        etSearchAddress = view.findViewById(R.id.search_minyan_address);
 
         spinnerNosachSynagogue = view.findViewById(R.id.search_nosach);
 
@@ -100,7 +100,7 @@ public class SearchFragment extends Fragment implements
 
         btnChooseATime = view.findViewById(R.id.search_choose_time);
 
-        btnSearchSynagogue = view.findViewById(R.id.search_synagogoe_btn_search);
+        btnSearchSynagogue = view.findViewById(R.id.search_minyan_btn_search);
 
 
         etSearchAddress.setOnClickListener(this);
@@ -231,13 +231,13 @@ public class SearchFragment extends Fragment implements
 
         switch (v.getId()) {
 
-            case R.id.search_synagogoe_btn_search:
+            case R.id.search_minyan_btn_search:
 
                 searchSynagogues();
 
                 break;
 
-            case R.id.search_synagogoe_address:
+            case R.id.search_minyan_address:
 
                 getAddress();
 

@@ -107,7 +107,7 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
 
         try {
 
-            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(getActivity());
+            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).zzim(etAddressSynagogue.getText().toString()).build(getActivity());
 
             startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
 
@@ -156,7 +156,7 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
             @Override
             public void onResponse(Synagogue response) {
                 s.setId(response.getId());
-                mListener.onShowSynagogueDetails(s.getId());
+                mListener.onAddSynagogue(s);
             }
         }, new ErrorResponse(new ErrorResponse.ErrorListener() {
             @Override
@@ -187,6 +187,8 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
                 updateSynagogueAddress(place.getAddress().toString());
 
                 mListener.onUpdateMarker(place);
+
+                mListener.onGetTheSynagoguesAround(place.getLatLng());
 
                 updateLatLng(place.getLatLng());
 
@@ -237,10 +239,12 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
 
     public interface AddSynagogueListener {
 
-        void onShowSynagogueDetails(String id);
+        void onAddSynagogue(Synagogue synagogue);
 
         void onSetActionBarTitle(String title);
 
         void onUpdateMarker(Place place);
+
+        void onGetTheSynagoguesAround(LatLng lng);
     }
 }

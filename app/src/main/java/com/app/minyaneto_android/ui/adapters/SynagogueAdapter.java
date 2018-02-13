@@ -20,6 +20,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
     private List<Synagogue> synagogues;
     private SynagogueClickListener myClickListener;
     private int row_index = -1;
+    private Context context;
 
 
     public SynagogueAdapter(List<Synagogue> synagogues, Context context) {
@@ -28,6 +29,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
 
     public void setMyClickListener(SynagogueClickListener listener) {
         this.myClickListener = listener;
+        this.context = context;
     }
 
     @Override
@@ -46,6 +48,9 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
     public void onBindViewHolder(SynagogueViewHolder holder, final int position) {
         Synagogue synagogue = synagogues.get(position);
         holder.nameTextView.setText(synagogue.getName());
+        // holder.walkingTime.setText(synagogue.getWalking_time()+"");
+        // holder.drivigTime.setText(synagogue.getDriving_time()+"");
+
 
         if (synagogue.getMinyans().size() > 0) {
             //TODO real time from minyans
@@ -118,5 +123,12 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
         }
     }
 
+    public void setSelectedListPosition(int position) {
+        int prevPosition = row_index;
+        if (prevPosition != -1) {
+            notifyItemChanged(prevPosition);
+        }
 
+        notifyItemChanged(position);
+    }
 }
