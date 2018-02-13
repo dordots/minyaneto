@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.minyaneto_android.R;
+import com.app.minyaneto_android.location.LocationRepository;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.app.minyaneto_android.models.time.DateUtility;
@@ -441,12 +442,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private Date getCurrentMinyan(ArrayList<Minyan> minyans) {
         Collections.sort(minyans, new Comparator<Minyan>() {
             public int compare(Minyan minyan1, Minyan minyan2) {
-                Date date1 = DateUtility.getDate(minyan1, getContext());
-                Date date2 = DateUtility.getDate(minyan2, getContext());
+                Date date1 = DateUtility.getDate(minyan1);
+                Date date2 = DateUtility.getDate(minyan2);
                 return date1.compareTo(date2);
             }
         });
-        return DateUtility.getDate(minyans.get(0), getContext());
+        return DateUtility.getDate(minyans.get(0));
     }
 
     private long calculateDistance(LatLng location1, LatLng location2) {
@@ -625,13 +626,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         // Assign the new location
         mLastLocation = location;
 
+        LocationRepository.getInstance().setLastKnownLocation(location);
         // Displaying the new location on UI
         displayLocation();
-    }
-
-    public Location getLastLocation() {
-
-        return mLastLocation;
     }
 
     public void moveCamera(LatLng lng) {

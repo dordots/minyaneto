@@ -18,6 +18,7 @@ import com.app.minyaneto_android.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class ZmanimFragment extends Fragment implements ZmanimContract.View {
 
@@ -28,7 +29,7 @@ public class ZmanimFragment extends Fragment implements ZmanimContract.View {
     private ContentAdapter adapter;
 
     public ZmanimFragment() {
-        formatter = new SimpleDateFormat("HH:mm");
+        formatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
     }
 
     @Override
