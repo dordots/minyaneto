@@ -8,10 +8,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Closeable;
 import java.util.ArrayList;
 
-public class Synagogue implements Parcelable ,Cloneable{
+public class Synagogue implements Parcelable, Cloneable {
 
     public static final String TAG = Synagogue.class.getName();
     public static final Creator<Synagogue> CREATOR = new Creator<Synagogue>() {
@@ -63,7 +62,7 @@ public class Synagogue implements Parcelable ,Cloneable{
     private String minyansAsString;
 
     public Synagogue() {
-        this.minyans = new ArrayList<Minyan>();
+        this.minyans = new ArrayList<>();
     }
 
     protected Synagogue(Parcel in) {
@@ -78,7 +77,7 @@ public class Synagogue implements Parcelable ,Cloneable{
         this.parking = in.readByte() != 0;
         this.seferTora = in.readByte() != 0;
         this.wheelchairAccessible = in.readByte() != 0;
-        this.minyans = new ArrayList<Minyan>();
+        this.minyans = new ArrayList<>();
         in.readList(this.minyans, Minyan.class.getClassLoader());
     }
 
@@ -123,8 +122,7 @@ public class Synagogue implements Parcelable ,Cloneable{
         this.geo = geo;
         try {
             latLng = new LatLng(Double.parseDouble(geo.getLat()), Double.parseDouble(geo.getLon()));
-        } catch (Exception ex) {
-
+        } catch (Exception ignored) {
         }
     }
 
@@ -141,7 +139,7 @@ public class Synagogue implements Parcelable ,Cloneable{
     }
 
     public void setMinyans(ArrayList<Minyan> minyans) {
-        this.minyans =minyans;
+        this.minyans = minyans;
     }
 
     public String getName() {

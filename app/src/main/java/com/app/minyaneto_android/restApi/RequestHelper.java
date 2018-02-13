@@ -16,12 +16,6 @@ import ravtech.co.il.httpclient.ErrorResponse;
 import ravtech.co.il.httpclient.GenericRequest;
 import ravtech.co.il.httpclient.model.Result;
 
-
-/**
- * class to handel the request
- * <p/>
- * Created by droiter on 5/15/2016.
- */
 public class RequestHelper {
 
     public static final String TAG = RequestHelper.class.getSimpleName();
