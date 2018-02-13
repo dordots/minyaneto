@@ -25,8 +25,10 @@ public class ZmanimPresenter implements ZmanimContract.UserActionsListener {
 
     @Override
     public void showZmanim() {
-        ComplexZmanimCalendar czc = getCzc(location, timeZone);
-        displayZmanim(czc);
+        if (location != null) {
+            ComplexZmanimCalendar czc = getCzc(location, timeZone);
+            displayZmanim(czc);
+        }
     }
 
     private ComplexZmanimCalendar getCzc(Location location, TimeZone timeZone) {

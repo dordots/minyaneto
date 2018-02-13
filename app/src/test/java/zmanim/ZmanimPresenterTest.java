@@ -22,6 +22,7 @@ import java.util.TimeZone;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(RobolectricTestRunner.class)
 public class ZmanimPresenterTest {
@@ -39,6 +40,20 @@ public class ZmanimPresenterTest {
         calendarProvider = new MockZmanimCalendarProvider();
         formatter = new SimpleDateFormat("HH:mm");
         captor = ArgumentCaptor.forClass(Date.class);
+    }
+
+    @Test
+    public void onNullLocationDoNotShowZmanim() throws Exception {
+        // Arrange
+        zmanimView = spy(ZmanimContract.View.class);
+        ZmanimPresenter presenter =
+                new ZmanimPresenter(calendarProvider, null, TimeZone.getTimeZone("GMT+2:00"), zmanimView);
+
+        // Act
+        presenter.showZmanim();
+
+        // Assert
+        verifyZeroInteractions(zmanimView);
     }
 
     @Test
