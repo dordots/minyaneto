@@ -5,7 +5,6 @@ import android.content.Context;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.app.minyaneto_android.models.geo.Geocoded;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.app.minyaneto_android.models.synagogue.SynagogueArray;
@@ -74,7 +73,8 @@ public class RequestHelper {
         AppQueue.getInstance(context).addToRequestQueue(request);
 
     }
-    public static void updateSynagogue(Context context,String id, Synagogue synagogue, Response.Listener<String> mResponseListener,
+
+    public static void updateSynagogue(Context context, String id, Synagogue synagogue, Response.Listener<String> mResponseListener,
                                        Response.ErrorListener errorResponse) {
 
         GenericRequest<String> request = new GenericRequest<>(
@@ -92,6 +92,7 @@ public class RequestHelper {
         AppQueue.getInstance(context).addToRequestQueue(request);
 
     }
+
     private static void setRetryPolicy(GenericRequest<?> request) {
         request.setRetryPolicy(new DefaultRetryPolicy(
                 MY_SOCKET_TIMEOUT_MS,
@@ -99,26 +100,7 @@ public class RequestHelper {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
-
-    public static void getDistance(Context context, double lat1, double lon1, double lat2, double lon2,
-                                   Response.Listener<Geocoded> responseListener, Response.ErrorListener errorResponse) {
-
-        GenericRequest<Geocoded> request = new GenericRequest<Geocoded>(
-                Request.Method.POST,
-                URL.getDistanceUrl(lat1,lon1,lat2,lon2),
-                Geocoded.class,
-                "",
-                responseListener,
-                errorResponse
-        );
-
-
-        setRetryPolicy(request);
-
-        AppQueue.getInstance(context).addToRequestQueue(request);
-    }
-
-    public static void getSynagogues(Context context,LatLng center,
+    public static void getSynagogues(Context context, LatLng center,
                                      Response.Listener<SynagogueArray> responseListener,
                                      ErrorResponse.ErrorListener errorListener) {
 

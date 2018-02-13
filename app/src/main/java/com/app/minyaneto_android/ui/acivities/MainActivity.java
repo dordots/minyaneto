@@ -16,10 +16,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.location.LocationRepository;
-import com.app.minyaneto_android.models.geo.Geocoded;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.minyan.PrayType;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
@@ -291,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements
 
                     Toast.makeText(MainActivity.this, R.string.attention_alert, Toast.LENGTH_SHORT).show();
 
-                    mapFragment.updateMarkers(response.getSynagogues());
+                mapFragment.updateMarkers(response.getSynagogues());
 
             }
         }, this);
@@ -417,30 +415,6 @@ public class MainActivity extends AppCompatActivity implements
         long distanceInMeters = Math.round(6371000 * c);
         return distanceInMeters;
     }
-
-    public void getDistance(final double lat1, final double lon1, final double lat2, final double lon2, final int i) {
-
-        RequestHelper.getDistance(MainActivity.this, lat1, lon1, lat2, lon2, new Response.Listener<Geocoded>() {
-            @Override
-            public void onResponse(Geocoded response) {
-
-                // TODO: 07 דצמבר 2017 insert the real app key for this and add case for walking and for if the distance more than hour
-                if (response.getStatus().equals("OK"))
-
-                    synagogues.get(i).setDistanceFromLocation(Double.parseDouble(response.getRoutes().get(0).getLegs().get(0).getDistance().getText().split(" ")[0]) * 1000);
-                //   response.getRoutes().get(0).getLegs().get(0).getDuration().getText());
-
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-
-    }
-
 
     @Override
     public void onMarkerClick(int position) {
