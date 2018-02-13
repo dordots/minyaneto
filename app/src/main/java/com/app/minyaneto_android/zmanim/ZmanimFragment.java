@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.app.minyaneto_android.Injection;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.location.LocationRepository;
 
@@ -39,7 +38,7 @@ public class ZmanimFragment extends Fragment implements ZmanimContract.View {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Location location = LocationRepository.getInstance().getLastKnownLocation();
-        listener = new ZmanimPresenter(Injection.getZmanimCalendarProvider(), location, TimeZone.getDefault(), this);
+        listener = new ZmanimPresenter(new ZmanimCalendarProvider(), location, TimeZone.getDefault(), this);
     }
 
     @Override
