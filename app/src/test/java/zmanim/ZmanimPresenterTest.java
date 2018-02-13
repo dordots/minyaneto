@@ -22,7 +22,6 @@ import java.util.TimeZone;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(RobolectricTestRunner.class)
 public class ZmanimPresenterTest {
@@ -43,7 +42,7 @@ public class ZmanimPresenterTest {
     }
 
     @Test
-    public void onNullLocationDoNotShowZmanim() throws Exception {
+    public void onNullLocationDisplayNoLocation() throws Exception {
         // Arrange
         zmanimView = spy(ZmanimContract.View.class);
         ZmanimPresenter presenter =
@@ -53,7 +52,7 @@ public class ZmanimPresenterTest {
         presenter.showZmanim();
 
         // Assert
-        verifyZeroInteractions(zmanimView);
+        verify(zmanimView).displayNoLocationFound();
     }
 
     @Test

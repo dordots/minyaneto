@@ -13,6 +13,8 @@ public interface ZmanimContract {
         void displayShkiaa(Date zman);
 
         void displayTzaisHakochavim(Date zman);
+
+        void displayNoLocationFound();
     }
 
     interface UserActionsListener {

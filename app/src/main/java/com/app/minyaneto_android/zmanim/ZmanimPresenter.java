@@ -28,6 +28,8 @@ public class ZmanimPresenter implements ZmanimContract.UserActionsListener {
         if (location != null) {
             ComplexZmanimCalendar czc = getCzc(location, timeZone);
             displayZmanim(czc);
+        } else {
+            zmanimView.displayNoLocationFound();
         }
     }
 

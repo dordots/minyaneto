@@ -89,6 +89,11 @@ public class ZmanimFragment extends Fragment implements ZmanimContract.View {
         displayZmanInPosition(zman, 4);
     }
 
+    @Override
+    public void displayNoLocationFound() {
+
+    }
+
     private void displayZmanInPosition(Date zman, int position) {
         adapter.zmanim[position] = formatter.format(zman);
         adapter.notifyItemChanged(position);
