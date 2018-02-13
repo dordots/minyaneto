@@ -70,12 +70,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private static final int UPDATE_INTERVAL = 10000; // 10 sec
     private static final int FATEST_INTERVAL = 5000; // 5 sec
     private static final int DISPLACEMENT = 10; // 10 meters
+    private final LatLng mHarHabait = new LatLng(31.7780628, 35.2353691);
     public SupportMapFragment mMapFragment;
     LatLngBounds latLngBounds;
-    private Location mLastLocation;
     private GoogleApiClient mGoogleApiClient;
     // boolean flag to toggle periodic location updates
-    private boolean mRequestingLocationUpdates = false;
+    private boolean mCurrentlyRequestingLocationUpdates = false;
     private LocationRequest mLocationRequest;
     private GoogleMap mMap;
     private List<Marker> synagoguesMarkers;
@@ -228,14 +228,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onResume() {
         super.onResume();
-
         checkPlayServices();
-
-        // Resuming the periodic location updates
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && mRequestingLocationUpdates) {
-            startLocationUpdates();
-        }
-
+        startLocationUpdates();
     }
 
     @Override
@@ -306,20 +300,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (requestCode == PERMISSIONS_REQUEST_RESOLUTION_REQUIRED) {
-
             if (resultCode != 0) {
-
                 onRefreshMap();
-
             } else {
-
-                LatLng myLoc = new LatLng(31.7780628, 35.2353691);
-
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLoc, 15));
-
-                updateCurrentLocation(myLoc);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mHarHabait, 15));
+                updateCurrentLocation(mHarHabait);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -413,25 +399,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         });
     }
 
-    private void updateCurrentLocation(LatLng mLocation) {
+    private void updateCurrentLocation(LatLng latLng) {
 
-        if (mLocation == null || mLocation.equals(lastLatLng)) return;
+        if (latLng == null || latLng.equals(lastLatLng)) return;
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(mLocation)      // Sets the center of the map to Mountain View
+                .target(latLng)      // Sets the center of the map to Mountain View
                 .zoom(15)                   // Sets the zoom
                 // .bearing(90)                // Sets the orientation of the camera to east
                 .tilt(30)                   // Sets the tilt of the camera to 30 degrees
                 .build();                   // Creates a CameraPosition from the builder
 
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        mMap.addMarker(new MarkerOptions().position(mLocation));
+        mMap.addMarker(new MarkerOptions().position(latLng));
 
         enableMyLocationIcon();
 
-        lastLatLng = mLocation;
+        lastLatLng = latLng;
 
-        mListener.onUpdateSynagogues(mLocation);
+        mListener.onUpdateSynagogues(latLng);
     }
 
     public void updateMarkers(ArrayList<Synagogue> synagogues) {
@@ -514,9 +500,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
-    /**
-     * Method to display the location on UI
-     */
     private void displayLocation() {
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
@@ -526,17 +509,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         }
         if (mGoogleApiClient == null)
             return;
-        mLastLocation = LocationServices.FusedLocationApi
-                .getLastLocation(mGoogleApiClient);
+        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        LocationRepository.getInstance().setLastKnownLocation(location);
 
-        if (mLastLocation != null) {
-            double latitude = mLastLocation.getLatitude();
-            double longitude = mLastLocation.getLongitude();
-            updateCurrentLocation(new LatLng(latitude, longitude));
-            mRequestingLocationUpdates = false;
-
+        if (location != null) {
+            updateCurrentLocation(new LatLng(location.getLatitude(), location.getLongitude()));
         } else {
-            mRequestingLocationUpdates = true;
             startLocationUpdates();
         }
     }
@@ -582,38 +560,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         return true;
     }
 
-    /**
-     * Starting the location updates
-     */
     protected void startLocationUpdates() {
-
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
 
-        if (mGoogleApiClient == null || !mGoogleApiClient.isConnected())
+        if (mGoogleApiClient == null || !mGoogleApiClient.isConnected() || mCurrentlyRequestingLocationUpdates)
             return;
 
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-
+        mCurrentlyRequestingLocationUpdates = true;
     }
 
-    /**
-     * Stopping location updates
-     */
     protected void stopLocationUpdates() {
-
-        if (mGoogleApiClient == null || !mGoogleApiClient.isConnected())
+        if (mGoogleApiClient == null || !mGoogleApiClient.isConnected() || !mCurrentlyRequestingLocationUpdates)
             return;
-
-        LocationServices.FusedLocationApi.removeLocationUpdates(
-                mGoogleApiClient, this);
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        mCurrentlyRequestingLocationUpdates = false;
     }
 
-    /**
-     * Google api callback methods
-     */
     @Override
     public void onConnectionFailed(ConnectionResult result) {
 
@@ -621,30 +587,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onConnected(Bundle arg0) {
-
-        // Once connected with google api, get the location
         displayLocation();
-
-        if (mRequestingLocationUpdates) {
-
-            startLocationUpdates();
-        }
+        startLocationUpdates();
     }
 
     @Override
     public void onConnectionSuspended(int arg0) {
-
         mGoogleApiClient.connect();
     }
 
     @Override
     public void onLocationChanged(Location location) {
-
-        // Assign the new location
-        mLastLocation = location;
-
         LocationRepository.getInstance().setLastKnownLocation(location);
-        // Displaying the new location on UI
         displayLocation();
     }
 
