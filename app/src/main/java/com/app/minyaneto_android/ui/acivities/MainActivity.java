@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -73,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements
     public AddSynagogueFragment addSynagogueFragment;
 
     public ArrayList<Synagogue> originSynagogues = new ArrayList<>();
-    private ArrayList<Fragment> liveFragments = new ArrayList<>();
     private NavigationHelper mNavigationHelper;
     private boolean doubleBackToExitPressedOnce = false;
     private FragmentHelper mFragmentHelper;
@@ -318,11 +316,9 @@ public class MainActivity extends AppCompatActivity implements
 
                 for (int i = 0; i < response.getSynagogues().size(); i++) {
 
-                    ArrayList<Minyan> minyens = new ArrayList<Minyan>();
+                    ArrayList<Minyan> minyens = new ArrayList<>();
 
-                    for (Minyan minyan : response.getSynagogues().get(i).getMinyans()) {
-                        minyens.add(minyan);
-                    }
+                    minyens.addAll(response.getSynagogues().get(i).getMinyans());
                     originSynagogues.add(response.getSynagogues().get(i));
                     originSynagogues.get(i).setMinyans(minyens);
                 }
@@ -365,7 +361,7 @@ public class MainActivity extends AppCompatActivity implements
             date = new Date();
         }
         SimpleDateFormat format = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        String result = "";
+        StringBuilder result = new StringBuilder();
         ArrayList<String> myResult = new ArrayList<>();
         for (Minyan minyan : minyans) {
             //TODO calculate real time -like rosh hodesh..
@@ -381,7 +377,7 @@ public class MainActivity extends AppCompatActivity implements
             Log.d("-------------", cal.getTime().toString());
             Date f = cal.getTime();
             if (minyan.getPrayDayType().ordinal() == date.getDay() && f.after(date)) {
-                result = result + " ," + format.format(f);
+                result.append(" ,").append(format.format(f));
                 myResult.add(format.format(f));
             }
         }
@@ -423,15 +419,6 @@ public class MainActivity extends AppCompatActivity implements
 
             synagoguesFragment.scrollToSynagoguePosition(position);
 
-        }
-    }
-
-    @Override
-    public void onGetDistanse(double meters, String drivingTime) {
-
-        if (mFragmentHelper.isContains(SynagoguesFragment.TAG)) {
-
-// TODO: 20/12/2017
         }
     }
 
@@ -529,23 +516,13 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        for (Fragment fragment : liveFragments) {
-            fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (requestCode == Alerts.ACTION_CODE_OPEN_GPS_SETTINGS) {
-
-
             return;
-
-        }
-        for (Fragment fragment : liveFragments) {
-            fragment.onActivityResult(requestCode, resultCode, data);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -571,29 +548,28 @@ public class MainActivity extends AppCompatActivity implements
 
         if (null != mapFragment) {
 
-            if (isShowSynagoguesFragment)
-                RequestHelper.getSynagogues(this, latLng, new Response.Listener<SynagogueArray>() {
+            RequestHelper.getSynagogues(this, latLng, new Response.Listener<SynagogueArray>() {
 
-                    @Override
-                    public void onResponse(SynagogueArray response) {
+                @Override
+                public void onResponse(SynagogueArray response) {
 
-                        originSynagogues.clear();
+                    originSynagogues.clear();
 
-                        for (Synagogue s : response.getSynagogues()) {
+                    for (Synagogue s : response.getSynagogues()) {
 
-                            s.refreshData();
-                            s.setDistanceFromLocation(calculateDistance(s.getGeo(), latLng));
+                        s.refreshData();
+                        s.setDistanceFromLocation(calculateDistance(s.getGeo(), latLng));
 
-                        }
-
-                        originSynagogues = response.getSynagogues();
-
-                        synagogues = originSynagogues;
-
-                        synagoguesFragment.updateSynagogues(synagogues);
                     }
 
-                }, this);
+                    originSynagogues = response.getSynagogues();
+
+                    synagogues = originSynagogues;
+
+                    synagoguesFragment.updateSynagogues(synagogues);
+                }
+
+            }, this);
         }
 
     }
@@ -607,10 +583,8 @@ public class MainActivity extends AppCompatActivity implements
         isShowSynagoguesFragment = true;
 
         if (null != mapFragment) {
-            if (isShowSynagoguesFragment) {
-                updateSynagogues(latLngCenter, date, prayType, nosach);
+            updateSynagogues(latLngCenter, date, prayType, nosach);
 
-            }
         }
     }
 

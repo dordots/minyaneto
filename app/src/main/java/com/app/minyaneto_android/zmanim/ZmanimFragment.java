@@ -2,6 +2,7 @@ package com.app.minyaneto_android.zmanim;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,10 +16,12 @@ import android.widget.TextView;
 
 import com.app.minyaneto_android.Injection;
 import com.app.minyaneto_android.R;
+import com.app.minyaneto_android.location.LocationRepository;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class ZmanimFragment extends Fragment implements ZmanimContract.View {
 
@@ -35,9 +38,8 @@ public class ZmanimFragment extends Fragment implements ZmanimContract.View {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        listener = new ZmanimPresenter(Injection.getZmanimCalendarProvider(),
-                Injection.getLocationProvider(getContext()),
-                this);
+        Location location = LocationRepository.getInstance().getLastKnownLocation();
+        listener = new ZmanimPresenter(Injection.getZmanimCalendarProvider(), location, TimeZone.getDefault(), this);
     }
 
     @Override

@@ -70,6 +70,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private static final int UPDATE_INTERVAL = 10000; // 10 sec
     private static final int FATEST_INTERVAL = 5000; // 5 sec
     private static final int DISPLACEMENT = 10; // 10 meters
+    public SupportMapFragment mMapFragment;
     LatLngBounds latLngBounds;
     private Location mLastLocation;
     private GoogleApiClient mGoogleApiClient;
@@ -81,9 +82,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private double lastZoom = -1;
     private LatLng lastLatLng = null;
     private OnFragmentInteractionListener mListener;
-
-    public SupportMapFragment mMapFragment;
-
     private Marker mAddSynagogueMarker;
 
     public static MapFragment newInstance() {
@@ -202,18 +200,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             mListener.onMapLongClick(latLng);
         }
     }
-
-    public interface OnFragmentInteractionListener {
-
-        void onUpdateSynagogues(LatLng latLng);
-
-        void onMarkerClick(int position);
-
-        void onGetDistanse(double meters, String drivingTime);
-
-        void onMapLongClick(LatLng latLng);
-    }
-
 
     @Override
     public void onStart() {
@@ -463,7 +449,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             Marker m = mMap.addMarker(new MarkerOptions().position(
                     synagogue.getGeo())
                     .title(synagogue.getName() + " - " + synagogue.getNosach())
-                    //.snippet(synagogue.getMinyans().size() > 0 ? format.format(getCurrentMinyan(synagogue.getMinyans())) : "")
+//                    .snippet(synagogue.getMinyans().size() > 0 ? format.format(getCurrentMinyan(synagogue.getMinyans())) : "")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
             synagoguesMarkers.add(m);
         }
@@ -684,5 +670,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         for (Marker m : synagoguesMarkers) {
             m.setVisible(isVisible);
         }
+    }
+
+    public interface OnFragmentInteractionListener {
+
+        void onUpdateSynagogues(LatLng latLng);
+
+        void onMarkerClick(int position);
+
+        void onMapLongClick(LatLng latLng);
     }
 }

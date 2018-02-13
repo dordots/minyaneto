@@ -1,8 +1,9 @@
 package zmanim;
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
+import android.location.Location;
+import android.location.LocationManager;
 
-import com.app.minyaneto_android.location.LocationProvider;
 import com.app.minyaneto_android.zmanim.ZmanimCalendarProvider;
 import com.app.minyaneto_android.zmanim.ZmanimContract;
 import com.app.minyaneto_android.zmanim.ZmanimPresenter;
@@ -16,6 +17,7 @@ import org.robolectric.RobolectricTestRunner;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.spy;
@@ -28,7 +30,6 @@ public class ZmanimPresenterTest {
     public InstantTaskExecutorRule instantExecutorRule = new InstantTaskExecutorRule();
 
     private ZmanimCalendarProvider calendarProvider;
-    private LocationProvider locationProvider;
     private SimpleDateFormat formatter;
     private ArgumentCaptor<Date> captor;
     private ZmanimContract.View zmanimView;
@@ -36,7 +37,6 @@ public class ZmanimPresenterTest {
     @Before
     public void setUp() throws Exception {
         calendarProvider = new MockZmanimCalendarProvider();
-        locationProvider = new MockLocationProvider();
         formatter = new SimpleDateFormat("HH:mm");
         captor = ArgumentCaptor.forClass(Date.class);
     }
@@ -46,7 +46,7 @@ public class ZmanimPresenterTest {
         // Arrange
         zmanimView = spy(ZmanimContract.View.class);
         ZmanimPresenter presenter =
-                new ZmanimPresenter(calendarProvider, locationProvider, zmanimView);
+                new ZmanimPresenter(calendarProvider, getMockLocation(), TimeZone.getTimeZone("GMT+2:00"), zmanimView);
 
         // Act
         presenter.showZmanim();
@@ -57,6 +57,14 @@ public class ZmanimPresenterTest {
         verifyHenez("06:24");
         verifyShkiaa("16:40");
         verifyTzais("17:02");
+    }
+
+    private Location getMockLocation() {
+        Location location = new Location(LocationManager.GPS_PROVIDER);
+        location.setLatitude(31.783);
+        location.setLongitude(35.219);
+        location.setAltitude(715);
+        return location;
     }
 
     private void verifyAlos(String expected) {
