@@ -14,7 +14,7 @@ import com.android.volley.toolbox.Volley;
 
 public class AppQueue {
 
-    protected static final String TAG = "all_queue" ;
+    protected static final String TAG = "all_queue";
 
     private static final int DEFAULT_CACHE_SIZE = 20 * 1024 * 1024;
 
@@ -69,7 +69,7 @@ public class AppQueue {
         return mRequestQueue;
     }
 
-    public <T> void addToRequestQueue(@NonNull  Request<T> req) {
+    public <T> void addToRequestQueue(@NonNull Request<T> req) {
 
         req.setTag(TAG);
 
@@ -94,9 +94,9 @@ public class AppQueue {
     }
 
 
-    public void cancelAll(){
+    public void cancelAll() {
 
-        if(getRequestQueue() != null)
+        if (getRequestQueue() != null)
             getRequestQueue().cancelAll(TAG);
 
     }
