@@ -16,9 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.minyaneto_android.R;
+import com.app.minyaneto_android.directions.FetchUrl;
+import com.app.minyaneto_android.directions.RouteListener;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.app.minyaneto_android.models.time.DateUtility;
+import com.app.minyaneto_android.utilities.LocationHelper;
 import com.app.minyaneto_android.utilities.Permissions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -43,6 +46,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,7 +63,7 @@ import java.util.List;
 public class MapFragment extends Fragment implements OnMapReadyCallback,
         ActivityCompat.OnRequestPermissionsResultCallback,
         GoogleMap.OnMarkerClickListener, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleMap.OnMapLongClickListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleMap.OnMapLongClickListener, RouteListener {
 
     public static final String TAG = MapFragment.class.getSimpleName();
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -80,10 +85,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private double lastZoom = -1;
     private LatLng lastLatLng = null;
     private OnFragmentInteractionListener mListener;
-
     public SupportMapFragment mMapFragment;
-
     private Marker mAddSynagogueMarker;
+    private Polyline mRoutePolyline;
 
     public static MapFragment newInstance() {
 
@@ -197,9 +201,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onMapLongClick(LatLng latLng) {
+        if (mAddSynagogueMarker != null) {
+            String url = LocationHelper.getDirectionsUrl(mAddSynagogueMarker.getPosition(), latLng);
+            FetchUrl FetchUrl = new FetchUrl(this);
+
+            // Start downloading json data from Google Directions API
+            FetchUrl.execute(url);
+        }
+
         if (mListener != null) {
             mListener.onMapLongClick(latLng);
         }
+    }
+
+    @Override
+    public void onRoutePolylineReceived(PolylineOptions polyline) {
+        if (mRoutePolyline != null) {
+            mRoutePolyline.remove();
+        }
+
+        mRoutePolyline = mMap.addPolyline(polyline);
     }
 
     public interface OnFragmentInteractionListener {
