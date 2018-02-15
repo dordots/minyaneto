@@ -69,6 +69,7 @@ public class SearchMinyanFragment extends Fragment implements
 
     public static SearchMinyanFragment getInstance() {
 
+
         return new SearchMinyanFragment();
     }
 
@@ -177,7 +178,7 @@ public class SearchMinyanFragment extends Fragment implements
 
         if (mListener != null) {
 
-            mListener.onSearch(mLatLng, date, prayType, nosach);
+            mListener.onSearch(etSearchAddress.getText().toString(),mLatLng, date, prayType, nosach);
         }
     }
 
@@ -303,7 +304,7 @@ public class SearchMinyanFragment extends Fragment implements
 
     public interface SearchListener {
 
-        void onSearch(LatLng latLng, Date date, PrayType prayType, String nosach);
+        void onSearch(String address, LatLng latLng, Date date, PrayType prayType, String nosach);
 
         void onSetActionBarTitle(String title);
 

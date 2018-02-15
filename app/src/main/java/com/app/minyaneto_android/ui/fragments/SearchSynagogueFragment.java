@@ -93,7 +93,7 @@ public class SearchSynagogueFragment extends Fragment implements
 
         if (mListener != null) {
 
-            mListener.onSearchSynagogue(mLatLng);
+            mListener.onSearchSynagogue(etSearchAddress.getText().toString(),mLatLng);
         }
     }
 
@@ -164,7 +164,7 @@ public class SearchSynagogueFragment extends Fragment implements
 
     public interface SearchListener {
 
-        void onSearchSynagogue(LatLng latLng);
+        void onSearchSynagogue(String address,LatLng latLng);
 
         void onSetActionBarTitle(String title);
 

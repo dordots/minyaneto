@@ -14,6 +14,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.location.LocationRepository;
@@ -59,7 +62,8 @@ import java.util.List;
 public class MapFragment extends Fragment implements OnMapReadyCallback,
         ActivityCompat.OnRequestPermissionsResultCallback,
         GoogleMap.OnMarkerClickListener, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleMap.OnMapLongClickListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleMap.OnMapLongClickListener,
+        View.OnClickListener {
 
     public static final String TAG = MapFragment.class.getSimpleName();
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -72,7 +76,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private static final int DISPLACEMENT = 10; // 10 meters
     private final LatLng mHarHabait = new LatLng(31.7780628, 35.2353691);
     public SupportMapFragment mMapFragment;
-    LatLngBounds latLngBounds;
     private GoogleApiClient mGoogleApiClient;
     // boolean flag to toggle periodic location updates
     private boolean mCurrentlyRequestingLocationUpdates = false;
@@ -83,6 +86,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private LatLng lastLatLng = null;
     private OnFragmentInteractionListener mListener;
     private Marker mAddSynagogueMarker;
+    private LinearLayout searchModeLinearLayout;
+    private TextView searchModeTextView;
+    private ImageButton searchModeExitImageButton;
 
     public static MapFragment newInstance() {
 
@@ -108,8 +114,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_map, container, false);
+        searchModeLinearLayout = view.findViewById(R.id.map_search_mode_linearlayout_fragment_map);
+        searchModeExitImageButton = view.findViewById(R.id.exit_search_mode_fragment_map);
+        searchModeTextView = view.findViewById(R.id.search_message_fragment_map);
 
-        init();
+        searchModeExitImageButton.setOnClickListener(this);
+
+        initMap();
 
         return view;
     }
@@ -129,20 +140,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     public void onRefreshMap() {
 
         mMapFragment.getMapAsync(this);
+        searchModeLinearLayout.setVisibility(View.GONE);
 
     }
 
-    public LatLng[] onGetBounds() {
-        LatLng[] latLngs = new LatLng[2];
-
-        latLngBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
-        latLngs[0] = latLngBounds.northeast;
-        latLngs[1] = latLngBounds.southwest;
-        return latLngs;
-    }
-
-
-    private void init() {
+    private void initMap() {
 
         mMapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.FM_map);
 
@@ -188,6 +190,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
 
         moveCamera(latLng);
+    }
+
+    public void startSearchMode(String msg){
+        searchModeLinearLayout.setVisibility(View.VISIBLE);
+        searchModeTextView.setText(getString(R.string.searchModeMsg)+ msg);
+        stopLocationUpdates();
     }
 
     public void updateMarker(Place place) {
@@ -624,6 +632,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         for (Marker m : synagoguesMarkers) {
             m.setVisible(isVisible);
         }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+
+            case R.id.exit_search_mode_fragment_map:
+
+                exitSearchMode();
+
+                break;
+        }
+
+    }
+
+    private void exitSearchMode() {
+        startLocationUpdates();
+        searchModeLinearLayout.setVisibility(View.GONE);
+        onRefreshMap();
     }
 
     public interface OnFragmentInteractionListener {

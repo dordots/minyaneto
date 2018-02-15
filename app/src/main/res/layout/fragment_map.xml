@@ -4,11 +4,44 @@
     android:layout_height="match_parent"
     tools:context="com.app.minyaneto_android.ui.fragments.MapFragment">
 
-    <fragment
-        android:id="@+id/FM_map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/map_search_mode_linearlayout_fragment_map"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="10"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/search_message_fragment_map"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_weight="10"
+                android:layout_gravity="center"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:id="@+id/exit_search_mode_fragment_map"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_delete"/>
+        </LinearLayout>
+
+        <fragment
+            android:id="@+id/FM_map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+        </fragment>
+    </LinearLayout>
 
 </FrameLayout>

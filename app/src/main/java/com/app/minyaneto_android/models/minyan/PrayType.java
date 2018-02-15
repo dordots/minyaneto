@@ -34,15 +34,11 @@ public enum PrayType {
             case "arvit":
             case "ערבית":
                 return PrayType.EVENING;
+            default:
+                return PrayType.MORNING; //TODO: fix it !!!!!!!!!!!!!!!!!!
+
         }
-        throw new Exception(string);
+        //throw new Exception(string);
     }
-
-    public static void getName(Context context,PrayType prayType){
-
-
-
-    }
-
 
 }

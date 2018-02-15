@@ -35,7 +35,7 @@ public enum PrayDayType {
             case "saturday":
             case "שבת":
                 return SATURDAY;
-            default:
+            default:  //TODO fix it!!!!!!!!!!!!!!!!!!!!!!!
                 return THURSDAY; //TODO return the right value for spacial cases like -rosh-hodesh..
         }
     }

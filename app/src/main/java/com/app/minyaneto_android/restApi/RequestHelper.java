@@ -100,12 +100,12 @@ public class RequestHelper {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
-    public static void getSynagogues(Context context, LatLng center,
+    public static void getSynagogues(Context context, LatLng center, double raduis,
                                      Response.Listener<SynagogueArray> responseListener,
                                      ErrorResponse.ErrorListener errorListener) {
 
         GenericRequest<SynagogueArray> request = new GenericRequest<>(
-                URL.getUrlSynagogues(center),
+                URL.getUrlSynagogues(center,raduis),
                 SynagogueArray.class,
                 responseListener,
                 new ErrorResponse(errorListener),

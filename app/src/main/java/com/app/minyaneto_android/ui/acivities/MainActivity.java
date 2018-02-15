@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements
         SearchSynagogueFragment.SearchListener, ErrorResponse.ErrorListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final double DEFUALT_RADUIS = 3;
+    private static final double RADUIS_FOR_ADD_SYNAGOGUE = 0.3;
     public MapFragment mapFragment;
     public SynagoguesFragment synagoguesFragment;
     public ArrayList<Synagogue> synagogues;
@@ -279,7 +281,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onGetTheSynagoguesAround(LatLng lng) {
 
-        RequestHelper.getSynagogues(this, lng, new Response.Listener<SynagogueArray>() {
+        RequestHelper.getSynagogues(this, lng,RADUIS_FOR_ADD_SYNAGOGUE, new Response.Listener<SynagogueArray>() {
             @Override
             public void onResponse(SynagogueArray response) {
 
@@ -308,7 +310,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void updateSynagogues(final LatLng latLngCenter,
                                   final Date date, final PrayType name, final String nosach) {
-        RequestHelper.getSynagogues(this, latLngCenter, new Response.Listener<SynagogueArray>() {
+        RequestHelper.getSynagogues(this, latLngCenter,DEFUALT_RADUIS, new Response.Listener<SynagogueArray>() {
             @Override
             public void onResponse(SynagogueArray response) {
 
@@ -522,7 +524,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Alerts.ACTION_CODE_OPEN_GPS_SETTINGS) {
-            return;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -540,15 +541,16 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onSearchSynagogue(final LatLng latLng) {
+    public void onSearchSynagogue(String address, final LatLng latLng) {
 
         mFragmentHelper.replaceFragment(R.id.MA_container, synagoguesFragment, SynagoguesFragment.TAG, null);
 
+        mapFragment.startSearchMode(address);
         isShowSynagoguesFragment = true;
 
         if (null != mapFragment) {
 
-            RequestHelper.getSynagogues(this, latLng, new Response.Listener<SynagogueArray>() {
+            RequestHelper.getSynagogues(this, latLng,DEFUALT_RADUIS, new Response.Listener<SynagogueArray>() {
 
                 @Override
                 public void onResponse(SynagogueArray response) {
@@ -576,12 +578,14 @@ public class MainActivity extends AppCompatActivity implements
 
 
     @Override
-    public void onSearch(LatLng latLngCenter, Date date, PrayType prayType, String nosach) {
+    public void onSearch(String address, LatLng latLngCenter, Date date, PrayType prayType, String nosach) {
 
         mFragmentHelper.replaceFragment(R.id.MA_container, synagoguesFragment, SynagoguesFragment.TAG, null);
 
         isShowSynagoguesFragment = true;
 
+
+        mapFragment.startSearchMode(address);
         if (null != mapFragment) {
             updateSynagogues(latLngCenter, date, prayType, nosach);
 
