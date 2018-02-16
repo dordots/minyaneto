@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -281,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onGetTheSynagoguesAround(LatLng lng) {
 
-        RequestHelper.getSynagogues(this, lng,RADUIS_FOR_ADD_SYNAGOGUE, new Response.Listener<SynagogueArray>() {
+        RequestHelper.getSynagogues(this, lng, RADUIS_FOR_ADD_SYNAGOGUE, new Response.Listener<SynagogueArray>() {
             @Override
             public void onResponse(SynagogueArray response) {
 
@@ -310,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void updateSynagogues(final LatLng latLngCenter,
                                   final Date date, final PrayType name, final String nosach) {
-        RequestHelper.getSynagogues(this, latLngCenter,DEFUALT_RADUIS, new Response.Listener<SynagogueArray>() {
+        RequestHelper.getSynagogues(this, latLngCenter, DEFUALT_RADUIS, new Response.Listener<SynagogueArray>() {
             @Override
             public void onResponse(SynagogueArray response) {
 
@@ -368,7 +367,6 @@ public class MainActivity extends AppCompatActivity implements
         for (Minyan minyan : minyans) {
             //TODO calculate real time -like rosh hodesh..
             Calendar cal = Calendar.getInstance();
-            Log.d("-------------", cal.getTime().toString());
             cal.setTime(date);
             if (date.getDay() != minyan.getPrayDayType().ordinal())
                 continue;
@@ -376,14 +374,12 @@ public class MainActivity extends AppCompatActivity implements
             ExactTime exactTime = TimeUtility.extractSpecificTime(minyan.getPrayTime(), LocationRepository.getInstance().getLastKnownLocation());
             cal.set(Calendar.HOUR_OF_DAY, exactTime.getHour());
             cal.set(Calendar.MINUTE, exactTime.getMinutes());
-            Log.d("-------------", cal.getTime().toString());
             Date f = cal.getTime();
             if (minyan.getPrayDayType().ordinal() == date.getDay() && f.after(date)) {
                 result.append(" ,").append(format.format(f));
                 myResult.add(format.format(f));
             }
         }
-        Log.d("------------", myResult.toString());
         Collections.sort(myResult, new Comparator<String>() {
             public int compare(String o1, String o2) {
                 Date date1 = new Date();
@@ -550,7 +546,7 @@ public class MainActivity extends AppCompatActivity implements
 
         if (null != mapFragment) {
 
-            RequestHelper.getSynagogues(this, latLng,DEFUALT_RADUIS, new Response.Listener<SynagogueArray>() {
+            RequestHelper.getSynagogues(this, latLng, DEFUALT_RADUIS, new Response.Listener<SynagogueArray>() {
 
                 @Override
                 public void onResponse(SynagogueArray response) {
