@@ -45,34 +45,21 @@ public class SearchMinyanFragment extends Fragment implements
 
     public static final String TAG = SearchMinyanFragment.class.getSimpleName();
 
-    private SearchListener mListener;
-
     EditText etSearchAddress;
-
     Spinner spinnerNosachSynagogue;
-
     Spinner spinnerNameTfila;
-
     CheckBox cbSearchByNosach;
-
     LinearLayout choose_nosach;
-
     Button btnChooseADate;
-
     Button btnChooseATime;
-
     Button btnSearchSynagogue;
-
-    LatLng mLatLng;
-
+    private SearchListener mListener;
     Date date;
+    private Place mPlace;
 
     public static SearchMinyanFragment getInstance() {
-
-
         return new SearchMinyanFragment();
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -154,15 +141,9 @@ public class SearchMinyanFragment extends Fragment implements
 
     }
 
-    public void updateLatLng(LatLng latLng) {
-
-        mLatLng = latLng;
-
-    }
-
     private void searchSynagogues() {
 
-        if (etSearchAddress.getText().toString().equals("") || null == mLatLng ||
+        if (etSearchAddress.getText().toString().equals("") || null == mPlace ||
                 btnChooseADate.getText() == getString(R.string.choose_a_date) ||
                 btnChooseATime.getText() == getString(R.string.choose_a_time)) {
             Toast.makeText(getContext(), getResources().getString(R.string.check_search), Toast.LENGTH_SHORT).show();
@@ -177,8 +158,9 @@ public class SearchMinyanFragment extends Fragment implements
         PrayType prayType = PrayType.values()[spinnerNameTfila.getSelectedItemPosition()];
 
         if (mListener != null) {
-
-            mListener.onSearch(etSearchAddress.getText().toString(),mLatLng, date, prayType, nosach);
+            mListener.onUpdateMarker(mPlace);
+            LatLng latLng = mPlace.getLatLng();
+            mListener.onSearch(etSearchAddress.getText().toString(), latLng, date, prayType, nosach);
         }
     }
 
@@ -190,22 +172,11 @@ public class SearchMinyanFragment extends Fragment implements
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
-
-            if (resultCode == Activity.RESULT_OK) {
-
-                Place place = PlacePicker.getPlace(getActivity(), data);
-
-                updateSynagogueAddress(place.getAddress().toString());
-
-                mListener.onUpdateMarker(place);
-
-                updateLatLng(place.getLatLng());
-
-            }
+        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            mPlace = PlacePicker.getPlace(getActivity(), data);
+            updateSynagogueAddress(mPlace.getAddress().toString());
         }
     }
 
