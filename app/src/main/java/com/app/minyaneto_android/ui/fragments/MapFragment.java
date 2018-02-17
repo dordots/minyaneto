@@ -89,6 +89,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private LinearLayout searchModeLinearLayout;
     private TextView searchModeTextView;
     private ImageButton searchModeExitImageButton;
+    private boolean searchMode = false;
 
     public static MapFragment newInstance() {
 
@@ -193,6 +194,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     public void startSearchMode(String msg){
+        searchMode = true;
         searchModeLinearLayout.setVisibility(View.VISIBLE);
         searchModeTextView.setText(getString(R.string.searchModeMsg)+ msg);
         stopLocationUpdates();
@@ -574,7 +576,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             return;
         }
 
-        if (mGoogleApiClient == null || !mGoogleApiClient.isConnected() || mCurrentlyRequestingLocationUpdates)
+        if (mGoogleApiClient == null || !mGoogleApiClient.isConnected() || mCurrentlyRequestingLocationUpdates || searchMode)
             return;
 
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
@@ -595,7 +597,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onConnected(Bundle arg0) {
-        displayLocation();
+        //displayLocation();
         startLocationUpdates();
     }
 
@@ -648,6 +650,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void exitSearchMode() {
+        searchMode = false;
         startLocationUpdates();
         searchModeLinearLayout.setVisibility(View.GONE);
         onRefreshMap();

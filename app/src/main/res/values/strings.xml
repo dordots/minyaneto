@@ -168,4 +168,5 @@
     <string name="sidebar_searchMinyan">חפש מניין</string>
     <string name="attention_alert">שים לב שקיימים בתי כנסת בסביבה</string>
     <string name="searchModeMsg">חיפוש: </string>
+    <string name="no_synagogues_found">לא נמצאו בתי כנסת.</string>
 </resources>
