@@ -1,28 +1,68 @@
 package com.app.minyaneto_android.restApi;
 
-import com.app.minyaneto_android.models.synagogue.SynagogueArrayData;
-import com.app.minyaneto_android.models.synagogue.SynagogueData;
+import com.app.minyaneto_android.DataTransformer;
+import com.app.minyaneto_android.models.data.SynagogueData;
+import com.app.minyaneto_android.models.data.SynagoguesWrapperData;
+import com.app.minyaneto_android.models.synagogue.SynagogueModel;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 
 public class SynagoguesRestAPITest {
 
     @Test
-    public void sampleSynagoguesData() throws Exception {
-        SynagogueArrayData body = RestAPIUtils
+    public void getSynagogues() throws Exception {
+        SynagoguesWrapperData body = RestAPIUtils
                 .createSynagoguesRestAPI()
-                .getSynagoguesArrayData("20", "31.786,35.186", "3km")
+                .getSynagoguesWrapperData("20", "31.786,35.186", "3km")
                 .execute()
                 .body();
         assertNotNull(body);
-        ArrayList<SynagogueData> synagogues = body.getSynagogues();
+        List<SynagogueData> synagogues = body.getSynagogues();
         assertNotNull(synagogues);
         assertEquals(8, synagogues.size());
     }
+    @Test
+    public void sandBox() throws Exception {
+        SynagoguesWrapperData body = RestAPIUtils
+                .createSynagoguesRestAPI()
+                .getSynagoguesWrapperData("20", "31.786,35.186", "3km")
+                .execute()
+                .body();
+        assertNotNull(body);
+        List<SynagogueData> synagogues = body.getSynagogues();
+        assertNotNull(synagogues);
+        assertEquals(8, synagogues.size());
+        System.out.println("synagogues = " + synagogues);
+        List<SynagogueModel> list = new DataTransformer().transformSynagoguesDataList(synagogues);
+        System.out.println("list = " + list);
+    }
 
+    @Test
+    @Ignore
+    public void addSynagogue() throws Exception {
+        SynagoguesRestAPI api = RestAPIUtils
+                .createSynagoguesRestAPI();
+        SynagogueData synagogue = new SynagogueData();
+        String synagogueName = "test_synagogue";
+        synagogue.setName(synagogueName);
+
+        api.addSynagogue(synagogue);
+
+        SynagoguesWrapperData body = api
+                .getSynagoguesWrapperData("1", "34.024,28.168", "1km")
+                .execute()
+                .body();
+        assertNotNull(body);
+        List<SynagogueData> synagogues = body.getSynagogues();
+        assertNotNull(synagogues);
+        assertFalse(synagogues.isEmpty());
+        assertEquals(synagogueName, synagogues.get(0).getName());
+    }
 }

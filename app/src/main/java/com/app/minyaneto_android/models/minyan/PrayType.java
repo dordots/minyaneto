@@ -1,25 +1,14 @@
 package com.app.minyaneto_android.models.minyan;
 
-import android.content.Context;
-
-import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.ui.acivities.MainActivity;
-
-/**
- * Created by משה on 25/08/2017.
- */
-
 public enum PrayType {
+    MORNING,
+    AFTER_NOON,
+    EVENING;
 
-    // TODO: CR david
-    MORNING(R.string.pray_type_morning),
-    AFTER_NOON(R.string.pray_type_after_noon),
-    EVENING(R.string.pray_type_evening);
-
-    PrayType(int stringId) {
+    PrayType() {
     }
 
-    public static PrayType getType(String string) throws Exception {
+    public static PrayType getType(String string) {
 
         if(null == string){
             return PrayType.MORNING;
@@ -47,7 +36,6 @@ public enum PrayType {
         catch (Exception e){
             return PrayType.MORNING; //TODO: fix it !!!!!!!!!!!!!!!!!!
         }
-        //throw new Exception(string);
     }
 
 }

@@ -1,6 +1,5 @@
 package com.app.minyaneto_android.ui.adapters;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,17 +18,14 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
 
     private List<Synagogue> synagogues;
     private SynagogueClickListener myClickListener;
-    private int row_index = -1;
-    private Context context;
+    private int rowIndex = -1;
 
-
-    public SynagogueAdapter(List<Synagogue> synagogues, Context context) {
+    public SynagogueAdapter(List<Synagogue> synagogues) {
         this.synagogues = synagogues;
     }
 
     public void setMyClickListener(SynagogueClickListener listener) {
         this.myClickListener = listener;
-        this.context = context;
     }
 
     @Override
@@ -62,10 +58,19 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
             holder.distanceSynagogueTextView.setText(String.format("%.2f ", synagogue.getDistanceFromLocation() / 1000) + "ק'מ");
 
 
-        if (row_index == position)
-            holder.row_linearlayout.setBackgroundColor(Color.LTGRAY);
+        if (rowIndex == position)
+            holder.rowLinearlayout.setBackgroundColor(Color.LTGRAY);
         else
-            holder.row_linearlayout.setBackgroundColor(Color.WHITE);
+            holder.rowLinearlayout.setBackgroundColor(Color.WHITE);
+    }
+
+    public void setSelectedListPosition(int position) {
+        int prevPosition = rowIndex;
+        if (prevPosition != -1) {
+            notifyItemChanged(prevPosition);
+        }
+
+        notifyItemChanged(position);
     }
 
     public interface SynagogueClickListener {
@@ -81,7 +86,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
         TextView nameTextView;
         TextView prayerTimeTextView;
         TextView distanceSynagogueTextView;
-        LinearLayout row_linearlayout;
+        LinearLayout rowLinearlayout;
         ImageView go;
         ImageView details;
 
@@ -91,14 +96,14 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
             nameTextView = itemView.findViewById(R.id.synagogue_name);
             prayerTimeTextView = itemView.findViewById(R.id.prayer_time);
             distanceSynagogueTextView = itemView.findViewById(R.id.synagogue_distance);
-            row_linearlayout = itemView.findViewById(R.id.row_linrLayout);
+            rowLinearlayout = itemView.findViewById(R.id.row_linrLayout);
             go = itemView.findViewById(R.id.go_waze);
             details = itemView.findViewById(R.id.synagogue_details);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    row_index = getAdapterPosition();
+                    rowIndex = getAdapterPosition();
                     if (myClickListener != null)
                         myClickListener.onItemClick(getAdapterPosition());
                     notifyDataSetChanged();
@@ -121,14 +126,5 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
                 }
             });
         }
-    }
-
-    public void setSelectedListPosition(int position) {
-        int prevPosition = row_index;
-        if (prevPosition != -1) {
-            notifyItemChanged(prevPosition);
-        }
-
-        notifyItemChanged(position);
     }
 }

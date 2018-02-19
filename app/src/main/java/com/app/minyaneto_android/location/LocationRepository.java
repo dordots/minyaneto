@@ -6,6 +6,9 @@ public class LocationRepository {
     private static LocationRepository instance = new LocationRepository();
     private Location lastKnownLocation;
 
+    private LocationRepository() {
+    }
+
     public static LocationRepository getInstance() {
         return instance;
     }

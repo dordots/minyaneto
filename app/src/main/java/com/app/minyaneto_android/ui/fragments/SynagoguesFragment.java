@@ -79,7 +79,7 @@ public class SynagoguesFragment extends Fragment {
 
         mSynagoguesView.setLayoutManager(linearLayoutManager);
 
-        mAdapter = new SynagogueAdapter(mSynagogues, getContext());
+        mAdapter = new SynagogueAdapter(mSynagogues);
 
         mSynagoguesView.setAdapter(mAdapter);
 
