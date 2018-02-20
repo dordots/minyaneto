@@ -66,15 +66,13 @@ public class MainActivity extends AppCompatActivity implements
         ZmanimFragment.ZmanimListener,
         SearchSynagogueFragment.SearchListener, ErrorResponse.ErrorListener {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
     private static final double DEFUALT_RADUIS = 3;
     private static final double RADUIS_FOR_ADD_SYNAGOGUE = 0.3;
     public MapFragment mapFragment;
     public SynagoguesFragment synagoguesFragment;
-    public ArrayList<Synagogue> synagogues;
     public AddSynagogueFragment addSynagogueFragment;
 
-    public ArrayList<Synagogue> originSynagogues = new ArrayList<>();
+    private ArrayList<Synagogue> originSynagogues = new ArrayList<>();
     private NavigationHelper mNavigationHelper;
     private boolean doubleBackToExitPressedOnce = false;
     private FragmentHelper mFragmentHelper;
@@ -206,26 +204,17 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onShowSynagogueDetails(String id) {
-
         if (null == originSynagogues)
             return;
-
         Synagogue synagogue = null;
-
         for (Synagogue s : originSynagogues) {
-
             if (s.getId().equals(id)) {
-
                 synagogue = s;
-
                 break;
             }
         }
-
         if (null != synagogue)
-
             mFragmentHelper.replaceFragment(R.id.MA_main_container, SynagogueDetailsFragment.newInstance(synagogue), SynagogueDetailsFragment.TAG, SynagogueDetailsFragment.TAG);
-
     }
 
     @Override
@@ -327,14 +316,15 @@ public class MainActivity extends AppCompatActivity implements
             public void onResponse(SynagogueArray response) {
 
                 originSynagogues.clear();
+                ArrayList<Synagogue> synagogues = response.getSynagogues();
 
-                for (int i = 0; i < response.getSynagogues().size(); i++) {
+                for (int i = 0; i < synagogues.size(); i++) {
 
-                    ArrayList<Minyan> minyens = new ArrayList<>();
+                    ArrayList<Minyan> minyans = new ArrayList<>();
 
-                    minyens.addAll(response.getSynagogues().get(i).getMinyans());
-                    originSynagogues.add(response.getSynagogues().get(i));
-                    originSynagogues.get(i).setMinyans(minyens);
+                    minyans.addAll(synagogues.get(i).getMinyans());
+                    originSynagogues.add(synagogues.get(i));
+                    originSynagogues.get(i).setMinyans(minyans);
                 }
 
 
@@ -342,12 +332,12 @@ public class MainActivity extends AppCompatActivity implements
                     s.refreshData();
                 }
 
-                for (Synagogue s : new ArrayList<>(response.getSynagogues())) {
+                for (Synagogue s : new ArrayList<>(synagogues)) {
                     s.refreshData();
                     s.setDistanceFromLocation(calculateDistance(s.getGeo(), latLngCenter));
                     if ((s.getMinyans().size() == 0) ||
                             (nosach != null && !nosach.equals(s.getNosach()))) {
-                        response.getSynagogues().remove(s);
+                        synagogues.remove(s);
                         continue;
                     }
 
@@ -359,11 +349,9 @@ public class MainActivity extends AppCompatActivity implements
                     String msg = getTimes(s.getMinyans(), date);
                     s.setMinyansAsString(msg);
                     if ("".equals(s.getMinyansAsString())) {
-                        response.getSynagogues().remove(s);
+                        synagogues.remove(s);
                     }
                 }
-
-                synagogues = response.getSynagogues();
                 if (null == name)
                     synagoguesFragment.updateSynagogues(synagogues, getResources().getString(R.string.no_minyans_found));
                 else
@@ -588,9 +576,7 @@ public class MainActivity extends AppCompatActivity implements
 
                     originSynagogues = response.getSynagogues();
 
-                    synagogues = originSynagogues;
-
-                    synagoguesFragment.updateSynagogues(synagogues, getResources().getString(R.string.no_synagogues_found));
+                    synagoguesFragment.updateSynagogues(originSynagogues, getResources().getString(R.string.no_synagogues_found));
                 }
 
             }, this);

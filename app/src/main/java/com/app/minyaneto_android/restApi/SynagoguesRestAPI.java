@@ -13,15 +13,17 @@ import retrofit2.http.Query;
 
 public interface SynagoguesRestAPI {
 
-    //    SAMPLE GET: "synagogues/?max_hits=20&center=31.786,35.186&radius=3km"
-    @GET("synagogues")
-    Call<SynagoguesWrapperData> getSynagoguesWrapperData(@Query("max_hits") int maxHits,
-                                                         @Query("center") String center,
-                                                         @Query("radius") String radius);
-
     @POST("synagogues")
     Call<String> addSynagogue(@Body SynagogueData synagogue);
 
     @PUT("synagogues/{id}")
     Call<Void> updateSynagogue(@Path("id") String id, SynagogueData synagogue);
+
+    @GET("synagogues/{id}")
+    Call<SynagogueData> getSynagogue(@Path("id") String id);
+
+    @GET("synagogues")
+    Call<SynagoguesWrapperData> getSynagoguesWrapperData(@Query("max_hits") int maxHits,
+                                                         @Query("center") String center,
+                                                         @Query("radius") String radius);
 }

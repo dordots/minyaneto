@@ -38,14 +38,7 @@ public class DataTransformer {
         return minyans;
     }
 
-    private MinyanScheduleDomain transform(MinyanScheduleData data) {
-        return new MinyanScheduleDomain(
-                DayOfWeek.valueOf(data.getWeekDay().toUpperCase()),
-                PrayType.getType(data.getPrayType()),
-                transformStringToTime(data.getStringTime()));
-    }
-
-    private SynagogueDomain transform(SynagogueData data) {
+    public SynagogueDomain transform(SynagogueData data) {
         return new SynagogueDomain(
                 data.getAddress(),
                 data.getClasses(),
@@ -60,8 +53,15 @@ public class DataTransformer {
                 transform(data.getLatLngData()));
     }
 
+    private MinyanScheduleDomain transform(MinyanScheduleData data) {
+        return new MinyanScheduleDomain(
+                DayOfWeek.valueOf(data.getWeekDay().toUpperCase()),
+                PrayType.getType(data.getPrayType()),
+                transformStringToTime(data.getStringTime()));
+    }
+
     private LatLng transform(LatLngData data) {
-        return new LatLng(Double.valueOf(data.getLat()), Double.valueOf(data.getLon()));
+        return new LatLng(Double.parseDouble(data.getLat()), Double.parseDouble(data.getLon()));
     }
 
     private PrayTime transformStringToTime(String stringTime) {

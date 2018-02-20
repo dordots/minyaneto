@@ -29,6 +29,7 @@ public class SynagoguesSource {
             SynagoguesWrapperData body = api.getSynagoguesWrapperData(maxHits, center, radius)
                     .execute()
                     .body();
+            //noinspection ConstantConditions
             synagogueList = transformer.transformSynagoguesDataList(body.getSynagogues());
         } catch (Exception e) {
             synagogueList = transformer.transformSynagoguesDataList(Collections.<SynagogueData>emptyList());
@@ -36,5 +37,9 @@ public class SynagoguesSource {
                     "Couldn't get synagogues data, an exception occurred:\n" + e.getMessage());
         }
         return synagogueList;
+    }
+
+    public SynagogueDomain getSynagogue(String id) throws IOException {
+        return transformer.transform(api.getSynagogue(id).execute().body());
     }
 }
