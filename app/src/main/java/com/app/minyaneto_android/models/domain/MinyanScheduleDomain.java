@@ -5,12 +5,12 @@ import com.app.minyaneto_android.models.time.PrayTime;
 
 import java.time.DayOfWeek;
 
-public class MinyanScheduleModel {
+public class MinyanScheduleDomain {
     private DayOfWeek dayOfWeek;
     private PrayType prayType;
     private PrayTime prayTime;
 
-    public MinyanScheduleModel(DayOfWeek dayOfWeek, PrayType prayType, PrayTime prayTime) {
+    public MinyanScheduleDomain(DayOfWeek dayOfWeek, PrayType prayType, PrayTime prayTime) {
         this.dayOfWeek = dayOfWeek;
         this.prayType = prayType;
         this.prayTime = prayTime;

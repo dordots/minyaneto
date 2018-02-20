@@ -4,12 +4,12 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
-public class SynagogueModel {
+public class SynagogueDomain {
     private String address;
     private Boolean classes;
     private String comments;
     private String id;
-    private List<MinyanScheduleModel> minyans;
+    private List<MinyanScheduleDomain> minyans;
     private String name;
     private String nosach;
     private Boolean parking;
@@ -17,17 +17,17 @@ public class SynagogueModel {
     private Boolean wheelchairAccessible;
     private LatLng location;
 
-    public SynagogueModel(String address,
-                          Boolean classes,
-                          String comments,
-                          String id,
-                          List<MinyanScheduleModel> minyans,
-                          String name,
-                          String nosach,
-                          Boolean parking,
-                          Boolean seferTora,
-                          Boolean wheelchairAccessible,
-                          LatLng location) {
+    public SynagogueDomain(String address,
+                           Boolean classes,
+                           String comments,
+                           String id,
+                           List<MinyanScheduleDomain> minyans,
+                           String name,
+                           String nosach,
+                           Boolean parking,
+                           Boolean seferTora,
+                           Boolean wheelchairAccessible,
+                           LatLng location) {
         this.address = address;
         this.classes = classes;
         this.comments = comments;
@@ -57,7 +57,7 @@ public class SynagogueModel {
         return id;
     }
 
-    public List<MinyanScheduleModel> getMinyans() {
+    public List<MinyanScheduleDomain> getMinyans() {
         return minyans;
     }
 

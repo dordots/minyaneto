@@ -5,8 +5,8 @@ import android.util.Log;
 import com.app.minyaneto_android.models.data.LatLonData;
 import com.app.minyaneto_android.models.data.MinyanScheduleData;
 import com.app.minyaneto_android.models.data.SynagogueData;
-import com.app.minyaneto_android.models.domain.MinyanScheduleModel;
-import com.app.minyaneto_android.models.domain.SynagogueModel;
+import com.app.minyaneto_android.models.domain.MinyanScheduleDomain;
+import com.app.minyaneto_android.models.domain.SynagogueDomain;
 import com.app.minyaneto_android.models.minyan.PrayType;
 import com.app.minyaneto_android.models.time.ExactTime;
 import com.app.minyaneto_android.models.time.PrayTime;
@@ -19,19 +19,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataTransformer {
-    public List<SynagogueModel> transformSynagoguesDataList(List<SynagogueData> dataList) {
-        ArrayList<SynagogueModel> synagogues = new ArrayList<>();
+    public List<SynagogueDomain> transformSynagoguesDataList(List<SynagogueData> dataList) {
+        ArrayList<SynagogueDomain> synagogues = new ArrayList<>();
         for (SynagogueData data : dataList) {
             synagogues.add(transform(data));
         }
         return synagogues;
     }
 
-    public List<MinyanScheduleModel> transformMinyanDataList(List<MinyanScheduleData> dataList) {
-        ArrayList<MinyanScheduleModel> minyans = new ArrayList<>();
+    public List<MinyanScheduleDomain> transformMinyanDataList(List<MinyanScheduleData> dataList) {
+        ArrayList<MinyanScheduleDomain> minyans = new ArrayList<>();
         for (MinyanScheduleData data : dataList) {
             try {
-                MinyanScheduleModel model = transform(data);
+                MinyanScheduleDomain model = transform(data);
                 minyans.add(model);
             } catch (Exception e) {
                 Log.w(DataTransformer.class.getSimpleName(),
@@ -41,15 +41,15 @@ public class DataTransformer {
         return minyans;
     }
 
-    private MinyanScheduleModel transform(MinyanScheduleData data) {
-        return new MinyanScheduleModel(
+    private MinyanScheduleDomain transform(MinyanScheduleData data) {
+        return new MinyanScheduleDomain(
                 DayOfWeek.valueOf(data.getWeekDay().toUpperCase()),
                 PrayType.getType(data.getPrayType()),
                 transformStringToTime(data.getStringTime()));
     }
 
-    private SynagogueModel transform(SynagogueData data) {
-        return new SynagogueModel(
+    private SynagogueDomain transform(SynagogueData data) {
+        return new SynagogueDomain(
                 data.getAddress(),
                 data.getClasses(),
                 data.getComments(),

@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.app.minyaneto_android.models.data.SynagogueData;
 import com.app.minyaneto_android.models.data.SynagoguesWrapperData;
-import com.app.minyaneto_android.models.domain.SynagogueModel;
+import com.app.minyaneto_android.models.domain.SynagogueDomain;
 import com.app.minyaneto_android.restApi.SynagoguesRestAPI;
 
 import java.io.IOException;
@@ -20,10 +20,10 @@ public class SynagoguesSource {
         this.transformer = transformer;
     }
 
-    public List<SynagogueModel> getSynagogues(int maxHits, double latitude, double longitude, int radiusInKm) throws IOException {
+    public List<SynagogueDomain> getSynagogues(int maxHits, double latitude, double longitude, int radiusInKm) throws IOException {
         String center = latitude + "," + longitude;
         String radius = radiusInKm + "km";
-        List<SynagogueModel> synagogueList;
+        List<SynagogueDomain> synagogueList;
         try {
             SynagoguesWrapperData body = api.getSynagoguesWrapperData(maxHits, center, radius)
                     .execute()
