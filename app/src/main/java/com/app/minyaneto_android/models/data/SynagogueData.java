@@ -1,6 +1,5 @@
 package com.app.minyaneto_android.models.data;
 
-import com.app.minyaneto_android.models.synagogue.Geo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -21,7 +20,7 @@ public class SynagogueData {
 
     @SerializedName("geo")
     @Expose
-    private Geo geo;
+    private LatLonData latLonData;
 
     @SerializedName("id")
     @Expose
@@ -71,8 +70,8 @@ public class SynagogueData {
         return comments;
     }
 
-    public Geo getGeo() {
-        return geo;
+    public LatLonData getLatLonData() {
+        return latLonData;
     }
 
     public String getId() {

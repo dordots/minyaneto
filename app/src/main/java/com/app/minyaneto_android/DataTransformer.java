@@ -2,12 +2,12 @@ package com.app.minyaneto_android;
 
 import android.util.Log;
 
+import com.app.minyaneto_android.models.data.LatLonData;
 import com.app.minyaneto_android.models.data.MinyanScheduleData;
 import com.app.minyaneto_android.models.data.SynagogueData;
 import com.app.minyaneto_android.models.domain.MinyanScheduleModel;
-import com.app.minyaneto_android.models.minyan.PrayType;
-import com.app.minyaneto_android.models.synagogue.Geo;
 import com.app.minyaneto_android.models.domain.SynagogueModel;
+import com.app.minyaneto_android.models.minyan.PrayType;
 import com.app.minyaneto_android.models.time.ExactTime;
 import com.app.minyaneto_android.models.time.PrayTime;
 import com.app.minyaneto_android.models.time.RelativeTime;
@@ -60,11 +60,11 @@ public class DataTransformer {
                 data.getParking(),
                 data.getSeferTora(),
                 data.getWheelchairAccessible(),
-                transform(data.getGeo()));
+                transform(data.getLatLonData()));
     }
 
-    private LatLng transform(Geo geo) {
-        return new LatLng(Double.valueOf(geo.getLat()), Double.valueOf(geo.getLon()));
+    private LatLng transform(LatLonData data) {
+        return new LatLng(Double.valueOf(data.getLat()), Double.valueOf(data.getLon()));
     }
 
     private PrayTime transformStringToTime(String stringTime) {
