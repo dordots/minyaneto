@@ -2,6 +2,7 @@ package com.app.minyaneto_android;
 
 import com.app.minyaneto_android.data.DataTransformer;
 import com.app.minyaneto_android.data.SynagogueData;
+import com.app.minyaneto_android.models.domain.SynagogueCache;
 import com.app.minyaneto_android.models.domain.SynagoguesSource;
 import com.app.minyaneto_android.restApi.SynagoguesRestAPI;
 import com.google.android.gms.maps.model.LatLng;
@@ -17,9 +18,10 @@ public class SynagoguesSourceTest {
     public void retrievesSynagoguesFromRestAPI() throws Exception {
         SynagoguesRestAPI api = mock(SynagoguesRestAPI.class);
         DataTransformer transformer = mock(DataTransformer.class);
+        SynagogueCache cache = mock(SynagogueCache.class);
         try {
             LatLng location = new LatLng(32, 34);
-            new SynagoguesSource(api, transformer).getSynagogues(20, location, 3);
+            new SynagoguesSource(api, transformer, cache).fetchSynagogues(20, location, 3);
         } catch (Exception ignored) {
         }
         verify(api).getSynagoguesWrapperData(20, "32,34", "3km");
@@ -29,9 +31,10 @@ public class SynagoguesSourceTest {
     public void transformSynagoguesDataToSynagogues() throws Exception {
         SynagoguesRestAPI api = mock(SynagoguesRestAPI.class);
         DataTransformer transformer = mock(DataTransformer.class);
+        SynagogueCache cache = mock(SynagogueCache.class);
         try {
             LatLng location = new LatLng(32, 34);
-            new SynagoguesSource(api, transformer).getSynagogues(20, location, 3);
+            new SynagoguesSource(api, transformer, cache).fetchSynagogues(20, location, 3);
         } catch (Exception ignored) {
         }
         verify(transformer).transformSynagoguesDataList(ArgumentMatchers.<SynagogueData>anyList());
