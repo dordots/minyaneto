@@ -1,16 +1,18 @@
 package com.app.minyaneto_android.models.domain;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SynagogueCacheRepository {
-    private static SynagogueCacheRepository instance = new SynagogueCacheRepository();
+public class SynagogueCache {
+    private static SynagogueCache instance = new SynagogueCache();
     private Map<String, SynagogueDomain> map;
 
-    private SynagogueCacheRepository() {
+    private SynagogueCache() {
+        map = new HashMap<>();
     }
 
-    public static SynagogueCacheRepository getInstance() {
+    public static SynagogueCache getInstance() {
         return instance;
     }
 
