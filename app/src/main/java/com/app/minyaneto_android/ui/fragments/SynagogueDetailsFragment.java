@@ -15,59 +15,43 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.models.synagogue.Synagogue;
+import com.app.minyaneto_android.models.domain.SynagogueCache;
+import com.app.minyaneto_android.models.domain.SynagogueDomain;
 import com.app.minyaneto_android.ui.adapters.MinyanAdapter;
 
 
 public class SynagogueDetailsFragment extends DialogFragment {
 
     public static final String TAG = SynagogueDetailsFragment.class.getSimpleName();
-    private Synagogue mSynagogue;
-
+    TextView tvNameSynagogue;
+    TextView tvAddressSynagogue;
+    TextView tvCommentsSynagogue;
+    TextView tvNosachSynagogue;
+    CheckBox cbParking;
+    CheckBox cbSefer_tora;
+    CheckBox cbWheelchair_accessible;
+    CheckBox cbLessons;
+    FloatingActionButton btnAddMinyan;
+    private SynagogueDomain mSynagogue;
     private WantCahngeFragmentListener mListener;
-
     private RecyclerView mRecyclerViewMinyans;
 
-    TextView tvNameSynagogue;
-
-    TextView tvAddressSynagogue;
-
-    TextView tvCommentsSynagogue;
-
-    TextView tvNosachSynagogue;
-
-    CheckBox cbParking;
-
-    CheckBox cbSefer_tora;
-
-    CheckBox cbWheelchair_accessible;
-
-    CheckBox cbLessons;
-
-    FloatingActionButton btnAddMinyan;
-
-
-    public static SynagogueDetailsFragment newInstance(Synagogue synagogue) {
-
+    public static SynagogueDetailsFragment newInstance(String id) {
         SynagogueDetailsFragment fragment = new SynagogueDetailsFragment();
-
         Bundle bundle = new Bundle();
-
-        bundle.putSerializable(Synagogue.TAG, synagogue);
-
+        bundle.putString(TAG, id);
         fragment.setArguments(bundle);
-
         return fragment;
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null && getArguments().containsKey(Synagogue.TAG)) {
+        if (getArguments() != null && getArguments().containsKey(TAG)) {
 
-            mSynagogue = (Synagogue) getArguments().getSerializable(Synagogue.TAG);
+            String id = getArguments().getString(TAG);
+            mSynagogue = SynagogueCache.getInstance().getSynagogue(id);
 
         }
     }
@@ -111,7 +95,7 @@ public class SynagogueDetailsFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (mListener != null)
-                    mListener.onWantToAddAMinyan(mSynagogue);
+                    mListener.onWantToAddAMinyan(mSynagogue.getId());
             }
         });
     }
@@ -163,7 +147,7 @@ public class SynagogueDetailsFragment extends DialogFragment {
 
     public interface WantCahngeFragmentListener {
 
-        void onWantToAddAMinyan(Synagogue synagogue);
+        void onWantToAddAMinyan(String id);
 
         void onSetActionBarTitle(String string);
     }

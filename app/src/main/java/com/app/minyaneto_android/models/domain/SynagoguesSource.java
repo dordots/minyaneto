@@ -28,7 +28,7 @@ public class SynagoguesSource {
     public void fetchSynagogues(int maxHits, LatLng location, int radiusInKm) throws IOException {
         String center = location.latitude + "," + location.longitude;
         String radius = radiusInKm + "km";
-        api.getSynagoguesWrapperData(maxHits, center, radius).enqueue(new Callback<SynagoguesWrapperData>() {
+        Callback<SynagoguesWrapperData> callback = new Callback<SynagoguesWrapperData>() {
             @Override
             public void onResponse(Call<SynagoguesWrapperData> call, Response<SynagoguesWrapperData> response) {
                 SynagoguesWrapperData data = response.body();
@@ -43,7 +43,8 @@ public class SynagoguesSource {
                 Log.w(SynagoguesSource.class.getSimpleName(),
                         "Couldn't get synagogues data, an exception occurred:\n" + t.getMessage());
             }
-        });
+        };
+        api.getSynagoguesWrapperData(maxHits, center, radius).enqueue(callback);
     }
 
     public SynagogueDomain getSynagogue(String id) throws IOException {

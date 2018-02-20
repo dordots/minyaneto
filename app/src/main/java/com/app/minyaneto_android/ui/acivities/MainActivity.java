@@ -16,7 +16,11 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.app.minyaneto_android.R;
+import com.app.minyaneto_android.data.DataTransformer;
 import com.app.minyaneto_android.location.LocationRepository;
+import com.app.minyaneto_android.models.domain.SynagogueCache;
+import com.app.minyaneto_android.models.domain.SynagogueDomain;
+import com.app.minyaneto_android.models.domain.SynagoguesSource;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.minyan.PrayType;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
@@ -24,6 +28,7 @@ import com.app.minyaneto_android.models.synagogue.SynagogueArray;
 import com.app.minyaneto_android.models.time.ExactTime;
 import com.app.minyaneto_android.models.time.TimeUtility;
 import com.app.minyaneto_android.restApi.RequestHelper;
+import com.app.minyaneto_android.restApi.RestAPIUtils;
 import com.app.minyaneto_android.ui.fragments.AboutFragment;
 import com.app.minyaneto_android.ui.fragments.AddMinyanFragment;
 import com.app.minyaneto_android.ui.fragments.AddSynagogueFragment;
@@ -40,6 +45,7 @@ import com.app.minyaneto_android.zmanim.ZmanimFragment;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -51,6 +57,9 @@ import java.util.Locale;
 import ravtech.co.il.httpclient.ErrorResponse;
 import ravtech.co.il.httpclient.model.ErrorData;
 import ravtech.co.il.httpclient.model.Result;
+
+import static com.app.minyaneto_android.Config.DEFAULT_RADIUS_IN_KM;
+import static com.app.minyaneto_android.Config.MAX_HITS_PER_REQUEST;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -73,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements
     public AddSynagogueFragment addSynagogueFragment;
 
     private ArrayList<Synagogue> originSynagogues = new ArrayList<>();
+    private SynagoguesSource synagoguesSource;
+
     private NavigationHelper mNavigationHelper;
     private boolean doubleBackToExitPressedOnce = false;
     private FragmentHelper mFragmentHelper;
@@ -81,52 +92,30 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LOCALE);
-
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.main_activity);
-
-        initVars();
-
+        synagoguesSource = new SynagoguesSource(RestAPIUtils.createSynagoguesRestAPI(), new DataTransformer(), SynagogueCache.getInstance());
+        mFragmentHelper = new FragmentHelper(this, new ActivityRunning());
+        mNavigationHelper = new NavigationHelper(this, this);
         initFragments();
-
     }
 
     private void initFragments() {
-
         initMapFragment();
-
         initSynagoguesFragment();
     }
 
     private void initSynagoguesFragment() {
-
         if (synagoguesFragment == null)
-
             synagoguesFragment = SynagoguesFragment.newInstance();
-
         mFragmentHelper.replaceFragment(R.id.MA_container, synagoguesFragment, SynagoguesFragment.TAG, null);
-
     }
 
     private void initMapFragment() {
-
         if (mapFragment == null)
-
             mapFragment = MapFragment.newInstance();
-
         mFragmentHelper.addFragment(R.id.MA_container_map, mapFragment, MapFragment.TAG, null);
-    }
-
-
-    private void initVars() {
-
-        mFragmentHelper = new FragmentHelper(this, new ActivityRunning());
-
-        mNavigationHelper = new NavigationHelper(this, this);
-
     }
 
 
@@ -198,23 +187,17 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onAddSynagogue(Synagogue synagogue) {
-        mFragmentHelper.replaceFragment(R.id.MA_main_container, SynagogueDetailsFragment.newInstance(synagogue), SynagogueDetailsFragment.TAG, SynagogueDetailsFragment.TAG);
+        mFragmentHelper.replaceFragment(R.id.MA_main_container, SynagogueDetailsFragment.newInstance(synagogue.getId()), SynagogueDetailsFragment.TAG, SynagogueDetailsFragment.TAG);
     }
 
 
     @Override
     public void onShowSynagogueDetails(String id) {
-        if (null == originSynagogues)
-            return;
-        Synagogue synagogue = null;
-        for (Synagogue s : originSynagogues) {
-            if (s.getId().equals(id)) {
-                synagogue = s;
-                break;
-            }
+        try {
+            SynagogueDomain synagogue = synagoguesSource.getSynagogue(id);
+            mFragmentHelper.replaceFragment(R.id.MA_main_container, SynagogueDetailsFragment.newInstance(synagogue.getId()), SynagogueDetailsFragment.TAG, SynagogueDetailsFragment.TAG);
+        } catch (IOException ignored) {
         }
-        if (null != synagogue)
-            mFragmentHelper.replaceFragment(R.id.MA_main_container, SynagogueDetailsFragment.newInstance(synagogue), SynagogueDetailsFragment.TAG, SynagogueDetailsFragment.TAG);
     }
 
     @Override
@@ -281,9 +264,14 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onGetTheSynagoguesAround(LatLng lng) {
+    public void onGetTheSynagoguesAround(LatLng center) {
+        try {
+            synagoguesSource.fetchSynagogues(MAX_HITS_PER_REQUEST, center, DEFAULT_RADIUS_IN_KM);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        RequestHelper.getSynagogues(this, lng, RADUIS_FOR_ADD_SYNAGOGUE, new Response.Listener<SynagogueArray>() {
+        RequestHelper.getSynagogues(this, center, RADUIS_FOR_ADD_SYNAGOGUE, new Response.Listener<SynagogueArray>() {
             @Override
             public void onResponse(SynagogueArray response) {
 
@@ -309,9 +297,14 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private void updateSynagogues(final LatLng latLngCenter,
+    private void updateSynagogues(final LatLng center,
                                   final Date date, final PrayType name, final String nosach) {
-        RequestHelper.getSynagogues(this, latLngCenter, DEFUALT_RADUIS, new Response.Listener<SynagogueArray>() {
+        try {
+            synagoguesSource.fetchSynagogues(MAX_HITS_PER_REQUEST, center, DEFAULT_RADIUS_IN_KM);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        RequestHelper.getSynagogues(this, center, DEFUALT_RADUIS, new Response.Listener<SynagogueArray>() {
             @Override
             public void onResponse(SynagogueArray response) {
 
@@ -327,14 +320,13 @@ public class MainActivity extends AppCompatActivity implements
                     originSynagogues.get(i).setMinyans(minyans);
                 }
 
-
                 for (Synagogue s : originSynagogues) {
                     s.refreshData();
                 }
 
                 for (Synagogue s : new ArrayList<>(synagogues)) {
                     s.refreshData();
-                    s.setDistanceFromLocation(calculateDistance(s.getGeo(), latLngCenter));
+                    s.setDistanceFromLocation(calculateDistance(s.getGeo(), center));
                     if ((s.getMinyans().size() == 0) ||
                             (nosach != null && !nosach.equals(s.getNosach()))) {
                         synagogues.remove(s);
@@ -440,10 +432,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onWantToAddAMinyan(Synagogue synagogue) {
-
-        mFragmentHelper.replaceFragment(R.id.MA_main_container, AddMinyanFragment.newInstance(synagogue), AddMinyanFragment.TAG, AddMinyanFragment.TAG);
-
+    public void onWantToAddAMinyan(String id) {
+        mFragmentHelper.replaceFragment(R.id.MA_main_container, AddMinyanFragment.newInstance(id), AddMinyanFragment.TAG, AddMinyanFragment.TAG);
     }
 
     @Override
@@ -551,7 +541,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onSearchSynagogue(String address, final LatLng latLng) {
+    public void onSearchSynagogue(String address, final LatLng center) {
 
         mFragmentHelper.replaceFragment(R.id.MA_container, synagoguesFragment, SynagoguesFragment.TAG, null);
 
@@ -559,8 +549,13 @@ public class MainActivity extends AppCompatActivity implements
         isShowSynagoguesFragment = true;
 
         if (null != mapFragment) {
+            try {
+                synagoguesSource.fetchSynagogues(MAX_HITS_PER_REQUEST, center, DEFAULT_RADIUS_IN_KM);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-            RequestHelper.getSynagogues(this, latLng, DEFUALT_RADUIS, new Response.Listener<SynagogueArray>() {
+            RequestHelper.getSynagogues(this, center, DEFUALT_RADUIS, new Response.Listener<SynagogueArray>() {
 
                 @Override
                 public void onResponse(SynagogueArray response) {
@@ -570,7 +565,7 @@ public class MainActivity extends AppCompatActivity implements
                     for (Synagogue s : response.getSynagogues()) {
 
                         s.refreshData();
-                        s.setDistanceFromLocation(calculateDistance(s.getGeo(), latLng));
+                        s.setDistanceFromLocation(calculateDistance(s.getGeo(), center));
 
                     }
 
