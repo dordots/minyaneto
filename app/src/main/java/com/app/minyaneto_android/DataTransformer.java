@@ -1,11 +1,13 @@
 package com.app.minyaneto_android;
 
+import android.util.Log;
+
 import com.app.minyaneto_android.models.data.MinyanScheduleData;
 import com.app.minyaneto_android.models.data.SynagogueData;
-import com.app.minyaneto_android.models.minyan.MinyanScheduleModel;
+import com.app.minyaneto_android.models.domain.MinyanScheduleModel;
 import com.app.minyaneto_android.models.minyan.PrayType;
 import com.app.minyaneto_android.models.synagogue.Geo;
-import com.app.minyaneto_android.models.synagogue.SynagogueModel;
+import com.app.minyaneto_android.models.domain.SynagogueModel;
 import com.app.minyaneto_android.models.time.ExactTime;
 import com.app.minyaneto_android.models.time.PrayTime;
 import com.app.minyaneto_android.models.time.RelativeTime;
@@ -31,7 +33,9 @@ public class DataTransformer {
             try {
                 MinyanScheduleModel model = transform(data);
                 minyans.add(model);
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                Log.w(DataTransformer.class.getSimpleName(),
+                        "Couldn't parse minyan data from server: " + data.toString());
             }
         }
         return minyans;

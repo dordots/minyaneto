@@ -1,6 +1,5 @@
-package com.app.minyaneto_android.models.synagogue;
+package com.app.minyaneto_android.models.domain;
 
-import com.app.minyaneto_android.models.minyan.MinyanScheduleModel;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;

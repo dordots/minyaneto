@@ -1,6 +1,5 @@
 package com.app.minyaneto_android.models.data;
 
-import com.app.minyaneto_android.models.data.SynagogueData;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

@@ -28,4 +28,13 @@ public class MinyanScheduleData {
     public String getStringTime() {
         return stringTime;
     }
+
+    @Override
+    public String toString() {
+        return "MinyanScheduleData{" +
+                "weekDay='" + weekDay + '\'' +
+                ", prayType='" + prayType + '\'' +
+                ", stringTime='" + stringTime + '\'' +
+                '}';
+    }
 }

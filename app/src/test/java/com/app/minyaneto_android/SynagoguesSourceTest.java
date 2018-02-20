@@ -18,7 +18,7 @@ public class SynagoguesSourceTest {
             new SynagoguesSource(api, transformer).getSynagogues(20, 32, 34, 3);
         } catch (Exception ignored) {
         }
-        verify(api).getSynagoguesWrapperData("20", "32,34", "3km");
+        verify(api).getSynagoguesWrapperData(20, "32,34", "3km");
     }
 
     @Test

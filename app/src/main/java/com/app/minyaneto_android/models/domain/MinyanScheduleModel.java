@@ -1,5 +1,6 @@
-package com.app.minyaneto_android.models.minyan;
+package com.app.minyaneto_android.models.domain;
 
+import com.app.minyaneto_android.models.minyan.PrayType;
 import com.app.minyaneto_android.models.time.PrayTime;
 
 import java.time.DayOfWeek;
