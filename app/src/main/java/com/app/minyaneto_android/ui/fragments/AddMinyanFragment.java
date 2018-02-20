@@ -119,20 +119,10 @@ public class AddMinyanFragment extends Fragment {
 
 
     private void addMinyan() {
-        Minyan minyan = new Minyan();
         if (inRelativeTimeMode) {
             if (etMinutes.getText().toString().equals("")) {
                 Toast.makeText(getContext(), getResources().getString(R.string.check), Toast.LENGTH_SHORT).show();
                 return;
-            }
-            minyan.setRelativeTime(new RelativeTime(
-                    (RelativeTimeType) spinnerRelativeTimeType.getSelectedItem(),
-                    Integer.parseInt(etMinutes.getText().toString())));
-        } else {
-            if (Build.VERSION.SDK_INT >= 23) {
-                minyan.setExactTime(new ExactTime(timePicker.getHour(), timePicker.getMinute()));
-            } else {
-                minyan.setExactTime(new ExactTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute()));
             }
         }
         ArrayList<PrayDayType> days = new ArrayList<>();
@@ -159,9 +149,20 @@ public class AddMinyanFragment extends Fragment {
             days.add(PrayDayType.SATURDAY);
         }
 
-        minyan.setPrayType((PrayType) spinnerPrayType.getSelectedItem());
-        minyan.setPrayDayType(days.get(0));
         for (PrayDayType day : days) {
+            Minyan minyan = new Minyan();
+            if (inRelativeTimeMode) {
+                minyan.setRelativeTime(new RelativeTime(
+                        (RelativeTimeType) spinnerRelativeTimeType.getSelectedItem(),
+                        Integer.parseInt(etMinutes.getText().toString())));
+            } else {
+                if (Build.VERSION.SDK_INT >= 23) {
+                    minyan.setExactTime(new ExactTime(timePicker.getHour(), timePicker.getMinute()));
+                } else {
+                    minyan.setExactTime(new ExactTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute()));
+                }
+            }
+            minyan.setPrayType((PrayType) spinnerPrayType.getSelectedItem());
             minyan.setPrayDayType(day);
             mSynagogue.addMinyan(minyan);
         }
@@ -175,7 +176,8 @@ public class AddMinyanFragment extends Fragment {
         }, new ErrorResponse(new ErrorResponse.ErrorListener() {
             @Override
             public void onErrorResponse(Result<ErrorData> error) {
-                error.getData().getMessage();
+                //error.getData().getMessage();
+                Toast.makeText(getContext(), getContext().getResources().getString(R.string.no_seccess), Toast.LENGTH_SHORT).show();
             }
         }));
     }
@@ -201,7 +203,7 @@ public class AddMinyanFragment extends Fragment {
             mListener = (AddMinyanListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnSynagoguesListener");
+                    + " must implement AddMinyanListener");
         }
     }
 
@@ -210,7 +212,7 @@ public class AddMinyanFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        mListener.onSetActionBarTitle(getResources().getString(R.string.about_fragment));
+        mListener.onSetActionBarTitle(getResources().getString(R.string.sidebar_addMinyan));
     }
 
     public interface AddMinyanListener {

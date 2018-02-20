@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements
         AboutFragment.AboutListener,
         AddMinyanFragment.AddMinyanListener,
         SearchMinyanFragment.SearchListener,
+        ZmanimFragment.ZmanimListener,
         SearchSynagogueFragment.SearchListener, ErrorResponse.ErrorListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -77,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements
     private boolean doubleBackToExitPressedOnce = false;
     private FragmentHelper mFragmentHelper;
     private boolean isShowSynagoguesFragment = true;
+    private MenuItem refresh_btn = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +130,19 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+
+    private void returnToMain() {
+
+        if (mFragmentHelper.isContains(AboutFragment.TAG))
+
+            mFragmentHelper.removeFragment(AboutFragment.TAG, true);
+
+        if (mFragmentHelper.isContains(ZmanimFragment.TAG))
+
+            mFragmentHelper.removeFragment(ZmanimFragment.TAG, true);
+
+    }
+
     @Override
     public void onMenuSelectHome() {
 
@@ -162,35 +177,22 @@ public class MainActivity extends AppCompatActivity implements
         mFragmentHelper.replaceFragment(R.id.MA_container, addSynagogueFragment, AddSynagogueFragment.TAG, AddSynagogueFragment.TAG);
     }
 
-    private void returnToMain() {
-
-        if (mFragmentHelper.isContains(AboutFragment.TAG))
-
-            mFragmentHelper.removeFragment(AboutFragment.TAG, true);
-
-        if (mFragmentHelper.isContains(ZmanimFragment.TAG))
-
-            mFragmentHelper.removeFragment(ZmanimFragment.TAG, true);
-
-    }
-
     @Override
     public void onMenuSelectSearchSynagogue() {
-
-        mFragmentHelper.replaceFragment(R.id.MA_container, SearchSynagogueFragment.getInstance(), SearchSynagogueFragment.TAG, null);
-
+        returnToMain();
+        mFragmentHelper.replaceFragment(R.id.MA_container, SearchSynagogueFragment.getInstance(), SearchSynagogueFragment.TAG, SearchSynagogueFragment.TAG);
     }
 
 
     @Override
     public void onMenuSelectSearchMinyan() {
-
-        mFragmentHelper.replaceFragment(R.id.MA_container, SearchMinyanFragment.getInstance(), SearchMinyanFragment.TAG, null);
-
+        returnToMain();
+        mFragmentHelper.replaceFragment(R.id.MA_container, SearchMinyanFragment.getInstance(), SearchMinyanFragment.TAG, SearchMinyanFragment.TAG);
     }
 
     @Override
     public void onMenuSelectAbout() {
+        returnToMain();
 
         mFragmentHelper.addFragment(R.id.MA_main_container, AboutFragment.getInstance(), AboutFragment.TAG, AboutFragment.TAG);
 
@@ -229,20 +231,34 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onSetActionBarTitle(String title) {
 
-        if (title != null && getSupportActionBar() != null)
-
+        if (title != null && getSupportActionBar() != null) {
             getSupportActionBar().setTitle(title);
-
-        else if (mFragmentHelper.isContains(SynagoguesFragment.TAG)) {
-
+            if (null != refresh_btn) {
+                if (title.equals(getResources().getString(R.string.zmanim_fragment)) ||
+                        title.equals(getResources().getString(R.string.sidebar_addMinyan)) ||
+                        title.equals(getResources().getString(R.string.synagogue_details_fragment)) ||
+                        title.equals(getResources().getString(R.string.about_fragment)))
+                    refresh_btn.setVisible(false);
+                else
+                    refresh_btn.setVisible(true);
+            }
+        } else if (mFragmentHelper.isContains(SynagoguesFragment.TAG)) {
             onSetActionBarTitle(getResources().getString(R.string.main_screen_fragment));
-
         } else if (mFragmentHelper.isContains(AddSynagogueFragment.TAG)) {
-
             onSetActionBarTitle(getResources().getString(R.string.add_synagogue_fragment));
+        } else if (mFragmentHelper.isContains(SearchMinyanFragment.TAG)) {
+            onSetActionBarTitle(getResources().getString(R.string.search_minyan_fragment));
+        } else if (mFragmentHelper.isContains(SearchSynagogueFragment.TAG)) {
+            onSetActionBarTitle(getResources().getString(R.string.search_synagogue_fragment));
+        } else if (mFragmentHelper.isContains(AddMinyanFragment.TAG)) {
+            onSetActionBarTitle(getResources().getString(R.string.sidebar_addMinyan));
+        } else if (mFragmentHelper.isContains(ZmanimFragment.TAG)) {
+            onSetActionBarTitle(getResources().getString(R.string.zmanim_fragment));
+        } else if (mFragmentHelper.isContains(AboutFragment.TAG)) {
+            onSetActionBarTitle(getResources().getString(R.string.about_fragment));
+        } else if (mFragmentHelper.isContains(SynagogueDetailsFragment.TAG)) {
+            onSetActionBarTitle(getResources().getString(R.string.synagogue_details_fragment));
         }
-
-
     }
 
     @Override
@@ -446,7 +462,10 @@ public class MainActivity extends AppCompatActivity implements
 
         if (!mNavigationHelper.closeDrawer()) {
 
-            if (mFragmentHelper.isContains(AddSynagogueFragment.TAG) || mFragmentHelper.getFragmentsSize() > 2) {
+            if (mFragmentHelper.isContains(AddSynagogueFragment.TAG) ||
+                    mFragmentHelper.isContains(SearchSynagogueFragment.TAG) ||
+                    mFragmentHelper.isContains(SearchMinyanFragment.TAG) ||
+                    mFragmentHelper.getFragmentsSize() > 2) {
 
                 super.onBackPressed();
 
@@ -531,7 +550,8 @@ public class MainActivity extends AppCompatActivity implements
 
         inflater.inflate(R.menu.action_bar_menu, menu);
 
-        menu.findItem(R.id.actionbar_refresh).setVisible(true);
+        refresh_btn = menu.findItem(R.id.actionbar_refresh);
+        refresh_btn.setVisible(true);
 
         return true;
     }

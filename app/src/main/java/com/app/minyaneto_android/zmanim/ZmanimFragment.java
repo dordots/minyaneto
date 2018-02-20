@@ -29,6 +29,7 @@ public class ZmanimFragment extends Fragment implements ZmanimContract.View {
     private ZmanimContract.UserActionsListener listener;
     private SimpleDateFormat formatter;
     private ContentAdapter adapter;
+    private ZmanimListener mListener;
 
     public ZmanimFragment() {
         formatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
@@ -44,6 +45,8 @@ public class ZmanimFragment extends Fragment implements ZmanimContract.View {
     @Override
     public void onResume() {
         super.onResume();
+        mListener.onSetActionBarTitle(getResources().getString(R.string.zmanim_fragment));
+
         listener.showZmanim();
     }
 
@@ -140,6 +143,29 @@ public class ZmanimFragment extends Fragment implements ZmanimContract.View {
         public int getItemCount() {
             return zmanim.length;
         }
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof ZmanimListener) {
+            mListener = (ZmanimListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement ZmanimListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+
+    public interface ZmanimListener {
+        void onSetActionBarTitle(String title);
     }
 
 }

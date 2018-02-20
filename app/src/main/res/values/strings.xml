@@ -119,10 +119,12 @@
 
     <!-- Fragments' Names -->
     <string name="about_fragment">אודות</string>
-    <string name="add_minyan_fragment">הוספת מניין</string>
+    <string name="search_synagogue_fragment">חיפוש בית כנסת</string>
+    <string name="search_minyan_fragment">חיפוש מניין</string>
     <string name="add_synagogue_fragment">הוספת בית כנסת</string>
     <string name="main_screen_fragment">מניינטו</string>
     <string name="synagogue_details_fragment">פרטי בית כנסת</string>
+    <string name="add_minyan_fragment">הוספת מניין</string>
 
 
     <string name="title_activity_maps">Map</string>
@@ -156,7 +158,6 @@
     <string name="no_gps_connection" />
     <string name="message_alert_no_gps">For use with this app the GPS is required</string>
     <string name="no_address">כתובת לא חוקית</string>
-    <string name="search_synagogue_fragment">חיפוש בית כנסת</string>
     <string name="enter_your_address">כתובת</string>
     <string name="check_search">יש למלא את השדות לפני ביצוע החיפוש</string>
     <string name="search_by_nosach">חפש לפי נוסח</string>
@@ -169,4 +170,5 @@
     <string name="attention_alert">שים לב שקיימים בתי כנסת בסביבה</string>
     <string name="searchModeMsg">חיפוש: </string>
     <string name="no_synagogues_found">לא נמצאו בתי כנסת.</string>
+    <string name="no_seccess">ההוספה לא הצליחה. נסה שוב</string>
 </resources>

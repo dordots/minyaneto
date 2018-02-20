@@ -71,9 +71,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private static final int MAX_DISTANCE_FROM_LAST_LOCATION = 2000;
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
     // Location updates intervals in sec
-    private static final int UPDATE_INTERVAL = 10000; // 10 sec
-    private static final int FATEST_INTERVAL = 5000; // 5 sec
-    private static final int DISPLACEMENT = 10; // 10 meters
+    private static final int UPDATE_INTERVAL = 60000; // 10 sec
+    private static final int FATEST_INTERVAL = 10000; // 5 sec
+    private static final int DISPLACEMENT = 100; // 10 meters
     private final LatLng mHarHabait = new LatLng(31.7780628, 35.2353691);
     public SupportMapFragment mMapFragment;
     private GoogleApiClient mGoogleApiClient;
@@ -142,7 +142,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         mMapFragment.getMapAsync(this);
         searchModeLinearLayout.setVisibility(View.GONE);
-
+        searchMode=false;
     }
 
     private void initMap() {

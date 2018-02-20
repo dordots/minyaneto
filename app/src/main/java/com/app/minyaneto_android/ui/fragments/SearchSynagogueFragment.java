@@ -59,7 +59,7 @@ public class SearchSynagogueFragment extends Fragment implements
 
         try {
 
-            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(getActivity());
+            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).zzim(etSearchAddress.getText().toString()).build(getActivity());
 
             startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
 
@@ -92,6 +92,9 @@ public class SearchSynagogueFragment extends Fragment implements
 
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             mPlace = PlacePicker.getPlace(getActivity(), data);
+            if (mListener != null) {
+                mListener.onUpdateMarker(mPlace);
+            }
             updateSynagogueAddress(mPlace.getAddress().toString());
         }
     }
