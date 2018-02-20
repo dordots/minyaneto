@@ -200,6 +200,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         stopLocationUpdates();
     }
 
+    public void stopSearchMode(){
+        searchMode = false;
+        searchModeLinearLayout.setVisibility(View.GONE);
+        startLocationUpdates();
+    }
+
     public void updateMarker(Place place) {
         updateMarker(place.getLatLng(), place.getName().toString());
     }
@@ -300,7 +306,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
                     lastLatLng = pos;
 
-                    //updateSynagogues(pos);
+                   // mListener.onUpdateSynagogues(lastLatLng);
                 }
             }
 

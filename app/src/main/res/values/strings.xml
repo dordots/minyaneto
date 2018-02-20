@@ -171,4 +171,5 @@
     <string name="searchModeMsg">חיפוש: </string>
     <string name="no_synagogues_found">לא נמצאו בתי כנסת.</string>
     <string name="no_seccess">ההוספה לא הצליחה. נסה שוב</string>
+    <string name="seccess_add_synagogue">בית הכנסת נוסף בהצלחה</string>
 </resources>

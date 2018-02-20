@@ -160,6 +160,7 @@ public class ZmanimFragment extends Fragment implements ZmanimContract.View {
     @Override
     public void onDetach() {
         super.onDetach();
+        mListener.onSetActionBarTitle(null);
         mListener = null;
     }
 

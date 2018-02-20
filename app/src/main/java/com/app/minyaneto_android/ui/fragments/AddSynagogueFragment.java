@@ -155,13 +155,14 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
         RequestHelper.addSynagogue(getContext(), s, new Response.Listener<Synagogue>() {
             @Override
             public void onResponse(Synagogue response) {
+                Toast.makeText(getContext(), getContext().getResources().getString(R.string.seccess_add_synagogue), Toast.LENGTH_SHORT).show();
                 s.setId(response.getId());
                 mListener.onAddSynagogue(s);
             }
         }, new ErrorResponse(new ErrorResponse.ErrorListener() {
             @Override
             public void onErrorResponse(Result<ErrorData> error) {
-                error.getData().getMessage();
+                Toast.makeText(getContext() , getContext().getResources().getString(R.string.no_seccess), Toast.LENGTH_SHORT).show();
             }
         }));
     }

@@ -132,15 +132,10 @@ public class MainActivity extends AppCompatActivity implements
 
 
     private void returnToMain() {
-
         if (mFragmentHelper.isContains(AboutFragment.TAG))
-
             mFragmentHelper.removeFragment(AboutFragment.TAG, true);
-
         if (mFragmentHelper.isContains(ZmanimFragment.TAG))
-
             mFragmentHelper.removeFragment(ZmanimFragment.TAG, true);
-
     }
 
     @Override
@@ -174,12 +169,15 @@ public class MainActivity extends AppCompatActivity implements
 
             addSynagogueFragment = AddSynagogueFragment.getInstance();
 
+        mapFragment.stopSearchMode();
+
         mFragmentHelper.replaceFragment(R.id.MA_container, addSynagogueFragment, AddSynagogueFragment.TAG, AddSynagogueFragment.TAG);
     }
 
     @Override
     public void onMenuSelectSearchSynagogue() {
         returnToMain();
+        mapFragment.stopSearchMode();
         mFragmentHelper.replaceFragment(R.id.MA_container, SearchSynagogueFragment.getInstance(), SearchSynagogueFragment.TAG, SearchSynagogueFragment.TAG);
     }
 
@@ -187,15 +185,14 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onMenuSelectSearchMinyan() {
         returnToMain();
+        mapFragment.stopSearchMode();
         mFragmentHelper.replaceFragment(R.id.MA_container, SearchMinyanFragment.getInstance(), SearchMinyanFragment.TAG, SearchMinyanFragment.TAG);
     }
 
     @Override
     public void onMenuSelectAbout() {
         returnToMain();
-
         mFragmentHelper.addFragment(R.id.MA_main_container, AboutFragment.getInstance(), AboutFragment.TAG, AboutFragment.TAG);
-
     }
 
     @Override
@@ -230,7 +227,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onSetActionBarTitle(String title) {
-
         if (title != null && getSupportActionBar() != null) {
             getSupportActionBar().setTitle(title);
             if (null != refresh_btn) {
@@ -288,9 +284,8 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onUpdateMarker(Place place) {
-
+        mapFragment.startSearchMode(place.getName().toString());
         mapFragment.updateMarker(place);
-
     }
 
     @Override
@@ -461,21 +456,18 @@ public class MainActivity extends AppCompatActivity implements
     public void onBackPressed() {
 
         if (!mNavigationHelper.closeDrawer()) {
-
-            if (mFragmentHelper.isContains(AddSynagogueFragment.TAG) ||
-                    mFragmentHelper.isContains(SearchSynagogueFragment.TAG) ||
-                    mFragmentHelper.isContains(SearchMinyanFragment.TAG) ||
-                    mFragmentHelper.getFragmentsSize() > 2) {
-
+            if (mFragmentHelper.getFragmentsSize() > 2) {
                 super.onBackPressed();
-
+            } else if (mFragmentHelper.isContains(AddSynagogueFragment.TAG) ||
+                    mFragmentHelper.isContains(SearchSynagogueFragment.TAG) ||
+                    mFragmentHelper.isContains(SearchMinyanFragment.TAG)) {
+                mapFragment.stopSearchMode();
+                super.onBackPressed();
             } else {
                 closeWithDoubleClick();
             }
         } else {
-
             super.onBackPressed();
-
         }
     }
 
