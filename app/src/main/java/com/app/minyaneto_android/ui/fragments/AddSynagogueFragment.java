@@ -162,7 +162,7 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
         }, new ErrorResponse(new ErrorResponse.ErrorListener() {
             @Override
             public void onErrorResponse(Result<ErrorData> error) {
-                Toast.makeText(getContext() , getContext().getResources().getString(R.string.no_seccess), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext() , getContext().getResources().getString(R.string.no_seccess)+"\n"+error.getData().getMessage(), Toast.LENGTH_SHORT).show();
             }
         }));
     }

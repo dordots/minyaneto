@@ -11,6 +11,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.UnsupportedEncodingException;
@@ -25,7 +26,7 @@ public class GenericRequest<T> extends JsonRequest<T> {
 
     private static final String TAG = GenericRequest.class.getSimpleName();
 
-    private final Gson gson = new Gson();
+    private final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     private final Class<T> clazz;
     private final Type type;
     private final Map<String, String> headers;
@@ -94,14 +95,14 @@ public class GenericRequest<T> extends JsonRequest<T> {
      */
     public GenericRequest(int method, String url, Class<T> returnClass, Object toBeSent,
                           Response.Listener<T> listener, Response.ErrorListener errorListener, Map<String, String> headers) {
-        this(method, returnClass, url, new Gson().toJson(toBeSent), listener,
+        this(method, returnClass, url, new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(toBeSent), listener,
                 errorListener, headers);
     }
 
     public GenericRequest(int method, String url, Type returnClass, Object toBeSent,
                           Response.Listener<T> listener, Response.ErrorListener errorListener, Map<String, String> headers) {
 
-        this(method, returnClass, url, new Gson().toJson(toBeSent), listener,
+        this(method, returnClass, url, new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(toBeSent), listener,
                 errorListener, headers);
     }
 
@@ -118,7 +119,7 @@ public class GenericRequest<T> extends JsonRequest<T> {
      */
     public GenericRequest(int method, String url, Class<T> returnClass, Object toBeSent,
                           Response.Listener<T> listener, Response.ErrorListener errorListener) {
-        this(method, returnClass, url, new Gson().toJson(toBeSent), listener,
+        this(method, returnClass, url, new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(toBeSent), listener,
                 errorListener, new HashMap<String, String>());
     }
 
@@ -191,7 +192,7 @@ public class GenericRequest<T> extends JsonRequest<T> {
      */
     public GenericRequest(int method, String url, Class<T> returnClass, Object toBeSent,
                           Response.Listener<T> listener, Response.ErrorListener errorListener, Map<String, String> headers, boolean mute) {
-        this(method, returnClass, url, new Gson().toJson(toBeSent), listener,
+        this(method, returnClass, url, new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(toBeSent), listener,
                 errorListener, headers);
         this.muteRequest = mute;
     }
@@ -209,7 +210,7 @@ public class GenericRequest<T> extends JsonRequest<T> {
      */
     public GenericRequest(int method, String url, Class<T> returnClass, Object toBeSent,
                           Response.Listener<T> listener, Response.ErrorListener errorListener, boolean mute) {
-        this(method, returnClass, url, new Gson().toJson(toBeSent), listener,
+        this(method, returnClass, url, new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(toBeSent), listener,
                 errorListener, new HashMap<String, String>());
         this.muteRequest = mute;
 

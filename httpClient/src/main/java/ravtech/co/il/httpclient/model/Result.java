@@ -8,7 +8,7 @@ public class Result<T> {
     @SerializedName("success")
     @Expose
     private Boolean success;
-    @SerializedName("data")
+    @SerializedName("message")
     @Expose
     private T data;
     @SerializedName("error_code")

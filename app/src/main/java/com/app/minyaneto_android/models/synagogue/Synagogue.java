@@ -57,8 +57,11 @@ public class Synagogue implements Parcelable, Cloneable {
     @SerializedName("wheelchair-accessible")
     @Expose
     private Boolean wheelchairAccessible;
+    @Expose(serialize = false)
     private double distanceFromLocation;
+    @Expose(serialize = false)
     private LatLng latLng;
+    @Expose(serialize = false)
     private String minyansAsString;
 
     public Synagogue() {
