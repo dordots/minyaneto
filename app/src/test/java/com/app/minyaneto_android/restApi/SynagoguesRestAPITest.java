@@ -1,7 +1,7 @@
 package com.app.minyaneto_android.restApi;
 
-import com.app.minyaneto_android.models.data.SynagogueData;
-import com.app.minyaneto_android.models.data.SynagoguesWrapperData;
+import com.app.minyaneto_android.data.SynagogueData;
+import com.app.minyaneto_android.data.SynagoguesWrapperData;
 
 import org.junit.Ignore;
 import org.junit.Test;

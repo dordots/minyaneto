@@ -1,7 +1,7 @@
 package com.app.minyaneto_android.restApi;
 
-import com.app.minyaneto_android.models.data.SynagogueData;
-import com.app.minyaneto_android.models.data.SynagoguesWrapperData;
+import com.app.minyaneto_android.data.SynagogueData;
+import com.app.minyaneto_android.data.SynagoguesWrapperData;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

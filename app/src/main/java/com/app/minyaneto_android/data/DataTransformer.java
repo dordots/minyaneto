@@ -1,10 +1,7 @@
-package com.app.minyaneto_android;
+package com.app.minyaneto_android.data;
 
 import android.util.Log;
 
-import com.app.minyaneto_android.models.data.LatLonData;
-import com.app.minyaneto_android.models.data.MinyanScheduleData;
-import com.app.minyaneto_android.models.data.SynagogueData;
 import com.app.minyaneto_android.models.domain.MinyanScheduleDomain;
 import com.app.minyaneto_android.models.domain.SynagogueDomain;
 import com.app.minyaneto_android.models.minyan.PrayType;
@@ -60,10 +57,10 @@ public class DataTransformer {
                 data.getParking(),
                 data.getSeferTora(),
                 data.getWheelchairAccessible(),
-                transform(data.getLatLonData()));
+                transform(data.getLatLngData()));
     }
 
-    private LatLng transform(LatLonData data) {
+    private LatLng transform(LatLngData data) {
         return new LatLng(Double.valueOf(data.getLat()), Double.valueOf(data.getLon()));
     }
 

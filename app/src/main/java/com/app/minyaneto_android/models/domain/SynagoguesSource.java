@@ -1,11 +1,12 @@
-package com.app.minyaneto_android;
+package com.app.minyaneto_android.models.domain;
 
 import android.util.Log;
 
-import com.app.minyaneto_android.models.data.SynagogueData;
-import com.app.minyaneto_android.models.data.SynagoguesWrapperData;
-import com.app.minyaneto_android.models.domain.SynagogueDomain;
+import com.app.minyaneto_android.data.DataTransformer;
+import com.app.minyaneto_android.data.SynagogueData;
+import com.app.minyaneto_android.data.SynagoguesWrapperData;
 import com.app.minyaneto_android.restApi.SynagoguesRestAPI;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -20,8 +21,8 @@ public class SynagoguesSource {
         this.transformer = transformer;
     }
 
-    public List<SynagogueDomain> getSynagogues(int maxHits, double latitude, double longitude, int radiusInKm) throws IOException {
-        String center = latitude + "," + longitude;
+    public List<SynagogueDomain> getSynagogues(int maxHits, LatLng location, int radiusInKm) throws IOException {
+        String center = location.latitude + "," + location.longitude;
         String radius = radiusInKm + "km";
         List<SynagogueDomain> synagogueList;
         try {
