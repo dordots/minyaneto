@@ -20,7 +20,7 @@ public class SynagoguesSource {
         this.transformer = transformer;
     }
 
-    public List<SynagogueModel> getSynagogues(int maxHits, int latitude, int longitude, int radiusInKm) throws IOException {
+    public List<SynagogueModel> getSynagogues(int maxHits, double latitude, double longitude, int radiusInKm) throws IOException {
         String center = latitude + "," + longitude;
         String radius = radiusInKm + "km";
         List<SynagogueModel> synagogueList;
