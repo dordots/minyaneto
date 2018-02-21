@@ -8,6 +8,7 @@ import com.app.minyaneto_android.data.SynagoguesWrapperData;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -15,7 +16,8 @@ import retrofit2.http.Query;
 
 public interface SynagoguesRestAPI {
 
-    @POST("synagogues")
+    @Headers("Content-Type: application/json")
+    @POST("synagogues/")
     Call<SynagogueIdData> addSynagogue(@Body SynagogueData synagogue);
 
     @PUT("synagogues/{id}")

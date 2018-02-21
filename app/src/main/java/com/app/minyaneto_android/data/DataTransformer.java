@@ -50,7 +50,7 @@ public class DataTransformer {
                 data.getParking(),
                 data.getSeferTora(),
                 data.getWheelchairAccessible(),
-                transform(data.getLatLngData()));
+                transform(data.getLatLngStringData()));
     }
 
     private MinyanScheduleDomain transform(MinyanScheduleData data) {
@@ -60,7 +60,7 @@ public class DataTransformer {
                 transformStringToTime(data.getStringTime()));
     }
 
-    private LatLng transform(LatLngData data) {
+    private LatLng transform(LatLngStringData data) {
         return new LatLng(Double.parseDouble(data.getLat()), Double.parseDouble(data.getLon()));
     }
 

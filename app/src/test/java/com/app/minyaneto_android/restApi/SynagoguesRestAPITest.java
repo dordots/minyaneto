@@ -2,7 +2,7 @@ package com.app.minyaneto_android.restApi;
 
 import android.support.annotation.NonNull;
 
-import com.app.minyaneto_android.data.LatLngData;
+import com.app.minyaneto_android.data.LatLngStringData;
 import com.app.minyaneto_android.data.MinyanScheduleData;
 import com.app.minyaneto_android.data.SynagogueData;
 import com.app.minyaneto_android.data.SynagogueIdData;
@@ -80,7 +80,7 @@ public class SynagoguesRestAPITest {
                 "no_where",
                 false,
                 "no_comments",
-                new LatLngData("34.024", "28.168"),
+                new LatLngStringData("34.024", "28.168"),
                 "id_should_be_ignored",
                 Collections.<MinyanScheduleData>emptyList(),
                 synagogueName,

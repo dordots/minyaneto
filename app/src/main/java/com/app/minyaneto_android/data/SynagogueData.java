@@ -20,7 +20,7 @@ public class SynagogueData {
 
     @SerializedName("geo")
     @Expose
-    private LatLngData latLngData;
+    private LatLngStringData latLngStringData;
 
     @SerializedName("id")
     @Expose
@@ -54,7 +54,7 @@ public class SynagogueData {
             String address,
             Boolean classes,
             String comments,
-            LatLngData latLngData,
+            LatLngStringData latLngStringData,
             String id,
             List<MinyanScheduleData> minyans,
             String name,
@@ -66,7 +66,7 @@ public class SynagogueData {
         this.address = address;
         this.classes = classes;
         this.comments = comments;
-        this.latLngData = latLngData;
+        this.latLngStringData = latLngStringData;
         this.id = id;
         this.minyans = minyans;
         this.name = name;
@@ -92,8 +92,8 @@ public class SynagogueData {
         return comments;
     }
 
-    public LatLngData getLatLngData() {
-        return latLngData;
+    public LatLngStringData getLatLngStringData() {
+        return latLngStringData;
     }
 
     public String getId() {
