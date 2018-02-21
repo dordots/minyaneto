@@ -2,10 +2,11 @@ package com.app.minyaneto_android.restApi;
 
 import android.support.annotation.NonNull;
 
-import com.app.minyaneto_android.data.LatLngStringData;
+import com.app.minyaneto_android.data.LatLngDoubleData;
 import com.app.minyaneto_android.data.MinyanScheduleData;
 import com.app.minyaneto_android.data.SynagogueData;
 import com.app.minyaneto_android.data.SynagogueIdData;
+import com.app.minyaneto_android.data.SynagogueToServerData;
 import com.app.minyaneto_android.data.SynagogueWrapperData;
 import com.app.minyaneto_android.data.SynagoguesWrapperData;
 
@@ -57,7 +58,7 @@ public class SynagoguesRestAPITest {
     public void addSynagogue() throws Exception {
         SynagoguesRestAPI api = RestAPIUtility.createSynagoguesRestAPI();
         String synagogueName = "test_synagogue";
-        SynagogueData synagogue = generateSynagogueData(synagogueName);
+        SynagogueToServerData synagogue = generateSynagogueData(synagogueName);
         Call<SynagogueIdData> call = api.addSynagogue(synagogue);
 
         Response<SynagogueIdData> response = call.execute();
@@ -75,13 +76,12 @@ public class SynagoguesRestAPITest {
     }
 
     @NonNull
-    private SynagogueData generateSynagogueData(String synagogueName) {
-        SynagogueData synagogue = new SynagogueData(
+    private SynagogueToServerData generateSynagogueData(String synagogueName) {
+        SynagogueToServerData synagogue = new SynagogueToServerData(
                 "no_where",
                 false,
                 "no_comments",
-                new LatLngStringData("34.024", "28.168"),
-                "id_should_be_ignored",
+                new LatLngDoubleData(34.024, 28.168),
                 Collections.<MinyanScheduleData>emptyList(),
                 synagogueName,
                 "test_nosach",

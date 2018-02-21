@@ -2,6 +2,7 @@ package com.app.minyaneto_android.restApi;
 
 import com.app.minyaneto_android.data.SynagogueData;
 import com.app.minyaneto_android.data.SynagogueIdData;
+import com.app.minyaneto_android.data.SynagogueToServerData;
 import com.app.minyaneto_android.data.SynagogueWrapperData;
 import com.app.minyaneto_android.data.SynagoguesWrapperData;
 
@@ -18,7 +19,7 @@ public interface SynagoguesRestAPI {
 
     @Headers("Content-Type: application/json")
     @POST("synagogues/")
-    Call<SynagogueIdData> addSynagogue(@Body SynagogueData synagogue);
+    Call<SynagogueIdData> addSynagogue(@Body SynagogueToServerData synagogue);
 
     @PUT("synagogues/{id}")
     Call<Void> updateSynagogue(@Path("id") String id, SynagogueData synagogue);
