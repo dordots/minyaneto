@@ -3,12 +3,21 @@ package com.app.minyaneto_android.models.time;
 import android.location.Location;
 import android.support.annotation.NonNull;
 
+import com.app.minyaneto_android.location.LocationRepository;
+import com.app.minyaneto_android.models.domain.MinyanScheduleDomain;
 import com.app.minyaneto_android.zmanim.ZmanimCalendarProvider;
 
 import net.sourceforge.zmanim.ComplexZmanimCalendar;
 import net.sourceforge.zmanim.util.GeoLocation;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class TimeUtility {
@@ -72,4 +81,44 @@ public class TimeUtility {
         return geoLocation;
     }
 
+    public static String getTimes(List<MinyanScheduleDomain> minyans, Date date) {
+        if (null == date) {
+            date = new Date();
+        }
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        StringBuilder result = new StringBuilder();
+        ArrayList<String> myResult = new ArrayList<>();
+        for (MinyanScheduleDomain minyan : minyans) {
+            //TODO calculate real time -like rosh hodesh..
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            if (date.getDay() != minyan.getDayOfWeek().ordinal())
+                continue;
+            cal.set(Calendar.DAY_OF_WEEK, minyan.getDayOfWeek().ordinal() + 1);
+            ExactTime exactTime = extractSpecificTime(minyan.getPrayTime(), LocationRepository.getInstance().getLastKnownLocation());
+            cal.set(Calendar.HOUR_OF_DAY, exactTime.getHour());
+            cal.set(Calendar.MINUTE, exactTime.getMinutes());
+            Date f = cal.getTime();
+            if (minyan.getDayOfWeek().ordinal() == date.getDay() && f.after(date)) {
+                result.append(" ,").append(format.format(f));
+                myResult.add(format.format(f));
+            }
+        }
+        Collections.sort(myResult, new Comparator<String>() {
+            public int compare(String o1, String o2) {
+                Date date1 = new Date();
+                date1.setHours(Integer.parseInt(o1.split(":")[0]));
+                date1.setMinutes(Integer.parseInt(o1.split(":")[1]));
+
+                Date date2 = new Date();
+                date2.setHours(Integer.parseInt(o2.split(":")[0]));
+                date2.setMinutes(Integer.parseInt(o2.split(":")[1]));
+
+                if (date1.equals(date2))
+                    return 0;
+                return date1.before(date2) ? -1 : 1;
+            }
+        });
+        return myResult.toString().substring(1, myResult.toString().length() - 1);//result;
+    }
 }

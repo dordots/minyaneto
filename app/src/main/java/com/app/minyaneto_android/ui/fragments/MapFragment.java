@@ -22,8 +22,8 @@ import android.widget.Toast;
 
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.location.LocationRepository;
+import com.app.minyaneto_android.models.domain.SynagogueDomain;
 import com.app.minyaneto_android.models.minyan.Minyan;
-import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.app.minyaneto_android.models.time.DateUtility;
 import com.app.minyaneto_android.utilities.Permissions;
 import com.google.android.gms.common.ConnectionResult;
@@ -46,7 +46,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -483,7 +482,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         mListener.onUpdateSynagogues(latLng);
     }
 
-    public void updateMarkers(ArrayList<Synagogue> synagogues) {
+    public void updateMarkers(List<SynagogueDomain> synagogues) {
         if (mMap == null) return;
 
         mMap.clear();
@@ -492,11 +491,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         SimpleDateFormat format = new SimpleDateFormat("HH:mm");
 
-        for (Synagogue synagogue : synagogues) {
+        for (SynagogueDomain synagogue : synagogues) {
 
-            synagogue.refreshData();
             Marker m = mMap.addMarker(new MarkerOptions().position(
-                    synagogue.getGeo())
+                    synagogue.getLocation())
                     .title(synagogue.getName() + " - " + synagogue.getNosach())
 //                    .snippet(synagogue.getMinyans().size() > 0 ? format.format(getCurrentMinyan(synagogue.getMinyans())) : "")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));

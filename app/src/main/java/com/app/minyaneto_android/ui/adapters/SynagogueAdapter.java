@@ -10,17 +10,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.models.synagogue.Synagogue;
+import com.app.minyaneto_android.location.LocationUtility;
+import com.app.minyaneto_android.models.domain.SynagogueDomain;
+import com.app.minyaneto_android.models.time.TimeUtility;
 
+import java.util.Date;
 import java.util.List;
 
 public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.SynagogueViewHolder> {
 
-    private List<Synagogue> synagogues;
+    private List<SynagogueDomain> synagogues;
     private SynagogueClickListener myClickListener;
     private int rowIndex = -1;
 
-    public SynagogueAdapter(List<Synagogue> synagogues) {
+    public SynagogueAdapter(List<SynagogueDomain> synagogues) {
         this.synagogues = synagogues;
     }
 
@@ -42,7 +45,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
 
     @Override
     public void onBindViewHolder(SynagogueViewHolder holder, final int position) {
-        Synagogue synagogue = synagogues.get(position);
+        SynagogueDomain synagogue = synagogues.get(position);
         holder.nameTextView.setText(synagogue.getName());
         // holder.walkingTime.setText(synagogue.getWalking_time()+"");
         // holder.drivigTime.setText(synagogue.getDriving_time()+"");
@@ -50,12 +53,13 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
 
         if (synagogue.getMinyans().size() > 0) {
             //TODO real time from minyans
-            holder.prayerTimeTextView.setText(synagogue.getMinyansAsString());
+            holder.prayerTimeTextView.setText(TimeUtility.getTimes(synagogue.getMinyans(), new Date()));
         }
-        if (synagogue.getDistanceFromLocation() < 1000)
-            holder.distanceSynagogueTextView.setText(String.format("%.2f ", synagogue.getDistanceFromLocation()) + "מ'");
+        double distance = LocationUtility.getDistance(synagogue);
+        if (distance < 1000)
+            holder.distanceSynagogueTextView.setText(String.format("%.2f ", distance) + "מ'");
         else
-            holder.distanceSynagogueTextView.setText(String.format("%.2f ", synagogue.getDistanceFromLocation() / 1000) + "ק'מ");
+            holder.distanceSynagogueTextView.setText(String.format("%.2f ", distance / 1000) + "ק'מ");
 
 
         if (rowIndex == position)

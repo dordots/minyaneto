@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.app.minyaneto_android.data.DataTransformer;
 import com.app.minyaneto_android.data.SynagoguesWrapperData;
+import com.app.minyaneto_android.restApi.ResponseListener;
 import com.app.minyaneto_android.restApi.SynagoguesRestAPI;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -25,7 +26,7 @@ public class SynagoguesSource {
         this.cache = cache;
     }
 
-    public void fetchSynagogues(int maxHits, LatLng location, int radiusInKm) throws IOException {
+    public void fetchSynagogues(int maxHits, LatLng location, int radiusInKm, final ResponseListener<List<SynagogueDomain>> listener) throws IOException {
         String center = location.latitude + "," + location.longitude;
         String radius = radiusInKm + "km";
         Callback<SynagoguesWrapperData> callback = new Callback<SynagoguesWrapperData>() {
@@ -35,6 +36,7 @@ public class SynagoguesSource {
                 if (data != null) {
                     List<SynagogueDomain> synagogueList = transformer.transformSynagoguesDataList(data.getSynagogues());
                     cache.putSynagogues(synagogueList);
+                    listener.onResponse(synagogueList);
                 }
             }
 
@@ -49,5 +51,14 @@ public class SynagoguesSource {
 
     public SynagogueDomain getSynagogue(String id) throws IOException {
         return cache.getSynagogue(id);
+    }
+
+    public void fetchSynagogues(int maxHits, LatLng location, int radiusInKm) throws IOException {
+        fetchSynagogues(maxHits, location, radiusInKm, new ResponseListener<List<SynagogueDomain>>() {
+            @Override
+            public void onResponse(List<SynagogueDomain> response) {
+
+            }
+        });
     }
 }

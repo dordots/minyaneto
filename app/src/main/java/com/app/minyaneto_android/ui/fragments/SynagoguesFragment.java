@@ -5,48 +5,37 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.models.synagogue.Synagogue;
+import com.app.minyaneto_android.location.LocationUtility;
+import com.app.minyaneto_android.models.domain.SynagogueDomain;
 import com.app.minyaneto_android.ui.adapters.SynagogueAdapter;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
-/**
- * create by david vardi
- */
 public class SynagoguesFragment extends Fragment {
 
     public static final String TAG = SynagoguesFragment.class.getSimpleName();
-
     private OnSynagoguesListener mListener;
-
-    private ArrayList<Synagogue> mSynagogues;
-
+    private List<SynagogueDomain> mSynagogues;
     private RecyclerView mSynagoguesView;
-
     private SynagogueAdapter mAdapter;
-
     private View mProgress;
     private TextView mError;
 
 
     public static SynagoguesFragment newInstance() {
-
         SynagoguesFragment fragment = new SynagoguesFragment();
-
         Bundle args = new Bundle();
-
         fragment.setArguments(args);
-
         return fragment;
     }
 
@@ -113,12 +102,12 @@ public class SynagoguesFragment extends Fragment {
 
     }
 
-    public void updateSynagogues(ArrayList<Synagogue> synagogues,String msg) {
+    public void updateSynagogues(List<SynagogueDomain> synagogues,String msg) {
         mSynagogues.clear();
-        if (synagogues.size() == 0){
+        if (synagogues.size() == 0) {
             mError.setVisibility(View.VISIBLE);
             mError.setText(msg);
-        }else {
+        } else {
             mError.setVisibility(View.GONE);
             mSynagogues.addAll(synagogues);
         }
@@ -147,14 +136,14 @@ public class SynagoguesFragment extends Fragment {
 
                 if (position == -1) return;
 
-                mListener.onMoveCamera(mSynagogues.get(position).getGeo(), position);
+                mListener.onMoveCamera(mSynagogues.get(position).getLocation(), position);
             }
 
             @Override
             public void onRouteClick(int position) {
                 if (position == -1) return;
 
-                mListener.onOpenRoute(mSynagogues.get(position).getGeo());
+                mListener.onOpenRoute(mSynagogues.get(position).getLocation());
             }
 
             @Override
@@ -172,11 +161,11 @@ public class SynagoguesFragment extends Fragment {
 
     private void sortSynagoguesByLocation() {
 
-        Collections.sort(mSynagogues, new Comparator<Synagogue>() {
-            public int compare(Synagogue o1, Synagogue o2) {
-                if (o1.getDistanceFromLocation() == o2.getDistanceFromLocation())
-                    return 0;
-                return o1.getDistanceFromLocation() < o2.getDistanceFromLocation() ? -1 : 1;
+        Collections.sort(mSynagogues, new Comparator<SynagogueDomain>() {
+            public int compare(SynagogueDomain o1, SynagogueDomain o2) {
+                long distance1 = LocationUtility.getDistance(o1);
+                long distance2 = LocationUtility.getDistance(o2);
+                return Long.compare(distance1, distance2);
             }
         });
     }
@@ -186,7 +175,7 @@ public class SynagoguesFragment extends Fragment {
 
         void onSetActionBarTitle(String title);
 
-        void onUpdateMarkers(ArrayList<Synagogue> mSynagogues);
+        void onUpdateMarkers(List<SynagogueDomain> mSynagogues);
 
         void onMoveCamera(LatLng latLng, int position);
 

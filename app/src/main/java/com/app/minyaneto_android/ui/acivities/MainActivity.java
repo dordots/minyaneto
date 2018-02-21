@@ -14,20 +14,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.android.volley.Response;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.data.DataTransformer;
-import com.app.minyaneto_android.location.LocationRepository;
+import com.app.minyaneto_android.models.domain.MinyanScheduleDomain;
 import com.app.minyaneto_android.models.domain.SynagogueCache;
 import com.app.minyaneto_android.models.domain.SynagogueDomain;
 import com.app.minyaneto_android.models.domain.SynagoguesSource;
-import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.minyan.PrayType;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
-import com.app.minyaneto_android.models.synagogue.SynagogueArray;
-import com.app.minyaneto_android.models.time.ExactTime;
 import com.app.minyaneto_android.models.time.TimeUtility;
-import com.app.minyaneto_android.restApi.RequestHelper;
+import com.app.minyaneto_android.restApi.ResponseListener;
 import com.app.minyaneto_android.restApi.RestAPIUtils;
 import com.app.minyaneto_android.ui.fragments.AboutFragment;
 import com.app.minyaneto_android.ui.fragments.AddMinyanFragment;
@@ -40,19 +36,14 @@ import com.app.minyaneto_android.ui.fragments.SynagoguesFragment;
 import com.app.minyaneto_android.utilities.LocationHelper;
 import com.app.minyaneto_android.utilities.fragment.ActivityRunning;
 import com.app.minyaneto_android.utilities.fragment.FragmentHelper;
-import com.app.minyaneto_android.utilities.user.Alerts;
 import com.app.minyaneto_android.zmanim.ZmanimFragment;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.Locale;
+import java.util.List;
 
 import ravtech.co.il.httpclient.ErrorResponse;
 import ravtech.co.il.httpclient.model.ErrorData;
@@ -75,13 +66,10 @@ public class MainActivity extends AppCompatActivity implements
         ZmanimFragment.ZmanimListener,
         SearchSynagogueFragment.SearchListener, ErrorResponse.ErrorListener {
 
-    private static final double DEFUALT_RADUIS = 3;
-    private static final double RADUIS_FOR_ADD_SYNAGOGUE = 0.3;
     public MapFragment mapFragment;
     public SynagoguesFragment synagoguesFragment;
     public AddSynagogueFragment addSynagogueFragment;
 
-    private ArrayList<Synagogue> originSynagogues = new ArrayList<>();
     private SynagoguesSource synagoguesSource;
 
     private NavigationHelper mNavigationHelper;
@@ -233,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onUpdateMarkers(ArrayList<Synagogue> mSynagogues) {
+    public void onUpdateMarkers(List<SynagogueDomain> mSynagogues) {
 
         mapFragment.updateMarkers(mSynagogues);
 
@@ -266,28 +254,22 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onGetTheSynagoguesAround(LatLng center) {
         try {
-            synagoguesSource.fetchSynagogues(MAX_HITS_PER_REQUEST, center, DEFAULT_RADIUS_IN_KM);
+            synagoguesSource.fetchSynagogues(MAX_HITS_PER_REQUEST, center, DEFAULT_RADIUS_IN_KM, new ResponseListener<List<SynagogueDomain>>() {
+                @Override
+                public void onResponse(List<SynagogueDomain> response) {
+                    if (response != null && response.size() > 0)
+                        Toast.makeText(MainActivity.this, R.string.attention_alert, Toast.LENGTH_SHORT).show();
+                    mapFragment.updateMarkers(response);
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        RequestHelper.getSynagogues(this, center, RADUIS_FOR_ADD_SYNAGOGUE, new Response.Listener<SynagogueArray>() {
-            @Override
-            public void onResponse(SynagogueArray response) {
-
-                if (response != null && response.getSynagogues() != null && response.getSynagogues().size() > 0)
-
-                    Toast.makeText(MainActivity.this, R.string.attention_alert, Toast.LENGTH_SHORT).show();
-
-                mapFragment.updateMarkers(response.getSynagogues());
-
-            }
-        }, this);
     }
 
     @Override
     public void onUpdateSynagogues(final LatLng latLngCenter) {
-        //TODO- choose the name of Tfilla - according to this time
+        //TODO- choose the name of Tfila - according to this time
         if (mFragmentHelper.isContains(SynagoguesFragment.TAG)) {
             if (null != mapFragment) {
                 if (isShowSynagoguesFragment) {
@@ -300,47 +282,25 @@ public class MainActivity extends AppCompatActivity implements
     private void updateSynagogues(final LatLng center,
                                   final Date date, final PrayType name, final String nosach) {
         try {
-            synagoguesSource.fetchSynagogues(MAX_HITS_PER_REQUEST, center, DEFAULT_RADIUS_IN_KM);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        RequestHelper.getSynagogues(this, center, DEFUALT_RADUIS, new Response.Listener<SynagogueArray>() {
-            @Override
-            public void onResponse(SynagogueArray response) {
+            synagoguesSource.fetchSynagogues(MAX_HITS_PER_REQUEST, center, DEFAULT_RADIUS_IN_KM, new ResponseListener<List<SynagogueDomain>>() {
+                @Override
+                public void onResponse(List<SynagogueDomain> response) {
 
-                originSynagogues.clear();
-                ArrayList<Synagogue> synagogues = response.getSynagogues();
+                    List<SynagogueDomain> synagogues = response;
 
-                for (int i = 0; i < synagogues.size(); i++) {
+                    for (SynagogueDomain s : new ArrayList<>(synagogues)) {
+                        if ((s.getMinyans().size() == 0) ||
+                                (nosach != null && !nosach.equals(s.getNosach()))) {
+                            synagogues.remove(s);
+                            continue;
+                        }
 
-                    ArrayList<Minyan> minyans = new ArrayList<>();
-
-                    minyans.addAll(synagogues.get(i).getMinyans());
-                    originSynagogues.add(synagogues.get(i));
-                    originSynagogues.get(i).setMinyans(minyans);
-                }
-
-                for (Synagogue s : originSynagogues) {
-                    s.refreshData();
-                }
-
-                for (Synagogue s : new ArrayList<>(synagogues)) {
-                    s.refreshData();
-                    s.setDistanceFromLocation(calculateDistance(s.getGeo(), center));
-                    if ((s.getMinyans().size() == 0) ||
-                            (nosach != null && !nosach.equals(s.getNosach()))) {
-                        synagogues.remove(s);
-                        continue;
-                    }
-
-                    for (Minyan m : new ArrayList<>(s.getMinyans())) {
+                    for (MinyanScheduleDomain m : new ArrayList<>(s.getMinyans())) {
                         if (name != null && m.getPrayType() != name) {
                             s.getMinyans().remove(m);
                         }
                     }
-                    String msg = getTimes(s.getMinyans(), date);
-                    s.setMinyansAsString(msg);
-                    if ("".equals(s.getMinyansAsString())) {
+                    if ("".equals(TimeUtility. getTimes(s.getMinyans(), date))) {
                         synagogues.remove(s);
                     }
                 }
@@ -350,61 +310,10 @@ public class MainActivity extends AppCompatActivity implements
                     synagoguesFragment.updateSynagogues(synagogues, getResources().getString(R.string.no_minyans_found_for_time));
 
             }
-        }, this);
-    }
-
-    private String getTimes(ArrayList<Minyan> minyans, Date date) {
-        if (null == date) {
-            date = new Date();
-        }
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        StringBuilder result = new StringBuilder();
-        ArrayList<String> myResult = new ArrayList<>();
-        for (Minyan minyan : minyans) {
-            //TODO calculate real time -like rosh hodesh..
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(date);
-
-            if (date.getDay() != minyan.getPrayDayType().ordinal())
-                continue;
-            cal.set(Calendar.DAY_OF_WEEK, minyan.getPrayDayType().ordinal() + 1);
-            ExactTime exactTime = TimeUtility.extractSpecificTime(minyan.getPrayTime(), LocationRepository.getInstance().getLastKnownLocation());
-            cal.set(Calendar.HOUR_OF_DAY, exactTime.getHour());
-            cal.set(Calendar.MINUTE, exactTime.getMinutes());
-            Date f = cal.getTime();
-            if (minyan.getPrayDayType().ordinal() == date.getDay() && f.after(date)) {
-                result.append(" ,").append(format.format(f));
-                myResult.add(format.format(f));
-            }
-        }
-        Collections.sort(myResult, new Comparator<String>() {
-            public int compare(String o1, String o2) {
-                Date date1 = new Date();
-                date1.setHours(Integer.parseInt(o1.split(":")[0]));
-                date1.setMinutes(Integer.parseInt(o1.split(":")[1]));
-
-                Date date2 = new Date();
-                date2.setHours(Integer.parseInt(o2.split(":")[0]));
-                date2.setMinutes(Integer.parseInt(o2.split(":")[1]));
-
-                if (date1.equals(date2))
-                    return 0;
-                return date1.before(date2) ? -1 : 1;
-            }
         });
-        return myResult.toString().substring(1, myResult.toString().length() - 1);//result;
+    } catch (IOException e) {
+            e.printStackTrace();
     }
-
-    private long calculateDistance(LatLng location1, LatLng location2) {
-        double dLat = Math.toRadians(location1.latitude - location2.latitude);
-        double dLon = Math.toRadians(location1.longitude - location2.longitude);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
-                + Math.cos(Math.toRadians(location2.latitude))
-                * Math.cos(Math.toRadians(location1.latitude)) * Math.sin(dLon / 2)
-                * Math.sin(dLon / 2);
-        double c = 2 * Math.asin(Math.sqrt(a));
-        long distanceInMeters = Math.round(6371000 * c);
-        return distanceInMeters;
     }
 
     @Override
@@ -550,33 +459,16 @@ public class MainActivity extends AppCompatActivity implements
 
         if (null != mapFragment) {
             try {
-                synagoguesSource.fetchSynagogues(MAX_HITS_PER_REQUEST, center, DEFAULT_RADIUS_IN_KM);
+                synagoguesSource.fetchSynagogues(MAX_HITS_PER_REQUEST, center, DEFAULT_RADIUS_IN_KM, new ResponseListener<List<SynagogueDomain>>() {
+                    @Override
+                    public void onResponse(List<SynagogueDomain> response) {
+                        synagoguesFragment.updateSynagogues(response, getResources().getString(R.string.no_synagogues_found));
+                    }
+                });
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            RequestHelper.getSynagogues(this, center, DEFUALT_RADUIS, new Response.Listener<SynagogueArray>() {
-
-                @Override
-                public void onResponse(SynagogueArray response) {
-
-                    originSynagogues.clear();
-
-                    for (Synagogue s : response.getSynagogues()) {
-
-                        s.refreshData();
-                        s.setDistanceFromLocation(calculateDistance(s.getGeo(), center));
-
-                    }
-
-                    originSynagogues = response.getSynagogues();
-
-                    synagoguesFragment.updateSynagogues(originSynagogues, getResources().getString(R.string.no_synagogues_found));
-                }
-
-            }, this);
         }
-
     }
 
 
