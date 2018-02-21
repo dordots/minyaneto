@@ -24,7 +24,7 @@ import com.app.minyaneto_android.models.minyan.PrayType;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.app.minyaneto_android.models.time.TimeUtility;
 import com.app.minyaneto_android.restApi.ResponseListener;
-import com.app.minyaneto_android.restApi.RestAPIUtils;
+import com.app.minyaneto_android.restApi.RestAPIUtility;
 import com.app.minyaneto_android.ui.fragments.AboutFragment;
 import com.app.minyaneto_android.ui.fragments.AddMinyanFragment;
 import com.app.minyaneto_android.ui.fragments.AddSynagogueFragment;
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements
         getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LOCALE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-        synagoguesSource = new SynagoguesSource(RestAPIUtils.createSynagoguesRestAPI(), new DataTransformer(), SynagogueCache.getInstance());
+        synagoguesSource = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(), new DataTransformer(), SynagogueCache.getInstance());
         mFragmentHelper = new FragmentHelper(this, new ActivityRunning());
         mNavigationHelper = new NavigationHelper(this, this);
         initFragments();

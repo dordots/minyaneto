@@ -50,12 +50,34 @@ public class SynagogueData {
     @Expose
     private Boolean wheelchairAccessible;
 
-    public String getName() {
-        return name;
+    public SynagogueData(
+            String address,
+            Boolean classes,
+            String comments,
+            LatLngData latLngData,
+            String id,
+            List<MinyanScheduleData> minyans,
+            String name,
+            String nosach,
+            Boolean parking,
+            Boolean seferTora,
+            Boolean wheelchairAccessible) {
+
+        this.address = address;
+        this.classes = classes;
+        this.comments = comments;
+        this.latLngData = latLngData;
+        this.id = id;
+        this.minyans = minyans;
+        this.name = name;
+        this.nosach = nosach;
+        this.parking = parking;
+        this.seferTora = seferTora;
+        this.wheelchairAccessible = wheelchairAccessible;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getName() {
+        return name;
     }
 
     public String getAddress() {

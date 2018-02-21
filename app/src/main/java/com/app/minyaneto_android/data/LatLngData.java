@@ -13,6 +13,11 @@ public class LatLngData {
     @Expose
     private String lon;
 
+    public LatLngData(String lat, String lon) {
+        this.lat = lat;
+        this.lon = lon;
+    }
+
     public String getLat() {
         return lat;
     }
