@@ -37,7 +37,7 @@ public class Synagogue implements Parcelable, Cloneable {
     @Expose
     private Geo geo;
     @SerializedName("id")
-    @Expose
+    @Expose(serialize = false)
     private String id;
     @SerializedName("minyans")
     @Expose
@@ -124,7 +124,7 @@ public class Synagogue implements Parcelable, Cloneable {
     public void setGeo(Geo geo) {
         this.geo = geo;
         try {
-            latLng = new LatLng(Double.parseDouble(geo.getLat()), Double.parseDouble(geo.getLon()));
+            latLng = new LatLng(geo.getLat(), geo.getLon());
         } catch (Exception ignored) {
         }
     }
@@ -220,7 +220,7 @@ public class Synagogue implements Parcelable, Cloneable {
 
     public void refreshData() {
         try {
-            latLng = new LatLng(Double.parseDouble(geo.getLat()), Double.parseDouble(geo.getLon()));
+            latLng = new LatLng(geo.getLat(), geo.getLon());
         } catch (Exception e) {
             e.printStackTrace();
         }

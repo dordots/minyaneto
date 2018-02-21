@@ -11,19 +11,19 @@ public class Geo implements Parcelable {
 
     @SerializedName("lat")
     @Expose
-    private String lat;
+    private double lat;
     @SerializedName("lon")
     @Expose
-    private String lon;
+    private double lon;
 
     public Geo(double lat,double lon){
-        this.lat=lat+"";
-        this.lon=lon+"";
+        this.lat=lat;
+        this.lon=lon;
     }
 
     protected Geo(Parcel in) {
-        lat = in.readString();
-        lon = in.readString();
+        lat = in.readDouble();
+        lon = in.readDouble();
     }
 
     public static final Creator<Geo> CREATOR = new Creator<Geo>() {
@@ -38,19 +38,19 @@ public class Geo implements Parcelable {
         }
     };
 
-    public String getLat() {
+    public double getLat() {
         return lat;
     }
 
-    public void setLat(String lat) {
+    public void setLat(double lat) {
         this.lat = lat;
     }
 
-    public String getLon() {
+    public double getLon() {
         return lon;
     }
 
-    public void setLon(String lon) {
+    public void setLon(double lon) {
         this.lon = lon;
     }
 
@@ -61,7 +61,7 @@ public class Geo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(lat);
-        dest.writeString(lon);
+        dest.writeDouble(lat);
+        dest.writeDouble(lon);
     }
 }

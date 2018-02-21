@@ -113,11 +113,11 @@ public class SynagoguesFragment extends Fragment {
 
     }
 
-    public void updateSynagogues(ArrayList<Synagogue> synagogues) {
+    public void updateSynagogues(ArrayList<Synagogue> synagogues,String msg) {
         mSynagogues.clear();
         if (synagogues.size() == 0){
             mError.setVisibility(View.VISIBLE);
-            mError.setText(R.string.no_synagogues_found);
+            mError.setText(msg);
         }else {
             mError.setVisibility(View.GONE);
             mSynagogues.addAll(synagogues);

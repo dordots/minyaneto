@@ -13,6 +13,9 @@ public enum PrayDayType {
     }
 
     public static PrayDayType getType(String str) throws Exception {
+        if (null == str) {
+            return SUNDAY;
+        }
         switch (str) {
             case "sunday":
             case "ראשון":

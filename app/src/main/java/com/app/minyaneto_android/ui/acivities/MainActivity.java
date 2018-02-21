@@ -312,7 +312,6 @@ public class MainActivity extends AppCompatActivity implements
             if (null != mapFragment) {
                 if (isShowSynagoguesFragment) {
                     updateSynagogues(latLngCenter, new Date(), null, null);
-
                 }
             }
         }
@@ -362,7 +361,10 @@ public class MainActivity extends AppCompatActivity implements
                 }
 
                 synagogues = response.getSynagogues();
-                synagoguesFragment.updateSynagogues(synagogues);
+                if(null==name)
+                    synagoguesFragment.updateSynagogues(synagogues,getResources().getString(R.string.no_minyans_found));
+                else
+                    synagoguesFragment.updateSynagogues(synagogues,getResources().getString(R.string.no_minyans_found_for_time));
 
             }
         }, this);
@@ -379,6 +381,7 @@ public class MainActivity extends AppCompatActivity implements
             //TODO calculate real time -like rosh hodesh..
             Calendar cal = Calendar.getInstance();
             cal.setTime(date);
+
             if (date.getDay() != minyan.getPrayDayType().ordinal())
                 continue;
             cal.set(Calendar.DAY_OF_WEEK, minyan.getPrayDayType().ordinal() + 1);
@@ -576,7 +579,7 @@ public class MainActivity extends AppCompatActivity implements
 
                     synagogues = originSynagogues;
 
-                    synagoguesFragment.updateSynagogues(synagogues);
+                    synagoguesFragment.updateSynagogues(synagogues,getResources().getString(R.string.no_synagogues_found));
                 }
 
             }, this);
