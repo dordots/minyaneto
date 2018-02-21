@@ -295,25 +295,25 @@ public class MainActivity extends AppCompatActivity implements
                             continue;
                         }
 
-                    for (MinyanScheduleDomain m : new ArrayList<>(s.getMinyans())) {
-                        if (name != null && m.getPrayType() != name) {
-                            s.getMinyans().remove(m);
+                        for (MinyanScheduleDomain m : new ArrayList<>(s.getMinyans())) {
+                            if (name != null && m.getPrayType() != name) {
+                                s.getMinyans().remove(m);
+                            }
+                        }
+                        if ("".equals(TimeUtility.getTimes(s.getMinyans(), date))) {
+                            synagogues.remove(s);
                         }
                     }
-                    if ("".equals(TimeUtility. getTimes(s.getMinyans(), date))) {
-                        synagogues.remove(s);
-                    }
-                }
-                if (null == name)
-                    synagoguesFragment.updateSynagogues(synagogues, getResources().getString(R.string.no_minyans_found));
-                else
-                    synagoguesFragment.updateSynagogues(synagogues, getResources().getString(R.string.no_minyans_found_for_time));
+                    if (null == name)
+                        synagoguesFragment.updateSynagogues(synagogues, getResources().getString(R.string.no_minyans_found));
+                    else
+                        synagoguesFragment.updateSynagogues(synagogues, getResources().getString(R.string.no_minyans_found_for_time));
 
-            }
-        });
-    } catch (IOException e) {
+                }
+            });
+        } catch (IOException e) {
             e.printStackTrace();
-    }
+        }
     }
 
     @Override

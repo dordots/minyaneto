@@ -21,7 +21,6 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.models.minyan.PrayType;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -41,10 +40,8 @@ public class SearchMinyanFragment extends Fragment implements
         DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener {
 
-    private final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
-
     public static final String TAG = SearchMinyanFragment.class.getSimpleName();
-
+    private final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     EditText etSearchAddress;
     Spinner spinnerNosachSynagogue;
     Spinner spinnerNameTfila;
@@ -53,8 +50,8 @@ public class SearchMinyanFragment extends Fragment implements
     Button btnChooseADate;
     Button btnChooseATime;
     Button btnSearchSynagogue;
-    private SearchListener mListener;
     Date date;
+    private SearchListener mListener;
     private Place mPlace;
 
     public static SearchMinyanFragment getInstance() {

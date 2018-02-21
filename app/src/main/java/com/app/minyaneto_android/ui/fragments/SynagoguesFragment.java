@@ -102,7 +102,7 @@ public class SynagoguesFragment extends Fragment {
 
     }
 
-    public void updateSynagogues(List<SynagogueDomain> synagogues,String msg) {
+    public void updateSynagogues(List<SynagogueDomain> synagogues, String msg) {
         mSynagogues.clear();
         if (synagogues.size() == 0) {
             mError.setVisibility(View.VISIBLE);
