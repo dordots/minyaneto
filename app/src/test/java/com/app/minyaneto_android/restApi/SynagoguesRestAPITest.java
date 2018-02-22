@@ -15,12 +15,14 @@ import org.junit.Test;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Response;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 
 public class SynagoguesRestAPITest {
 
@@ -41,8 +43,8 @@ public class SynagoguesRestAPITest {
     @Test
     public void getSynagogue() throws Exception {
         SynagoguesRestAPI api = RestAPIUtility.createSynagoguesRestAPI();
-        String synagogueName = "חזון איש - רמת שלמה";
-        Call<SynagogueWrapperData> call = api.getSynagogue("AV-W6p-eUpGeNoeyp2vV");
+        String synagogueName = "test_synagogue";
+        Call<SynagogueWrapperData> call = api.getSynagogue("AWG4o-siXhnPh-4nqCDV");
 
         Response<SynagogueWrapperData> response = call.execute();
 
@@ -67,6 +69,26 @@ public class SynagoguesRestAPITest {
         assertNotNull(idData);
         SynagogueWrapperData body = api
                 .getSynagogue(idData.getId())
+                .execute()
+                .body();
+        assertNotNull(body);
+        SynagogueData result = body.getSynagogue();
+        assertNotNull(result);
+        assertEquals(synagogueName, result.getName());
+    }
+
+    @Test
+    public void updateSynagogue() throws Exception {
+        SynagoguesRestAPI api = RestAPIUtility.createSynagoguesRestAPI();
+        String synagogueName = String.format("test_synagogue%d", new Random().nextInt(1000));
+        SynagogueToServerData synagogue = generateSynagogueData(synagogueName);
+        Call<Void> call = api.updateSynagogue("AWG4o-siXhnPh-4nqCDV", synagogue);
+
+        Response<Void> response = call.execute();
+
+        assertTrue(response.isSuccessful());
+        SynagogueWrapperData body = api
+                .getSynagogue("AWG4o-siXhnPh-4nqCDV")
                 .execute()
                 .body();
         assertNotNull(body);
