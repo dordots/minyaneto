@@ -53,7 +53,7 @@ public class SynagogueDetailsFragment extends DialogFragment {
 
         Bundle bundle = new Bundle();
 
-        bundle.putParcelable(Synagogue.TAG, synagogue);
+        bundle.putSerializable(Synagogue.TAG, synagogue);
 
         fragment.setArguments(bundle);
 
@@ -67,7 +67,7 @@ public class SynagogueDetailsFragment extends DialogFragment {
 
         if (getArguments() != null && getArguments().containsKey(Synagogue.TAG)) {
 
-            mSynagogue = getArguments().getParcelable(Synagogue.TAG);
+            mSynagogue = (Synagogue) getArguments().getSerializable(Synagogue.TAG);
 
         }
     }
@@ -105,7 +105,7 @@ public class SynagogueDetailsFragment extends DialogFragment {
         cbLessons.setChecked(mSynagogue.getClasses() != null ? mSynagogue.getClasses() : false);
         cbParking.setChecked(mSynagogue.getParking() != null ? mSynagogue.getParking() : false);
         cbSefer_tora.setChecked(mSynagogue.getSeferTora() != null ? mSynagogue.getSeferTora() : false);
-        cbWheelchair_accessible.setChecked(mSynagogue.getWheelchairAccessible() != null? mSynagogue.getWheelchairAccessible():false);
+        cbWheelchair_accessible.setChecked(mSynagogue.getWheelchairAccessible() != null ? mSynagogue.getWheelchairAccessible() : false);
         mRecyclerViewMinyans.setAdapter(new MinyanAdapter(mSynagogue.getMinyans()));
         btnAddMinyan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,6 +124,26 @@ public class SynagogueDetailsFragment extends DialogFragment {
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnSynagoguesListener");
+        }
+    }
+
+    @Override
+    public void onStop() {
+        try {
+            super.onStop();
+        }
+        catch (Exception e){}
+    }
+
+    @Override
+    public void onDetach() {
+        try {
+            super.onDetach();
+
+            mListener.onSetActionBarTitle(null);
+
+            mListener = null;
+        } catch (Exception x) {
         }
     }
 

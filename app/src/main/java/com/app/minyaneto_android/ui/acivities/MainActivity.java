@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -136,6 +137,8 @@ public class MainActivity extends AppCompatActivity implements
             mFragmentHelper.removeFragment(AboutFragment.TAG, true);
         if (mFragmentHelper.isContains(ZmanimFragment.TAG))
             mFragmentHelper.removeFragment(ZmanimFragment.TAG, true);
+        if (mFragmentHelper.isContains(SynagogueDetailsFragment.TAG))
+            mFragmentHelper.removeFragment(SynagogueDetailsFragment.TAG, true);
     }
 
     @Override
@@ -361,10 +364,10 @@ public class MainActivity extends AppCompatActivity implements
                 }
 
                 synagogues = response.getSynagogues();
-                if(null==name)
-                    synagoguesFragment.updateSynagogues(synagogues,getResources().getString(R.string.no_minyans_found));
+                if (null == name)
+                    synagoguesFragment.updateSynagogues(synagogues, getResources().getString(R.string.no_minyans_found));
                 else
-                    synagoguesFragment.updateSynagogues(synagogues,getResources().getString(R.string.no_minyans_found_for_time));
+                    synagoguesFragment.updateSynagogues(synagogues, getResources().getString(R.string.no_minyans_found_for_time));
 
             }
         }, this);
@@ -479,8 +482,12 @@ public class MainActivity extends AppCompatActivity implements
 
         if (doubleBackToExitPressedOnce) {
 
-            super.onBackPressed();
 
+            try {
+                super.onBackPressed();
+            } catch (Exception ex) {
+
+            }
             Intent intent = new Intent(Intent.ACTION_MAIN);
 
             intent.addCategory(Intent.CATEGORY_HOME);
@@ -528,13 +535,17 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if(null != mapFragment)
+               mapFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Alerts.ACTION_CODE_OPEN_GPS_SETTINGS) {
-        }
+
+        if(null != mapFragment)
+            mapFragment.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -579,7 +590,7 @@ public class MainActivity extends AppCompatActivity implements
 
                     synagogues = originSynagogues;
 
-                    synagoguesFragment.updateSynagogues(synagogues,getResources().getString(R.string.no_synagogues_found));
+                    synagoguesFragment.updateSynagogues(synagogues, getResources().getString(R.string.no_synagogues_found));
                 }
 
             }, this);

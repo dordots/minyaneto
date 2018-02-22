@@ -11,6 +11,7 @@ import com.app.minyaneto_android.location.LocationRepository;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.time.ExactTime;
 import com.app.minyaneto_android.models.time.TimeUtility;
+import com.app.minyaneto_android.utilities.SynagogeUtils;
 
 import java.util.List;
 import java.util.Locale;
@@ -38,12 +39,13 @@ public class MinyanAdapter extends RecyclerView.Adapter<MinyanAdapter.MinyanView
     @Override
     public void onBindViewHolder(MinyanViewHolder holder, int position) {
         Minyan minyan = minyans.get(position);
-        holder.prayTypeTextView.setText(minyan.getPrayType().name());
+        holder.prayTypeTextView.setText(SynagogeUtils.getTextFromEnum(holder.prayTypeTextView.getContext(),minyan.getPrayType()));
         ExactTime time = TimeUtility.extractSpecificTime(
                 minyan.getPrayTime(),
                 LocationRepository.getInstance().getLastKnownLocation());
+
         holder.prayerTimeTextView.setText(String.format(Locale.getDefault(), "%02d:%02d", time.getHour(), time.getMinutes()));
-        holder.prayDayTypeTextView.setText(minyan.getPrayDayType().name());
+        holder.prayDayTypeTextView.setText(SynagogeUtils.getTextFromEnum(holder.prayDayTypeTextView.getContext(),minyan.getPrayDayType()));
     }
 
 

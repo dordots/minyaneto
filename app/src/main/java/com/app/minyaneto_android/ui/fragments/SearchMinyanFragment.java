@@ -90,7 +90,6 @@ public class SearchMinyanFragment extends Fragment implements
 
         btnSearchSynagogue = view.findViewById(R.id.search_minyan_btn_search);
 
-
         etSearchAddress.setOnClickListener(this);
 
         btnChooseADate.setOnClickListener(this);

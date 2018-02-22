@@ -29,6 +29,7 @@ import com.app.minyaneto_android.models.time.ExactTime;
 import com.app.minyaneto_android.models.time.RelativeTime;
 import com.app.minyaneto_android.models.time.RelativeTimeType;
 import com.app.minyaneto_android.restApi.RequestHelper;
+import com.app.minyaneto_android.utilities.SynagogeUtils;
 
 import java.util.ArrayList;
 
@@ -113,8 +114,16 @@ public class AddMinyanFragment extends Fragment {
             }
         });
 
-        spinnerRelativeTimeType.setAdapter(new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, RelativeTimeType.values()));
-        spinnerPrayType.setAdapter(new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, PrayType.values()));
+        ArrayList<String> prayTypeNames=new ArrayList<>(PrayType.values().length);
+        for(PrayType prayType :PrayType.values()){
+            prayTypeNames.add(SynagogeUtils.getTextFromEnum(getContext(),prayType));
+        }
+        spinnerPrayType.setAdapter(new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, prayTypeNames));
+        ArrayList<String> relativeTimeTypeNames=new ArrayList<>(RelativeTimeType.values().length);
+        for(RelativeTimeType relativeTimeType :RelativeTimeType.values()){
+            relativeTimeTypeNames.add(SynagogeUtils.getTextFromEnum(getContext(),relativeTimeType));
+        }
+        spinnerRelativeTimeType.setAdapter(new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, relativeTimeTypeNames));
     }
 
 
@@ -162,7 +171,7 @@ public class AddMinyanFragment extends Fragment {
                     minyan.setExactTime(new ExactTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute()));
                 }
             }
-            minyan.setPrayType((PrayType) spinnerPrayType.getSelectedItem());
+            minyan.setPrayType(PrayType.values()[spinnerPrayType.getSelectedItemPosition()]);
             minyan.setPrayDayType(day);
             mSynagogue.addMinyan(minyan);
         }
@@ -171,6 +180,7 @@ public class AddMinyanFragment extends Fragment {
             @Override
             public void onResponse(String response) { //response = null
                 //TODO some message to user?
+                Toast.makeText(getContext(), getContext().getResources().getString(R.string.seccess_add_minyan), Toast.LENGTH_SHORT).show();
                 getActivity().onBackPressed();
             }
         }, new ErrorResponse(new ErrorResponse.ErrorListener() {

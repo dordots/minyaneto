@@ -11,12 +11,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.location.LocationRepository;
@@ -142,7 +144,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         mMapFragment.getMapAsync(this);
         searchModeLinearLayout.setVisibility(View.GONE);
-        searchMode=false;
+        searchMode = false;
     }
 
     private void initMap() {
@@ -193,14 +195,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         moveCamera(latLng);
     }
 
-    public void startSearchMode(String msg){
+    public void startSearchMode(String msg) {
         searchMode = true;
         searchModeLinearLayout.setVisibility(View.VISIBLE);
-        searchModeTextView.setText(getString(R.string.searchModeMsg)+ msg);
+        searchModeExitImageButton.setVisibility(View.VISIBLE);
+
+        searchModeTextView.setText(getString(R.string.searchModeMsg) + msg);
         stopLocationUpdates();
     }
 
-    public void stopSearchMode(){
+    public void stopSearchMode() {
         searchMode = false;
         searchModeLinearLayout.setVisibility(View.GONE);
         startLocationUpdates();
@@ -270,6 +274,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
+        if(null != searchModeLinearLayout){
+            searchModeLinearLayout.setVisibility(View.GONE);
+        }
         mMap = googleMap;
 
         mMap.setOnMarkerClickListener(this);
@@ -302,11 +309,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
                 LatLng pos = mMap.getCameraPosition().target;
 
-                if (calculateDistance(lastLatLng, pos) > MAX_DISTANCE_FROM_LAST_LOCATION) {
+                if (lastLatLng!=null &&calculateDistance(lastLatLng, pos) > MAX_DISTANCE_FROM_LAST_LOCATION) {
 
                     lastLatLng = pos;
 
-                   // mListener.onUpdateSynagogues(lastLatLng);
+                    // mListener.onUpdateSynagogues(lastLatLng);
                 }
             }
 
@@ -321,45 +328,81 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 onRefreshMap();
             } else {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mHarHabait, 15));
-                updateCurrentLocation(mHarHabait);
+                defaultLocation();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    private void defaultLocation() {
+        updateCurrentLocation(mHarHabait);
+        searchModeLinearLayout.setVisibility(View.VISIBLE);
+        searchModeExitImageButton.setVisibility(View.GONE);
+        searchModeTextView.setText(getContext().getString(R.string.default_location));
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
+            case PERMISSIONS_REQUEST_RESOLUTION_REQUIRED: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    handleLocationSetting();
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
             case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
 
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     handleLocationSetting();
+                } else {
+                    defaultLocation();
                 }
 
                 break;
             }
+
+
+            // other 'case' lines to check for other
+            // permissions this app might request.
         }
     }
 
     private void handleLocationSetting() {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.
+                checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-        if (!Permissions.checkPermissionForGPS(getActivity()))
             return;
-
-        LocationManager service = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
-        boolean enabled = false;
-
-        if (service != null) {
-
-            enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
         }
 
+        if (Permissions.checkPermissionForGPS(getActivity())) {
 
-        if (!enabled) {
+            LocationManager service = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-            displayLocationSettingsRequest(getActivity());
+            boolean enabled = false;
+
+            if (service != null) {
+
+                enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            }
+
+
+            if (!enabled) {
+
+                displayLocationSettingsRequest(getActivity());
+            }
         }
     }
 
@@ -417,6 +460,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     private void updateCurrentLocation(LatLng latLng) {
 
+        if (latLng == mHarHabait) {
+            mListener.onUpdateSynagogues(latLng);
+            return;
+        }
         if (latLng == null || latLng.equals(lastLatLng)) return;
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -521,8 +568,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.
                 checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            //defaultLocation();
             return;
         }
+
         if (mGoogleApiClient == null)
             return;
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
@@ -531,7 +580,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         if (location != null) {
             updateCurrentLocation(new LatLng(location.getLatitude(), location.getLongitude()));
         } else {
-            startLocationUpdates();
+            if (!startLocationUpdates()&&(mCurrentlyRequestingLocationUpdates || mGoogleApiClient.isConnected() ))
+                defaultLocation();
         }
     }
 
@@ -576,17 +626,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         return true;
     }
 
-    protected void startLocationUpdates() {
+    protected boolean startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
+            return false;
         }
 
         if (mGoogleApiClient == null || !mGoogleApiClient.isConnected() || mCurrentlyRequestingLocationUpdates || searchMode)
-            return;
+            return false;
 
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         mCurrentlyRequestingLocationUpdates = true;
+        return true;
     }
 
     protected void stopLocationUpdates() {

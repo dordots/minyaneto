@@ -1,6 +1,5 @@
 package com.app.minyaneto_android.models.synagogue;
 
-import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.app.minyaneto_android.models.minyan.Minyan;
@@ -8,22 +7,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Synagogue implements Parcelable, Cloneable {
+public class Synagogue implements Cloneable , Serializable{
 
     public static final String TAG = Synagogue.class.getName();
-    public static final Creator<Synagogue> CREATOR = new Creator<Synagogue>() {
-        @Override
-        public Synagogue createFromParcel(Parcel source) {
-            return new Synagogue(source);
-        }
 
-        @Override
-        public Synagogue[] newArray(int size) {
-            return new Synagogue[size];
-        }
-    };
     @SerializedName("address")
     @Expose
     private String address;
@@ -66,22 +56,6 @@ public class Synagogue implements Parcelable, Cloneable {
 
     public Synagogue() {
         this.minyans = new ArrayList<>();
-    }
-
-    protected Synagogue(Parcel in) {
-        this.id = in.readString();
-        this.address = in.readString();
-        this.comments = in.readString();
-        this.name = in.readString();
-        this.nosach = in.readString();
-        this.distanceFromLocation = in.readDouble();
-        this.geo = in.readParcelable(Geo.class.getClassLoader());
-        this.classes = in.readByte() != 0;
-        this.parking = in.readByte() != 0;
-        this.seferTora = in.readByte() != 0;
-        this.wheelchairAccessible = in.readByte() != 0;
-        this.minyans = new ArrayList<>();
-        in.readList(this.minyans, Minyan.class.getClassLoader());
     }
 
     public String getMinyansAsString() {
@@ -195,27 +169,6 @@ public class Synagogue implements Parcelable, Cloneable {
 
     public void setDistanceFromLocation(double distanceFromLocation) {
         this.distanceFromLocation = distanceFromLocation;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.id);
-        dest.writeString(this.address);
-        dest.writeString(this.comments);
-        dest.writeString(this.name);
-        dest.writeString(this.nosach);
-        dest.writeDouble(this.distanceFromLocation);
-        dest.writeParcelable(this.geo, flags);
-        dest.writeByte(this.classes ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.parking ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.seferTora ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.wheelchairAccessible ? (byte) 1 : (byte) 0);
-        dest.writeList(this.minyans);
     }
 
     public void refreshData() {
