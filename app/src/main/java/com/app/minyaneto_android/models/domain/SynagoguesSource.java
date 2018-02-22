@@ -3,6 +3,8 @@ package com.app.minyaneto_android.models.domain;
 import android.util.Log;
 
 import com.app.minyaneto_android.data.DataTransformer;
+import com.app.minyaneto_android.data.SynagogueIdData;
+import com.app.minyaneto_android.data.SynagogueToServerData;
 import com.app.minyaneto_android.data.SynagoguesWrapperData;
 import com.app.minyaneto_android.restApi.ResponseListener;
 import com.app.minyaneto_android.restApi.SynagoguesRestAPI;
@@ -49,16 +51,23 @@ public class SynagoguesSource {
         api.getSynagoguesWrapperData(maxHits, center, radius).enqueue(callback);
     }
 
-    public SynagogueDomain getSynagogue(String id) throws IOException {
-        return cache.getSynagogue(id);
-    }
-
-    public void fetchSynagogues(int maxHits, LatLng location, int radiusInKm) throws IOException {
-        fetchSynagogues(maxHits, location, radiusInKm, new ResponseListener<List<SynagogueDomain>>() {
+    public void addSynagogue(SynagogueDomain synagogue, final ResponseListener<String> listener) {
+        Callback<SynagogueIdData> callback = new Callback<SynagogueIdData>() {
             @Override
-            public void onResponse(List<SynagogueDomain> response) {
-
+            public void onResponse(Call<SynagogueIdData> call, Response<SynagogueIdData> response) {
+                SynagogueIdData idData = response.body();
+                if (idData != null) {
+                    listener.onResponse(idData.getId());
+                }
             }
-        });
+
+            @Override
+            public void onFailure(Call<SynagogueIdData> call, Throwable t) {
+                Log.w(SynagoguesSource.class.getSimpleName(),
+                        "Couldn't add synagogue, an exception occurred:\n" + t.getMessage());
+            }
+        };
+        SynagogueToServerData toServer = transformer.transform(synagogue);
+        api.addSynagogue(toServer).enqueue(callback);
     }
 }

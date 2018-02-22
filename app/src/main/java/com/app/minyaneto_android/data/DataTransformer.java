@@ -17,7 +17,7 @@ import java.util.List;
 
 public class DataTransformer {
     public List<SynagogueDomain> transformSynagoguesDataList(List<SynagogueData> dataList) {
-        ArrayList<SynagogueDomain> synagogues = new ArrayList<>();
+        List<SynagogueDomain> synagogues = new ArrayList<>();
         for (SynagogueData data : dataList) {
             synagogues.add(transform(data));
         }
@@ -38,6 +38,14 @@ public class DataTransformer {
         return minyans;
     }
 
+    private List<MinyanScheduleData> transformMinyanToDataList(List<MinyanScheduleDomain> minyans) {
+        List<MinyanScheduleData> list = new ArrayList<>();
+        for (MinyanScheduleDomain minyan : minyans) {
+            list.add(transform(minyan));
+        }
+        return list;
+    }
+
     public SynagogueDomain transform(SynagogueData data) {
         return new SynagogueDomain(
                 data.getAddress(),
@@ -53,11 +61,33 @@ public class DataTransformer {
                 transform(data.getLatLngStringData()));
     }
 
+    public SynagogueToServerData transform(SynagogueDomain synagogue) {
+        LatLng latLng = synagogue.getLocation();
+        return new SynagogueToServerData(
+                synagogue.getAddress(),
+                synagogue.getClasses(),
+                synagogue.getComments(),
+                new LatLngDoubleData(latLng.latitude, latLng.longitude),
+                transformMinyanToDataList(synagogue.getMinyans()),
+                synagogue.getName(),
+                synagogue.getNosach(),
+                synagogue.getParking(),
+                synagogue.getSeferTora(),
+                synagogue.getWheelchairAccessible());
+    }
+
     private MinyanScheduleDomain transform(MinyanScheduleData data) {
         return new MinyanScheduleDomain(
                 DayOfWeek.valueOf(data.getWeekDay().toUpperCase()),
                 PrayType.getType(data.getPrayType()),
                 transformStringToTime(data.getStringTime()));
+    }
+
+    private MinyanScheduleData transform(MinyanScheduleDomain minyan) {
+        return new MinyanScheduleData(
+                minyan.getDayOfWeek().toString(),
+                minyan.getPrayType().toString(),
+                transformTimeToString(minyan.getPrayTime()));
     }
 
     private LatLng transform(LatLngStringData data) {
@@ -74,5 +104,14 @@ public class DataTransformer {
             return new PrayTime(new RelativeTime(RelativeTimeType.valueOf(parts[0]), Integer.parseInt(parts[1])));
         }
         throw new IllegalArgumentException("Couldn't transform time from data: " + stringTime);
+    }
+
+    private String transformTimeToString(PrayTime prayTime) {
+        if (prayTime.isRelative()) {
+            RelativeTime relativeTime = prayTime.getRelativeTime();
+            return relativeTime.getRelativeTimeType() + "#" + relativeTime.getOffset();
+        }
+        ExactTime exactTime = prayTime.getExactTime();
+        return exactTime.getHour() + ":" + exactTime.getMinutes();
     }
 }

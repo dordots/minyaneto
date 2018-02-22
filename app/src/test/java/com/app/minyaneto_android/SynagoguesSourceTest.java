@@ -21,7 +21,7 @@ public class SynagoguesSourceTest {
         SynagogueCache cache = mock(SynagogueCache.class);
         try {
             LatLng location = new LatLng(32, 34);
-            new SynagoguesSource(api, transformer, cache).fetchSynagogues(20, location, 3);
+            new SynagoguesSource(api, transformer, cache).fetchSynagogues(20, location, 3, null);
         } catch (Exception ignored) {
         }
         verify(api).getSynagoguesWrapperData(20, "32,34", "3km");
@@ -34,7 +34,7 @@ public class SynagoguesSourceTest {
         SynagogueCache cache = mock(SynagogueCache.class);
         try {
             LatLng location = new LatLng(32, 34);
-            new SynagoguesSource(api, transformer, cache).fetchSynagogues(20, location, 3);
+            new SynagoguesSource(api, transformer, cache).fetchSynagogues(20, location, 3, null);
         } catch (Exception ignored) {
         }
         verify(transformer).transformSynagoguesDataList(ArgumentMatchers.<SynagogueData>anyList());

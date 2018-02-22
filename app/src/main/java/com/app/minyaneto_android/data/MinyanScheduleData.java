@@ -4,18 +4,21 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class MinyanScheduleData {
-
     @SerializedName("day")
     @Expose
     private String weekDay;
-
     @SerializedName("name")
     @Expose
     private String prayType;
-
     @SerializedName("time")
     @Expose
     private String stringTime;
+
+    public MinyanScheduleData(String weekDay, String prayType, String stringTime) {
+        this.weekDay = weekDay;
+        this.prayType = prayType;
+        this.stringTime = stringTime;
+    }
 
     public String getWeekDay() {
         return weekDay;
