@@ -70,4 +70,20 @@ public class SynagoguesSource {
         SynagogueToServerData toServer = transformer.transform(synagogue);
         api.addSynagogue(toServer).enqueue(callback);
     }
+
+    public void updateSynagogue(SynagogueDomain synagogue) {
+        Callback<Void> callback = new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.w(SynagoguesSource.class.getSimpleName(),
+                        "Couldn't add synagogue, an exception occurred:\n" + t.getMessage());
+            }
+        };
+        SynagogueToServerData toServer = transformer.transform(synagogue);
+        api.updateSynagogue(synagogue.getId(), toServer).enqueue(callback);
+    }
 }
