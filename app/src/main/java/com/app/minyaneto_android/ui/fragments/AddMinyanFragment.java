@@ -35,7 +35,7 @@ import com.app.minyaneto_android.models.time.RelativeTime;
 import com.app.minyaneto_android.models.time.RelativeTimeType;
 import com.app.minyaneto_android.restApi.RequestHelper;
 import com.google.android.gms.maps.model.LatLng;
-import com.app.minyaneto_android.utilities.SynagogeUtils;
+import com.app.minyaneto_android.utilities.SynagogueUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -162,12 +162,12 @@ public class AddMinyanFragment extends Fragment {
 
         ArrayList<String> prayTypeNames=new ArrayList<>(PrayType.values().length);
         for(PrayType prayType :PrayType.values()){
-            prayTypeNames.add(SynagogeUtils.getTextFromEnum(getContext(),prayType));
+            prayTypeNames.add(SynagogueUtils.getTextFromEnum(getContext(),prayType));
         }
         spinnerPrayType.setAdapter(new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, prayTypeNames));
         ArrayList<String> relativeTimeTypeNames=new ArrayList<>(RelativeTimeType.values().length);
         for(RelativeTimeType relativeTimeType :RelativeTimeType.values()){
-            relativeTimeTypeNames.add(SynagogeUtils.getTextFromEnum(getContext(),relativeTimeType));
+            relativeTimeTypeNames.add(SynagogueUtils.getTextFromEnum(getContext(),relativeTimeType));
         }
         spinnerRelativeTimeType.setAdapter(new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, relativeTimeTypeNames));
     }

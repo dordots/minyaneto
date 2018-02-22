@@ -1,7 +1,5 @@
 package com.app.minyaneto_android.models.synagogue;
 
-import android.os.Parcelable;
-
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
@@ -10,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Synagogue implements Cloneable , Serializable{
+public class Synagogue implements Cloneable, Serializable {
 
     public static final String TAG = Synagogue.class.getName();
 

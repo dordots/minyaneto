@@ -3,18 +3,23 @@ package com.app.minyaneto_android.utilities;
 import android.content.Context;
 
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.models.minyan.PrayDayType;
 import com.app.minyaneto_android.models.minyan.PrayType;
 import com.app.minyaneto_android.models.time.RelativeTimeType;
 
-/**
- * Created by admin on 22/02/2018.
- */
+import java.time.DayOfWeek;
 
-public class SynagogeUtils {
+import static java.util.Calendar.FRIDAY;
+import static java.util.Calendar.MONDAY;
+import static java.util.Calendar.SATURDAY;
+import static java.util.Calendar.SUNDAY;
+import static java.util.Calendar.THURSDAY;
+import static java.util.Calendar.TUESDAY;
+import static java.util.Calendar.WEDNESDAY;
 
-    public static String getTextFromEnum(Context context, PrayType prayType){
-        switch (prayType){
+public class SynagogueUtils {
+
+    public static String getTextFromEnum(Context context, PrayType prayType) {
+        switch (prayType) {
             case MORNING:
                 return context.getResources().getString(R.string.pray_type_morning);
             case AFTER_NOON:
@@ -26,8 +31,8 @@ public class SynagogeUtils {
     }
 
 
-    public static String getTextFromEnum(Context context, PrayDayType prayDayType){
-        switch (prayDayType){
+    public static String getTextFromEnum(Context context, DayOfWeek prayDayType) {
+        switch (prayDayType.ordinal() + 1) {
             case SUNDAY:
                 return context.getResources().getString(R.string.pray_day_type_s);
             case MONDAY:
@@ -46,8 +51,8 @@ public class SynagogeUtils {
         return "";
     }
 
-    public static String getTextFromEnum(Context context, RelativeTimeType relativeTimeType){
-        switch (relativeTimeType){
+    public static String getTextFromEnum(Context context, RelativeTimeType relativeTimeType) {
+        switch (relativeTimeType) {
             case DAWN:
                 return context.getResources().getString(R.string.relative_time_dawn);
             case SUNSET:
