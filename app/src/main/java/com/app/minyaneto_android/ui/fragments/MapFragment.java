@@ -46,7 +46,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -335,6 +334,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void defaultLocation() {
+        if(mCurrentlyRequestingLocationUpdates)
+            return;
         updateCurrentLocation(mHarHabait);
         searchModeLinearLayout.setVisibility(View.VISIBLE);
         searchModeExitImageButton.setVisibility(View.GONE);
