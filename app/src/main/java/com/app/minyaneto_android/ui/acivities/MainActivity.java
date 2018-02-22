@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,7 +20,6 @@ import com.app.minyaneto_android.models.domain.SynagogueCache;
 import com.app.minyaneto_android.models.domain.SynagogueDomain;
 import com.app.minyaneto_android.models.domain.SynagoguesSource;
 import com.app.minyaneto_android.models.minyan.PrayType;
-import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.app.minyaneto_android.models.time.TimeUtility;
 import com.app.minyaneto_android.restApi.ResponseListener;
 import com.app.minyaneto_android.restApi.RestAPIUtility;
@@ -174,18 +172,13 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onAddSynagogue(Synagogue synagogue) {
-        mFragmentHelper.replaceFragment(R.id.MA_main_container, SynagogueDetailsFragment.newInstance(synagogue.getId()), SynagogueDetailsFragment.TAG, SynagogueDetailsFragment.TAG);
+    public void onAddSynagogue(String id) {
+        showSynagogueDetails(id);
     }
-
 
     @Override
     public void onShowSynagogueDetails(String id) {
-        try {
-            SynagogueDomain synagogue = synagoguesSource.getSynagogue(id);
-            mFragmentHelper.replaceFragment(R.id.MA_main_container, SynagogueDetailsFragment.newInstance(synagogue.getId()), SynagogueDetailsFragment.TAG, SynagogueDetailsFragment.TAG);
-        } catch (IOException ignored) {
-        }
+        showSynagogueDetails(id);
     }
 
     @Override
@@ -364,7 +357,6 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-
     private void closeWithDoubleClick() {
 
         if (doubleBackToExitPressedOnce) {
@@ -372,8 +364,7 @@ public class MainActivity extends AppCompatActivity implements
 
             try {
                 super.onBackPressed();
-            } catch (Exception ex) {
-
+            } catch (Exception ignored) {
             }
             Intent intent = new Intent(Intent.ACTION_MAIN);
 
@@ -423,15 +414,16 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        if(null != mapFragment)
-               mapFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (null != mapFragment)
+            mapFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if(null != mapFragment)
+        if (null != mapFragment)
             mapFragment.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -471,26 +463,23 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-
     @Override
     public void onSearch(String address, LatLng latLngCenter, Date date, PrayType prayType, String nosach) {
-
         mFragmentHelper.replaceFragment(R.id.MA_container, synagoguesFragment, SynagoguesFragment.TAG, null);
-
         isShowSynagoguesFragment = true;
-
-
         mapFragment.startSearchMode(address);
         if (null != mapFragment) {
             updateSynagogues(latLngCenter, date, prayType, nosach);
-
         }
     }
 
     @Override
     public void onErrorResponse(Result<ErrorData> error) {
         // TODO: 2/12/2018  add error dialog David
-
         Toast.makeText(this, "Try again", Toast.LENGTH_SHORT).show();
+    }
+
+    private void showSynagogueDetails(String id) {
+        mFragmentHelper.replaceFragment(R.id.MA_main_container, SynagogueDetailsFragment.newInstance(id), SynagogueDetailsFragment.TAG, SynagogueDetailsFragment.TAG);
     }
 }

@@ -21,24 +21,19 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.models.domain.MinyanScheduleDomain;
 import com.app.minyaneto_android.models.domain.SynagogueCache;
 import com.app.minyaneto_android.models.domain.SynagogueDomain;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.minyan.PrayDayType;
 import com.app.minyaneto_android.models.minyan.PrayType;
-import com.app.minyaneto_android.models.synagogue.Geo;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.app.minyaneto_android.models.time.ExactTime;
-import com.app.minyaneto_android.models.time.PrayTime;
 import com.app.minyaneto_android.models.time.RelativeTime;
 import com.app.minyaneto_android.models.time.RelativeTimeType;
 import com.app.minyaneto_android.restApi.RequestHelper;
-import com.google.android.gms.maps.model.LatLng;
 import com.app.minyaneto_android.utilities.SynagogueUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import ravtech.co.il.httpclient.ErrorResponse;
 import ravtech.co.il.httpclient.model.ErrorData;
@@ -69,47 +64,8 @@ public class AddMinyanFragment extends Fragment {
 
     public static AddMinyanFragment newInstance(String id) {
         SynagogueDomain synagogue = SynagogueCache.getInstance().getSynagogue(id);
-        mSynagogue = toOldModel(synagogue);
+        mSynagogue = SynagogueUtils.toOldModel(synagogue);
         return new AddMinyanFragment();
-    }
-
-    private static Synagogue toOldModel(SynagogueDomain synagogue) {
-        Synagogue result = new Synagogue();
-        result.setAddress(synagogue.getAddress());
-        result.setClasses(synagogue.getClasses());
-        result.setComments(synagogue.getComments());
-        LatLng latLng = synagogue.getLocation();
-        result.setGeo(new Geo(latLng.latitude, latLng.longitude));
-        result.setId(synagogue.getId());
-        result.setMinyans(toOldModel(synagogue.getMinyans()));
-        result.setName(synagogue.getName());
-        result.setNosach(synagogue.getNosach());
-        result.setParking(synagogue.getParking());
-        result.setSeferTora(synagogue.getSeferTora());
-        result.setWheelchairAccessible(synagogue.getWheelchairAccessible());
-        return result;
-    }
-
-    private static ArrayList<Minyan> toOldModel(List<MinyanScheduleDomain> minyans) {
-        ArrayList<Minyan> list = new ArrayList<>();
-        for (MinyanScheduleDomain minyan :
-                minyans) {
-            Minyan item = new Minyan();
-            item.setDay(minyan.getDayOfWeek().name());
-            item.setName(minyan.getPrayType().name());
-            PrayTime time = minyan.getPrayTime();
-            String strTime;
-            if (time.isRelative()) {
-                RelativeTime relativeTime = time.getRelativeTime();
-                strTime = relativeTime.getRelativeTimeType().name() + ":" + relativeTime.getOffset();
-            } else {
-                ExactTime exactTime = time.getExactTime();
-                strTime = exactTime.getHour() + ":" + exactTime.getMinutes();
-            }
-            item.setTime(strTime);
-            list.add(item);
-        }
-        return list;
     }
 
     @Override

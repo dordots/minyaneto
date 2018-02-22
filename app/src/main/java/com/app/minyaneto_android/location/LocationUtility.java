@@ -1,14 +1,11 @@
 package com.app.minyaneto_android.location;
 
-import android.location.Location;
-
 import com.app.minyaneto_android.models.domain.SynagogueDomain;
 import com.google.android.gms.maps.model.LatLng;
 
 public class LocationUtility {
     public static long getDistance(SynagogueDomain synagogue) {
-        Location curLocation = LocationRepository.getInstance().getLastKnownLocation();
-        LatLng latLng = new LatLng(curLocation.getLatitude(), curLocation.getLongitude());
+        LatLng latLng = LocationRepository.getInstance().getLastKnownLatLng();
         return calculateDistance(synagogue.getLocation(), latLng);
     }
 
