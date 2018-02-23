@@ -15,14 +15,15 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.android.volley.Response;
 import com.app.minyaneto_android.R;
+import com.app.minyaneto_android.data.DataTransformer;
 import com.app.minyaneto_android.location.LocationRepository;
 import com.app.minyaneto_android.models.domain.MinyanScheduleDomain;
+import com.app.minyaneto_android.models.domain.SynagogueCache;
 import com.app.minyaneto_android.models.domain.SynagogueDomain;
-import com.app.minyaneto_android.models.synagogue.Synagogue;
-import com.app.minyaneto_android.restApi.RequestHelper;
-import com.app.minyaneto_android.utilities.SynagogueUtils;
+import com.app.minyaneto_android.models.domain.SynagoguesSource;
+import com.app.minyaneto_android.restApi.ResponseListener;
+import com.app.minyaneto_android.restApi.RestAPIUtility;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -31,10 +32,6 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Collections;
-
-import ravtech.co.il.httpclient.ErrorResponse;
-import ravtech.co.il.httpclient.model.ErrorData;
-import ravtech.co.il.httpclient.model.Result;
 
 
 public class AddSynagogueFragment extends Fragment implements View.OnClickListener {
@@ -132,19 +129,14 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
                 LocationRepository.getInstance().getLastKnownLatLng()
         );
 
-        RequestHelper.addSynagogue(getContext(), SynagogueUtils.toOldModel(s), new Response.Listener<Synagogue>() {
+        SynagoguesSource source = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(), new DataTransformer(), SynagogueCache.getInstance());
+        source.addSynagogue(s, new ResponseListener<String>() {
             @Override
-            public void onResponse(Synagogue response) {
+            public void onResponse(String response) {
                 Toast.makeText(getContext(), getContext().getResources().getString(R.string.seccess_add_synagogue), Toast.LENGTH_SHORT).show();
-                String id = response.getId();
-                mListener.onAddSynagogue(id);
+                mListener.onAddSynagogue(response);
             }
-        }, new ErrorResponse(new ErrorResponse.ErrorListener() {
-            @Override
-            public void onErrorResponse(Result<ErrorData> error) {
-                Toast.makeText(getContext(), getContext().getResources().getString(R.string.no_seccess) + "\n" + error.getData().getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }));
+        });
     }
 
 

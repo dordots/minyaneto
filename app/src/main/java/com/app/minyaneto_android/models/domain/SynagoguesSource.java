@@ -5,6 +5,7 @@ import android.util.Log;
 import com.app.minyaneto_android.data.DataTransformer;
 import com.app.minyaneto_android.data.SynagogueIdData;
 import com.app.minyaneto_android.data.SynagogueToServerData;
+import com.app.minyaneto_android.data.SynagogueWrapperData;
 import com.app.minyaneto_android.data.SynagoguesWrapperData;
 import com.app.minyaneto_android.restApi.ResponseListener;
 import com.app.minyaneto_android.restApi.SynagoguesRestAPI;
@@ -57,7 +58,23 @@ public class SynagoguesSource {
             public void onResponse(Call<SynagogueIdData> call, Response<SynagogueIdData> response) {
                 SynagogueIdData idData = response.body();
                 if (idData != null) {
-                    listener.onResponse(idData.getId());
+                    String id = idData.getId();
+                    api.getSynagogue(id).enqueue(new Callback<SynagogueWrapperData>() {
+                        @Override
+                        public void onResponse(Call<SynagogueWrapperData> call, Response<SynagogueWrapperData> response) {
+                            SynagogueWrapperData data = response.body();
+                            if (data != null) {
+                                SynagogueDomain synagogue = transformer.transform(data.getSynagogue());
+                                cache.putSynagogue(synagogue);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<SynagogueWrapperData> call, Throwable t) {
+
+                        }
+                    });
+                    listener.onResponse(id);
                 }
             }
 
