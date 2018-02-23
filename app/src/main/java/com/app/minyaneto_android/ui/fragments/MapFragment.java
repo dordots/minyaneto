@@ -11,20 +11,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.location.LocationRepository;
 import com.app.minyaneto_android.models.domain.SynagogueDomain;
-import com.app.minyaneto_android.models.minyan.Minyan;
-import com.app.minyaneto_android.models.time.DateUtility;
 import com.app.minyaneto_android.utilities.Permissions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -51,9 +47,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 
@@ -273,7 +266,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-        if(null != searchModeLinearLayout){
+        if (null != searchModeLinearLayout) {
             searchModeLinearLayout.setVisibility(View.GONE);
         }
         mMap = googleMap;
@@ -308,7 +301,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
                 LatLng pos = mMap.getCameraPosition().target;
 
-                if (lastLatLng!=null &&calculateDistance(lastLatLng, pos) > MAX_DISTANCE_FROM_LAST_LOCATION) {
+                if (lastLatLng != null && calculateDistance(lastLatLng, pos) > MAX_DISTANCE_FROM_LAST_LOCATION) {
 
                     lastLatLng = pos;
 
@@ -496,22 +489,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             Marker m = mMap.addMarker(new MarkerOptions().position(
                     synagogue.getLocation())
                     .title(synagogue.getName() + " - " + synagogue.getNosach())
-//                    .snippet(synagogue.getMinyans().size() > 0 ? format.format(getCurrentMinyan(synagogue.getMinyans())) : "")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
             synagoguesMarkers.add(m);
         }
 
-    }
-
-    private Date getCurrentMinyan(ArrayList<Minyan> minyans) {
-        Collections.sort(minyans, new Comparator<Minyan>() {
-            public int compare(Minyan minyan1, Minyan minyan2) {
-                Date date1 = DateUtility.getDate(minyan1);
-                Date date2 = DateUtility.getDate(minyan2);
-                return date1.compareTo(date2);
-            }
-        });
-        return DateUtility.getDate(minyans.get(0));
     }
 
     private long calculateDistance(LatLng location1, LatLng location2) {
@@ -578,7 +559,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         if (location != null) {
             updateCurrentLocation(new LatLng(location.getLatitude(), location.getLongitude()));
         } else {
-            if (!startLocationUpdates()&&(mCurrentlyRequestingLocationUpdates || mGoogleApiClient.isConnected() ))
+            if (!startLocationUpdates() && (mCurrentlyRequestingLocationUpdates || mGoogleApiClient.isConnected()))
                 defaultLocation();
         }
     }

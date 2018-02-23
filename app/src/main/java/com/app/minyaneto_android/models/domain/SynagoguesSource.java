@@ -88,10 +88,11 @@ public class SynagoguesSource {
         api.addSynagogue(toServer).enqueue(callback);
     }
 
-    public void updateSynagogue(SynagogueDomain synagogue) {
+    public void updateSynagogue(SynagogueDomain synagogue, final ResponseListener<Void> listener) {
         Callback<Void> callback = new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
+                listener.onResponse(response.body());
             }
 
             @Override

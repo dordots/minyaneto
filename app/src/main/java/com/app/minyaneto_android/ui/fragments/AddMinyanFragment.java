@@ -3,6 +3,7 @@ package com.app.minyaneto_android.ui.fragments;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -19,30 +20,28 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.android.volley.Response;
 import com.app.minyaneto_android.R;
+import com.app.minyaneto_android.data.DataTransformer;
+import com.app.minyaneto_android.models.domain.MinyanScheduleDomain;
 import com.app.minyaneto_android.models.domain.SynagogueCache;
 import com.app.minyaneto_android.models.domain.SynagogueDomain;
-import com.app.minyaneto_android.models.minyan.Minyan;
-import com.app.minyaneto_android.models.minyan.PrayDayType;
+import com.app.minyaneto_android.models.domain.SynagoguesSource;
 import com.app.minyaneto_android.models.minyan.PrayType;
-import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.app.minyaneto_android.models.time.ExactTime;
+import com.app.minyaneto_android.models.time.PrayTime;
 import com.app.minyaneto_android.models.time.RelativeTime;
 import com.app.minyaneto_android.models.time.RelativeTimeType;
-import com.app.minyaneto_android.restApi.RequestHelper;
+import com.app.minyaneto_android.restApi.ResponseListener;
+import com.app.minyaneto_android.restApi.RestAPIUtility;
 import com.app.minyaneto_android.utilities.SynagogueUtils;
 
+import java.time.DayOfWeek;
 import java.util.ArrayList;
-
-import ravtech.co.il.httpclient.ErrorResponse;
-import ravtech.co.il.httpclient.model.ErrorData;
-import ravtech.co.il.httpclient.model.Result;
 
 public class AddMinyanFragment extends Fragment {
 
     public static final String TAG = AddMinyanFragment.class.getSimpleName();
-    private static Synagogue mSynagogue;
+    private static SynagogueDomain mSynagogue;
     boolean inRelativeTimeMode;
     private Spinner spinnerPrayType;
     private EditText etMinutes;
@@ -54,7 +53,7 @@ public class AddMinyanFragment extends Fragment {
     private CheckBox cbWednesday;
     private CheckBox cbThursday;
     private CheckBox cbFriday;
-    private CheckBox cbSaterday;
+    private CheckBox cbSaturday;
     private LinearLayout linearLayoutRelativeTime;
     private AddMinyanListener mListener;
 
@@ -63,8 +62,7 @@ public class AddMinyanFragment extends Fragment {
     }
 
     public static AddMinyanFragment newInstance(String id) {
-        SynagogueDomain synagogue = SynagogueCache.getInstance().getSynagogue(id);
-        mSynagogue = SynagogueUtils.toOldModel(synagogue);
+        mSynagogue = SynagogueCache.getInstance().getSynagogue(id);
         return new AddMinyanFragment();
     }
 
@@ -80,8 +78,8 @@ public class AddMinyanFragment extends Fragment {
         cbWednesday = view.findViewById(R.id.add_minyan_wednesday);
         cbThursday = view.findViewById(R.id.add_minyan_thursday);
         cbFriday = view.findViewById(R.id.add_minyan_friday);
-        cbSaterday = view.findViewById(R.id.add_minyan_saterday);
-        Button btnAddMinyn = view.findViewById(R.id.add_minyan_btn);
+        cbSaturday = view.findViewById(R.id.add_minyan_saterday);
+        Button btnAddMinyan = view.findViewById(R.id.add_minyan_btn);
         timePicker = view.findViewById(R.id.timePicker);
         linearLayoutRelativeTime = view.findViewById(R.id.liner_layout_relative_time);
 
@@ -109,21 +107,21 @@ public class AddMinyanFragment extends Fragment {
             }
         });
         ((RadioButton) view.findViewById(R.id.add_minyan_exact_time)).setChecked(true);
-        btnAddMinyn.setOnClickListener(new View.OnClickListener() {
+        btnAddMinyan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addMinyan();
             }
         });
 
-        ArrayList<String> prayTypeNames=new ArrayList<>(PrayType.values().length);
-        for(PrayType prayType :PrayType.values()){
-            prayTypeNames.add(SynagogueUtils.getTextFromEnum(getContext(),prayType));
+        ArrayList<String> prayTypeNames = new ArrayList<>(PrayType.values().length);
+        for (PrayType prayType : PrayType.values()) {
+            prayTypeNames.add(SynagogueUtils.getTextFromEnum(getContext(), prayType));
         }
         spinnerPrayType.setAdapter(new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, prayTypeNames));
-        ArrayList<String> relativeTimeTypeNames=new ArrayList<>(RelativeTimeType.values().length);
-        for(RelativeTimeType relativeTimeType :RelativeTimeType.values()){
-            relativeTimeTypeNames.add(SynagogueUtils.getTextFromEnum(getContext(),relativeTimeType));
+        ArrayList<String> relativeTimeTypeNames = new ArrayList<>(RelativeTimeType.values().length);
+        for (RelativeTimeType relativeTimeType : RelativeTimeType.values()) {
+            relativeTimeTypeNames.add(SynagogueUtils.getTextFromEnum(getContext(), relativeTimeType));
         }
         spinnerRelativeTimeType.setAdapter(new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, relativeTimeTypeNames));
     }
@@ -136,62 +134,39 @@ public class AddMinyanFragment extends Fragment {
                 return;
             }
         }
-        ArrayList<PrayDayType> days = new ArrayList<>();
+        PrayType prayType = PrayType.values()[spinnerPrayType.getSelectedItemPosition()];
+        PrayTime time = getPrayTime();
 
         if (cbSunday.isChecked()) {
-            days.add(PrayDayType.SUNDAY);
+            mSynagogue.addMinyan(new MinyanScheduleDomain(DayOfWeek.valueOf("SUNDAY"), prayType, time));
         }
         if (cbMonday.isChecked()) {
-            days.add(PrayDayType.MONDAY);
+            mSynagogue.addMinyan(new MinyanScheduleDomain(DayOfWeek.valueOf("MONDAY"), prayType, time));
         }
         if (cbTuesday.isChecked()) {
-            days.add(PrayDayType.TUESDAY);
+            mSynagogue.addMinyan(new MinyanScheduleDomain(DayOfWeek.valueOf("TUESDAY"), prayType, time));
         }
         if (cbWednesday.isChecked()) {
-            days.add(PrayDayType.WEDNESDAY);
+            mSynagogue.addMinyan(new MinyanScheduleDomain(DayOfWeek.valueOf("WEDNESDAY"), prayType, time));
         }
         if (cbThursday.isChecked()) {
-            days.add(PrayDayType.THURSDAY);
+            mSynagogue.addMinyan(new MinyanScheduleDomain(DayOfWeek.valueOf("THURSDAY"), prayType, time));
         }
         if (cbFriday.isChecked()) {
-            days.add(PrayDayType.FRIDAY);
+            mSynagogue.addMinyan(new MinyanScheduleDomain(DayOfWeek.valueOf("FRIDAY"), prayType, time));
         }
-        if (cbSaterday.isChecked()) {
-            days.add(PrayDayType.SATURDAY);
-        }
-
-        for (PrayDayType day : days) {
-            Minyan minyan = new Minyan();
-            if (inRelativeTimeMode) {
-                minyan.setRelativeTime(new RelativeTime(
-                        (RelativeTimeType) spinnerRelativeTimeType.getSelectedItem(),
-                        Integer.parseInt(etMinutes.getText().toString())));
-            } else {
-                if (Build.VERSION.SDK_INT >= 23) {
-                    minyan.setExactTime(new ExactTime(timePicker.getHour(), timePicker.getMinute()));
-                } else {
-                    minyan.setExactTime(new ExactTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute()));
-                }
-            }
-            minyan.setPrayType(PrayType.values()[spinnerPrayType.getSelectedItemPosition()]);
-            minyan.setPrayDayType(day);
-            mSynagogue.addMinyan(minyan);
+        if (cbSaturday.isChecked()) {
+            mSynagogue.addMinyan(new MinyanScheduleDomain(DayOfWeek.valueOf("SATURDAY"), prayType, time));
         }
 
-        RequestHelper.updateSynagogue(getContext(), mSynagogue.getId(), mSynagogue, new Response.Listener<String>() {
+        SynagoguesSource source = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(), new DataTransformer(), SynagogueCache.getInstance());
+        source.updateSynagogue(mSynagogue, new ResponseListener<Void>() {
             @Override
-            public void onResponse(String response) { //response = null
-                //TODO some message to user?
+            public void onResponse(Void response) {
                 Toast.makeText(getContext(), getContext().getResources().getString(R.string.seccess_add_minyan), Toast.LENGTH_SHORT).show();
                 getActivity().onBackPressed();
             }
-        }, new ErrorResponse(new ErrorResponse.ErrorListener() {
-            @Override
-            public void onErrorResponse(Result<ErrorData> error) {
-                //error.getData().getMessage();
-                Toast.makeText(getContext(), getContext().getResources().getString(R.string.no_seccess), Toast.LENGTH_SHORT).show();
-            }
-        }));
+        });
     }
 
     @Override
@@ -219,16 +194,26 @@ public class AddMinyanFragment extends Fragment {
         }
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
-
         mListener.onSetActionBarTitle(getResources().getString(R.string.sidebar_addMinyan));
     }
 
-    public interface AddMinyanListener {
+    @NonNull
+    private PrayTime getPrayTime() {
+        PrayTime time;
+        if (inRelativeTimeMode) time = new PrayTime(new RelativeTime(
+                (RelativeTimeType) spinnerRelativeTimeType.getSelectedItem(),
+                Integer.parseInt(etMinutes.getText().toString())));
+        else if (Build.VERSION.SDK_INT >= 23)
+            time = new PrayTime(new ExactTime(timePicker.getHour(), timePicker.getMinute()));
+        else
+            time = new PrayTime(new ExactTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute()));
+        return time;
+    }
 
+    public interface AddMinyanListener {
         void onSetActionBarTitle(String title);
     }
 }

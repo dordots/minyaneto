@@ -84,4 +84,8 @@ public class SynagogueDomain {
     public LatLng getLocation() {
         return location;
     }
+
+    public void addMinyan(MinyanScheduleDomain minyan) {
+        minyans.add(minyan);
+    }
 }
