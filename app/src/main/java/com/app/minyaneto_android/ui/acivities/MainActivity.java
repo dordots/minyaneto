@@ -43,10 +43,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import ravtech.co.il.httpclient.ErrorResponse;
-import ravtech.co.il.httpclient.model.ErrorData;
-import ravtech.co.il.httpclient.model.Result;
-
 import static com.app.minyaneto_android.Config.DEFAULT_RADIUS_IN_KM;
 import static com.app.minyaneto_android.Config.MAX_HITS_PER_REQUEST;
 
@@ -62,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements
         AddMinyanFragment.AddMinyanListener,
         SearchMinyanFragment.SearchListener,
         ZmanimFragment.ZmanimListener,
-        SearchSynagogueFragment.SearchListener, ErrorResponse.ErrorListener {
+        SearchSynagogueFragment.SearchListener {
 
     public MapFragment mapFragment;
     public SynagoguesFragment synagoguesFragment;
@@ -471,12 +467,6 @@ public class MainActivity extends AppCompatActivity implements
         if (null != mapFragment) {
             updateSynagogues(latLngCenter, date, prayType, nosach);
         }
-    }
-
-    @Override
-    public void onErrorResponse(Result<ErrorData> error) {
-        // TODO: 2/12/2018  add error dialog David
-        Toast.makeText(this, "Try again", Toast.LENGTH_SHORT).show();
     }
 
     private void showSynagogueDetails(String id) {
