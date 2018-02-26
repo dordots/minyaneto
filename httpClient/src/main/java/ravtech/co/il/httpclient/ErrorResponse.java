@@ -5,8 +5,6 @@ import android.util.Log;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.annotations.Expose;
 import com.google.gson.reflect.TypeToken;
 
 import java.nio.charset.StandardCharsets;
@@ -33,12 +31,13 @@ public class ErrorResponse implements Response.ErrorListener {
     @Override
     public void onErrorResponse(final VolleyError error) {
 
-        Result<ErrorData> errorDataResult = new Result<>();;
+        Result<ErrorData> errorDataResult = new Result<>();
+        ;
 
         if (error.networkResponse != null) {
             try {
 
-                Log.d(TAG , new String(error.networkResponse.data, StandardCharsets.UTF_8));
+                Log.d(TAG, new String(error.networkResponse.data, StandardCharsets.UTF_8));
 
                 errorDataResult = new Gson().fromJson(new String(error.networkResponse.data, StandardCharsets.UTF_8),
                         new TypeToken<Result<ErrorData>>() {
@@ -63,7 +62,7 @@ public class ErrorResponse implements Response.ErrorListener {
 
                 e.printStackTrace();
             }
-        }else {
+        } else {
 
             errorDataResult.setErrors(error.getMessage());
 

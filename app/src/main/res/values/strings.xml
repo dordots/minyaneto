@@ -119,10 +119,12 @@
 
     <!-- Fragments' Names -->
     <string name="about_fragment">אודות</string>
-    <string name="add_minyan_fragment">הוספת מניין</string>
+    <string name="search_synagogue_fragment">חיפוש בית כנסת</string>
+    <string name="search_minyan_fragment">חיפוש מניין</string>
     <string name="add_synagogue_fragment">הוספת בית כנסת</string>
     <string name="main_screen_fragment">מניינטו</string>
     <string name="synagogue_details_fragment">פרטי בית כנסת</string>
+    <string name="add_minyan_fragment">הוספת מניין</string>
 
 
     <string name="title_activity_maps">Map</string>
@@ -145,18 +147,17 @@
     <string name="camera_permission_toast">Camera permission needed. Please allow in App Settings for additional functionality.</string>
 
     <!-- Alerts -->
-    <string name="no_internet_connection">No internet connection</string>
+    <string name="no_internet_connection">אין חיבור לאינטרנט</string>
     <string name="message_alert_no_interner">For this action internet required</string>
-    <string name="open_internet_settings">Settings</string>
+    <string name="open_internet_settings">הגדרות</string>
     <string name="select_settings" />
-    <string name="cancel">Cancel</string>
+    <string name="cancel">ביטול</string>
     <string name="close_app">Close App</string>
     <string name="prmission" />
-    <string name="ok">OK</string>
+    <string name="ok">אישור</string>
     <string name="no_gps_connection" />
     <string name="message_alert_no_gps">For use with this app the GPS is required</string>
     <string name="no_address">כתובת לא חוקית</string>
-    <string name="search_synagogue_fragment">חיפוש בית כנסת</string>
     <string name="enter_your_address">כתובת</string>
     <string name="check_search">יש למלא את השדות לפני ביצוע החיפוש</string>
     <string name="search_by_nosach">חפש לפי נוסח</string>
@@ -166,4 +167,13 @@
     <string name="choose_a_time">בחר זמן ביום</string>
     <string name="choose_name_synagogue">תפילת</string>
     <string name="sidebar_searchMinyan">חפש מניין</string>
+    <string name="attention_alert">שים לב שקיימים בתי כנסת בסביבה</string>
+    <string name="searchModeMsg">חיפוש: </string>
+    <string name="no_synagogues_found">לא נמצאו בתי כנסת.</string>
+    <string name="no_seccess">ההוספה לא הצליחה. נסה שוב</string>
+    <string name="seccess_add_synagogue">בית הכנסת נוסף בהצלחה</string>
+    <string name="no_minyans_found_for_time">לא נמצאו מניינים בסביבה נכון לשעת החיפוש</string>
+    <string name="no_minyans_found">לא נמצאו מניינים קרובים</string>
+    <string name="seccess_add_minyan">המניין/ים נוסף/ו בהצלחה.</string>
+    <string name="default_location">חיפוש באזור הכותל המערבי</string>
 </resources>

@@ -1,6 +1,0 @@
-<resources>
-    <declare-styleable name="DynamicHeightRatioLayout">
-        <attr name="navHeight" format="dimension" />
-        <attr name="navColor" format="color" />
-    </declare-styleable>
-</resources>

@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
@@ -34,6 +36,7 @@ public class SynagoguesFragment extends Fragment {
     private SynagogueAdapter mAdapter;
 
     private View mProgress;
+    private TextView mError;
 
 
     public static SynagoguesFragment newInstance() {
@@ -81,7 +84,7 @@ public class SynagoguesFragment extends Fragment {
         mSynagoguesView.setAdapter(mAdapter);
 
         mProgress = view.findViewById(R.id.FS_progress);
-
+        mError = view.findViewById(R.id.FS_error);
 
     }
 
@@ -110,19 +113,18 @@ public class SynagoguesFragment extends Fragment {
 
     }
 
-    public void updateSynagogues(ArrayList<Synagogue> synagogues) {
-
+    public void updateSynagogues(ArrayList<Synagogue> synagogues,String msg) {
         mSynagogues.clear();
-
-        mSynagogues.addAll(synagogues);
-
+        if (synagogues.size() == 0){
+            mError.setVisibility(View.VISIBLE);
+            mError.setText(msg);
+        }else {
+            mError.setVisibility(View.GONE);
+            mSynagogues.addAll(synagogues);
+        }
         mProgress.setVisibility(View.GONE);
-
         updateAdapter();
-
     }
-
-
 
 
     public void scrollToSynagoguePosition(int position) {
@@ -135,8 +137,10 @@ public class SynagoguesFragment extends Fragment {
 
         sortSynagoguesByLocation();
 
-        mListener.onUpdateMarkers(mSynagogues);
+        if (mListener != null) {
 
+            mListener.onUpdateMarkers(mSynagogues);
+        }
         mAdapter.setMyClickListener(new SynagogueAdapter.SynagogueClickListener() {
             @Override
             public void onItemClick(int position) {

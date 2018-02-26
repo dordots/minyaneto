@@ -26,16 +26,12 @@ public class SearchSynagogueFragment extends Fragment implements
         View.OnClickListener {
 
     private final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
-
     public static final String TAG = SearchSynagogueFragment.class.getSimpleName();
 
-    private SearchListener mListener;
-
     EditText etSearchAddress;
-
     Button btnSearchSynagogue;
-
-    LatLng mLatLng;
+    private SearchListener mListener;
+    private Place mPlace;
 
     public static SearchSynagogueFragment getInstance() {
 
@@ -53,22 +49,17 @@ public class SearchSynagogueFragment extends Fragment implements
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         etSearchAddress = view.findViewById(R.id.search_synagogue_address);
-
         btnSearchSynagogue = view.findViewById(R.id.search_synagogue_btn_search);
-
         etSearchAddress.setOnClickListener(this);
-
         btnSearchSynagogue.setOnClickListener(this);
-
     }
 
     private void getAddress() {
 
         try {
 
-            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(getActivity());
+            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).zzim(etSearchAddress.getText().toString()).build(getActivity());
 
             startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
 
@@ -78,49 +69,33 @@ public class SearchSynagogueFragment extends Fragment implements
 
     }
 
-    public void updateLatLng(LatLng latLng) {
-
-        mLatLng = latLng;
-
-    }
-
     private void searchSynagogues() {
-
         if (etSearchAddress.getText().toString().equals("")) {
             Toast.makeText(getContext(), getResources().getString(R.string.check_search), Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (mListener != null) {
-
-            mListener.onSearchSynagogue(mLatLng);
+            mListener.onUpdateMarker(mPlace);
+            LatLng latLng = mPlace.getLatLng();
+            mListener.onSearchSynagogue(etSearchAddress.getText().toString(), latLng);
         }
     }
 
     public void updateSynagogueAddress(String address) {
-
         etSearchAddress.setText(address);
-
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
-
-            if (resultCode == Activity.RESULT_OK) {
-
-                Place place = PlacePicker.getPlace(getActivity(), data);
-
-                updateSynagogueAddress(place.getAddress().toString());
-
-                mListener.onUpdateMarker(place);
-
-                updateLatLng(place.getLatLng());
-
+        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            mPlace = PlacePicker.getPlace(getActivity(), data);
+            if (mListener != null) {
+                mListener.onUpdateMarker(mPlace);
             }
+            updateSynagogueAddress(mPlace.getAddress().toString());
         }
     }
 
@@ -144,27 +119,19 @@ public class SearchSynagogueFragment extends Fragment implements
 
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
-
             case R.id.search_synagogue_btn_search:
-
                 searchSynagogues();
-
                 break;
-
             case R.id.search_synagogue_address:
-
                 getAddress();
-
                 break;
         }
     }
 
-
     public interface SearchListener {
 
-        void onSearchSynagogue(LatLng latLng);
+        void onSearchSynagogue(String address, LatLng latLng);
 
         void onSetActionBarTitle(String title);
 

@@ -1,46 +1,43 @@
 package com.app.minyaneto_android.zmanim;
 
-import android.arch.lifecycle.Observer;
 import android.location.Location;
-import android.support.annotation.Nullable;
-
-import com.app.minyaneto_android.location.LocationProvider;
 
 import net.sourceforge.zmanim.ComplexZmanimCalendar;
 import net.sourceforge.zmanim.util.GeoLocation;
 
+import java.util.TimeZone;
+
 public class ZmanimPresenter implements ZmanimContract.UserActionsListener {
 
     private final ZmanimCalendarProvider zmanimCalendarProvider;
-    private final LocationProvider locationProvider;
+    private final Location location;
     private final ZmanimContract.View zmanimView;
+    private final TimeZone timeZone;
 
     public ZmanimPresenter(ZmanimCalendarProvider zmanimCalendarProvider,
-                           LocationProvider locationProvider,
-                           ZmanimContract.View zmanimView) {
+                           Location location,
+                           TimeZone timeZone, ZmanimContract.View zmanimView) {
         this.zmanimCalendarProvider = zmanimCalendarProvider;
-        this.locationProvider = locationProvider;
+        this.location = location;
+        this.timeZone = timeZone;
         this.zmanimView = zmanimView;
     }
 
     @Override
     public void showZmanim() {
-        locationProvider.getLocation().observeForever(new Observer<Location>() {
-            @Override
-            public void onChanged(@Nullable Location location) {
-                if (location != null) {
-                    ComplexZmanimCalendar czc = getCzc(location);
-                    displayZmanim(czc);
-                }
-            }
-        });
+        if (location != null) {
+            ComplexZmanimCalendar czc = getCzc(location, timeZone);
+            displayZmanim(czc);
+        } else {
+            zmanimView.displayNoLocationFound();
+        }
     }
 
-    private ComplexZmanimCalendar getCzc(Location location) {
+    private ComplexZmanimCalendar getCzc(Location location, TimeZone timeZone) {
         GeoLocation geoLocation = new GeoLocation("",
                 location.getLatitude(),
                 location.getLongitude(),
-                locationProvider.getTimeZone());
+                timeZone);
         if (location.hasAltitude()) {
             geoLocation.setElevation(location.getAltitude());
         }

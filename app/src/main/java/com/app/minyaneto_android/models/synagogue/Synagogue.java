@@ -1,6 +1,5 @@
 package com.app.minyaneto_android.models.synagogue;
 
-import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.app.minyaneto_android.models.minyan.Minyan;
@@ -8,23 +7,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Closeable;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Synagogue implements Parcelable ,Cloneable{
+public class Synagogue implements Cloneable , Serializable{
 
     public static final String TAG = Synagogue.class.getName();
-    public static final Creator<Synagogue> CREATOR = new Creator<Synagogue>() {
-        @Override
-        public Synagogue createFromParcel(Parcel source) {
-            return new Synagogue(source);
-        }
 
-        @Override
-        public Synagogue[] newArray(int size) {
-            return new Synagogue[size];
-        }
-    };
     @SerializedName("address")
     @Expose
     private String address;
@@ -38,7 +27,7 @@ public class Synagogue implements Parcelable ,Cloneable{
     @Expose
     private Geo geo;
     @SerializedName("id")
-    @Expose
+    @Expose(serialize = false)
     private String id;
     @SerializedName("minyans")
     @Expose
@@ -58,28 +47,15 @@ public class Synagogue implements Parcelable ,Cloneable{
     @SerializedName("wheelchair-accessible")
     @Expose
     private Boolean wheelchairAccessible;
+    @Expose(serialize = false)
     private double distanceFromLocation;
+    @Expose(serialize = false)
     private LatLng latLng;
+    @Expose(serialize = false)
     private String minyansAsString;
 
     public Synagogue() {
-        this.minyans = new ArrayList<Minyan>();
-    }
-
-    protected Synagogue(Parcel in) {
-        this.id = in.readString();
-        this.address = in.readString();
-        this.comments = in.readString();
-        this.name = in.readString();
-        this.nosach = in.readString();
-        this.distanceFromLocation = in.readDouble();
-        this.geo = in.readParcelable(Geo.class.getClassLoader());
-        this.classes = in.readByte() != 0;
-        this.parking = in.readByte() != 0;
-        this.seferTora = in.readByte() != 0;
-        this.wheelchairAccessible = in.readByte() != 0;
-        this.minyans = new ArrayList<Minyan>();
-        in.readList(this.minyans, Minyan.class.getClassLoader());
+        this.minyans = new ArrayList<>();
     }
 
     public String getMinyansAsString() {
@@ -115,15 +91,15 @@ public class Synagogue implements Parcelable ,Cloneable{
     }
 
     public LatLng getGeo() {
+
         return latLng;
     }
 
     public void setGeo(Geo geo) {
         this.geo = geo;
         try {
-            latLng = new LatLng(Double.parseDouble(geo.getLat()), Double.parseDouble(geo.getLon()));
-        } catch (Exception ex) {
-
+            latLng = new LatLng(geo.getLat(), geo.getLon());
+        } catch (Exception ignored) {
         }
     }
 
@@ -140,7 +116,7 @@ public class Synagogue implements Parcelable ,Cloneable{
     }
 
     public void setMinyans(ArrayList<Minyan> minyans) {
-        this.minyans =minyans;
+        this.minyans = minyans;
     }
 
     public String getName() {
@@ -195,30 +171,9 @@ public class Synagogue implements Parcelable ,Cloneable{
         this.distanceFromLocation = distanceFromLocation;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.id);
-        dest.writeString(this.address);
-        dest.writeString(this.comments);
-        dest.writeString(this.name);
-        dest.writeString(this.nosach);
-        dest.writeDouble(this.distanceFromLocation);
-        dest.writeParcelable(this.geo, flags);
-        dest.writeByte(this.classes ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.parking ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.seferTora ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.wheelchairAccessible ? (byte) 1 : (byte) 0);
-        dest.writeList(this.minyans);
-    }
-
     public void refreshData() {
         try {
-            latLng = new LatLng(Double.parseDouble(geo.getLat()), Double.parseDouble(geo.getLon()));
+            latLng = new LatLng(geo.getLat(), geo.getLon());
         } catch (Exception e) {
             e.printStackTrace();
         }

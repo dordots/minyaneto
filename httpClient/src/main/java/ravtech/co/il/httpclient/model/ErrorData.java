@@ -6,8 +6,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by maytav on 9/5/2016.
  */
-public class ErrorData
-{
+public class ErrorData {
 
     @SerializedName("name")
     @Expose
@@ -26,90 +25,70 @@ public class ErrorData
     private String type;
 
     /**
-     *
-     * @return
-     * The name
+     * @return The name
      */
     public String getName() {
         return name;
     }
 
     /**
-     *
-     * @param name
-     * The name
+     * @param name The name
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     *
-     * @return
-     * The message
+     * @return The message
      */
     public String getMessage() {
         return message;
     }
 
     /**
-     *
-     * @param message
-     * The message
+     * @param message The message
      */
     public void setMessage(String message) {
         this.message = message;
     }
 
     /**
-     *
-     * @return
-     * The code
+     * @return The code
      */
     public Integer getCode() {
         return code;
     }
 
     /**
-     *
-     * @param code
-     * The code
+     * @param code The code
      */
     public void setCode(Integer code) {
         this.code = code;
     }
 
     /**
-     *
-     * @return
-     * The status
+     * @return The status
      */
     public Integer getStatus() {
         return status;
     }
 
     /**
-     *
-     * @param status
-     * The status
+     * @param status The status
      */
     public void setStatus(Integer status) {
         this.status = status;
     }
 
     /**
-     *
-     * @return
-     * The type
+     * @return The type
      */
     public String getType() {
         return type;
     }
 
     /**
-     *
-     * @param type
-     * The type
+     * @param type The type
      */
     public void setType(String type) {
         this.type = type;

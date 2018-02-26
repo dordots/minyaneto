@@ -1,18 +1,16 @@
-
 package ravtech.co.il.httpclient.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Result<T>
-{
+public class Result<T> {
 
     @SerializedName("success")
     @Expose
     private Boolean success;
-    @SerializedName("data")
+    @SerializedName("message")
     @Expose
-    private T data ;
+    private T data;
     @SerializedName("error_code")
     @Expose
     private Integer errorCode;
@@ -29,49 +27,39 @@ public class Result<T>
     }
 
     /**
-     * 
-     * @return
-     *     The data
+     * @return The data
      */
-    public T getData()
-    {
+    public T getData() {
         return data;
     }
 
     /**
-     * 
-     * @param data
-     *     The data
+     * @param data The data
      */
-    public void setData(T data)
-    {
+    public void setData(T data) {
         this.data = data;
     }
 
 
-    public Integer getErrorCode()
-    {
+    public Integer getErrorCode() {
 
         return errorCode;
     }
 
 
-    public void setErrorCode(Integer errorCode)
-    {
+    public void setErrorCode(Integer errorCode) {
 
         this.errorCode = errorCode;
     }
 
 
-    public String getErrors()
-    {
+    public String getErrors() {
 
         return errors;
     }
 
 
-    public void setErrors(String errors)
-    {
+    public void setErrors(String errors) {
 
         this.errors = errors;
     }

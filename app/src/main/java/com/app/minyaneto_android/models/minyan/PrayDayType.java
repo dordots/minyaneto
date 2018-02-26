@@ -13,6 +13,9 @@ public enum PrayDayType {
     }
 
     public static PrayDayType getType(String str) throws Exception {
+        if (null == str) {
+            return SUNDAY;
+        }
         switch (str) {
             case "sunday":
             case "ראשון":
@@ -35,7 +38,7 @@ public enum PrayDayType {
             case "saturday":
             case "שבת":
                 return SATURDAY;
-            default:
+            default:  //TODO fix it!!!!!!!!!!!!!!!!!!!!!!!
                 return THURSDAY; //TODO return the right value for spacial cases like -rosh-hodesh..
         }
     }

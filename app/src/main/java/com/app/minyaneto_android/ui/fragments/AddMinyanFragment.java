@@ -29,6 +29,7 @@ import com.app.minyaneto_android.models.time.ExactTime;
 import com.app.minyaneto_android.models.time.RelativeTime;
 import com.app.minyaneto_android.models.time.RelativeTimeType;
 import com.app.minyaneto_android.restApi.RequestHelper;
+import com.app.minyaneto_android.utilities.SynagogeUtils;
 
 import java.util.ArrayList;
 
@@ -113,26 +114,24 @@ public class AddMinyanFragment extends Fragment {
             }
         });
 
-        spinnerRelativeTimeType.setAdapter(new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, RelativeTimeType.values()));
-        spinnerPrayType.setAdapter(new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, PrayType.values()));
+        ArrayList<String> prayTypeNames=new ArrayList<>(PrayType.values().length);
+        for(PrayType prayType :PrayType.values()){
+            prayTypeNames.add(SynagogeUtils.getTextFromEnum(getContext(),prayType));
+        }
+        spinnerPrayType.setAdapter(new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, prayTypeNames));
+        ArrayList<String> relativeTimeTypeNames=new ArrayList<>(RelativeTimeType.values().length);
+        for(RelativeTimeType relativeTimeType :RelativeTimeType.values()){
+            relativeTimeTypeNames.add(SynagogeUtils.getTextFromEnum(getContext(),relativeTimeType));
+        }
+        spinnerRelativeTimeType.setAdapter(new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, relativeTimeTypeNames));
     }
 
 
     private void addMinyan() {
-        Minyan minyan = new Minyan();
         if (inRelativeTimeMode) {
             if (etMinutes.getText().toString().equals("")) {
                 Toast.makeText(getContext(), getResources().getString(R.string.check), Toast.LENGTH_SHORT).show();
                 return;
-            }
-            minyan.setRelativeTime(new RelativeTime(
-                    (RelativeTimeType) spinnerRelativeTimeType.getSelectedItem(),
-                    Integer.parseInt(etMinutes.getText().toString())));
-        } else {
-            if (Build.VERSION.SDK_INT >= 23) {
-                minyan.setExactTime(new ExactTime(timePicker.getHour(), timePicker.getMinute()));
-            } else {
-                minyan.setExactTime(new ExactTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute()));
             }
         }
         ArrayList<PrayDayType> days = new ArrayList<>();
@@ -159,9 +158,20 @@ public class AddMinyanFragment extends Fragment {
             days.add(PrayDayType.SATURDAY);
         }
 
-        minyan.setPrayType((PrayType) spinnerPrayType.getSelectedItem());
-        minyan.setPrayDayType(days.get(0));
         for (PrayDayType day : days) {
+            Minyan minyan = new Minyan();
+            if (inRelativeTimeMode) {
+                minyan.setRelativeTime(new RelativeTime(
+                        (RelativeTimeType) spinnerRelativeTimeType.getSelectedItem(),
+                        Integer.parseInt(etMinutes.getText().toString())));
+            } else {
+                if (Build.VERSION.SDK_INT >= 23) {
+                    minyan.setExactTime(new ExactTime(timePicker.getHour(), timePicker.getMinute()));
+                } else {
+                    minyan.setExactTime(new ExactTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute()));
+                }
+            }
+            minyan.setPrayType(PrayType.values()[spinnerPrayType.getSelectedItemPosition()]);
             minyan.setPrayDayType(day);
             mSynagogue.addMinyan(minyan);
         }
@@ -170,12 +180,14 @@ public class AddMinyanFragment extends Fragment {
             @Override
             public void onResponse(String response) { //response = null
                 //TODO some message to user?
+                Toast.makeText(getContext(), getContext().getResources().getString(R.string.seccess_add_minyan), Toast.LENGTH_SHORT).show();
                 getActivity().onBackPressed();
             }
         }, new ErrorResponse(new ErrorResponse.ErrorListener() {
             @Override
             public void onErrorResponse(Result<ErrorData> error) {
-                error.getData().getMessage();
+                //error.getData().getMessage();
+                Toast.makeText(getContext(), getContext().getResources().getString(R.string.no_seccess), Toast.LENGTH_SHORT).show();
             }
         }));
     }
@@ -201,7 +213,7 @@ public class AddMinyanFragment extends Fragment {
             mListener = (AddMinyanListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnSynagoguesListener");
+                    + " must implement AddMinyanListener");
         }
     }
 
@@ -210,7 +222,7 @@ public class AddMinyanFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        mListener.onSetActionBarTitle(getResources().getString(R.string.about_fragment));
+        mListener.onSetActionBarTitle(getResources().getString(R.string.sidebar_addMinyan));
     }
 
     public interface AddMinyanListener {

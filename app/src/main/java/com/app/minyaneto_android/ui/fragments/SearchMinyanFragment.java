@@ -45,33 +45,21 @@ public class SearchMinyanFragment extends Fragment implements
 
     public static final String TAG = SearchMinyanFragment.class.getSimpleName();
 
-    private SearchListener mListener;
-
     EditText etSearchAddress;
-
     Spinner spinnerNosachSynagogue;
-
     Spinner spinnerNameTfila;
-
     CheckBox cbSearchByNosach;
-
     LinearLayout choose_nosach;
-
     Button btnChooseADate;
-
     Button btnChooseATime;
-
     Button btnSearchSynagogue;
-
-    LatLng mLatLng;
-
+    private SearchListener mListener;
     Date date;
+    private Place mPlace;
 
     public static SearchMinyanFragment getInstance() {
-
         return new SearchMinyanFragment();
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,7 +89,6 @@ public class SearchMinyanFragment extends Fragment implements
         btnChooseATime = view.findViewById(R.id.search_choose_time);
 
         btnSearchSynagogue = view.findViewById(R.id.search_minyan_btn_search);
-
 
         etSearchAddress.setOnClickListener(this);
 
@@ -143,7 +130,7 @@ public class SearchMinyanFragment extends Fragment implements
 
         try {
 
-            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(getActivity());
+            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).zzim(etSearchAddress.getText().toString()).build(getActivity());
 
             startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
 
@@ -153,15 +140,9 @@ public class SearchMinyanFragment extends Fragment implements
 
     }
 
-    public void updateLatLng(LatLng latLng) {
-
-        mLatLng = latLng;
-
-    }
-
     private void searchSynagogues() {
 
-        if (etSearchAddress.getText().toString().equals("") || null == mLatLng ||
+        if (etSearchAddress.getText().toString().equals("") || null == mPlace ||
                 btnChooseADate.getText() == getString(R.string.choose_a_date) ||
                 btnChooseATime.getText() == getString(R.string.choose_a_time)) {
             Toast.makeText(getContext(), getResources().getString(R.string.check_search), Toast.LENGTH_SHORT).show();
@@ -176,8 +157,9 @@ public class SearchMinyanFragment extends Fragment implements
         PrayType prayType = PrayType.values()[spinnerNameTfila.getSelectedItemPosition()];
 
         if (mListener != null) {
-
-            mListener.onSearch(mLatLng, date, prayType, nosach);
+            mListener.onUpdateMarker(mPlace);
+            LatLng latLng = mPlace.getLatLng();
+            mListener.onSearch(etSearchAddress.getText().toString(), latLng, date, prayType, nosach);
         }
     }
 
@@ -189,22 +171,14 @@ public class SearchMinyanFragment extends Fragment implements
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
-
-            if (resultCode == Activity.RESULT_OK) {
-
-                Place place = PlacePicker.getPlace(getActivity(), data);
-
-                updateSynagogueAddress(place.getAddress().toString());
-
-                mListener.onUpdateMarker(place);
-
-                updateLatLng(place.getLatLng());
-
+        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            mPlace = PlacePicker.getPlace(getActivity(), data);
+            if (mListener != null) {
+                mListener.onUpdateMarker(mPlace);
             }
+            updateSynagogueAddress(mPlace.getAddress().toString());
         }
     }
 
@@ -212,7 +186,7 @@ public class SearchMinyanFragment extends Fragment implements
     public void onResume() {
         super.onResume();
 
-        mListener.onSetActionBarTitle(getResources().getString(R.string.search_synagogue_fragment));
+        mListener.onSetActionBarTitle(getResources().getString(R.string.search_minyan_fragment));
     }
 
     @Override
@@ -222,7 +196,7 @@ public class SearchMinyanFragment extends Fragment implements
             mListener = (SearchListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnSynagoguesListener");
+                    + " must implement SearchListener");
         }
     }
 
@@ -303,7 +277,7 @@ public class SearchMinyanFragment extends Fragment implements
 
     public interface SearchListener {
 
-        void onSearch(LatLng latLng, Date date, PrayType prayType, String nosach);
+        void onSearch(String address, LatLng latLng, Date date, PrayType prayType, String nosach);
 
         void onSetActionBarTitle(String title);
 

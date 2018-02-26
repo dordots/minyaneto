@@ -7,9 +7,10 @@ import com.app.minyaneto_android.models.time.RelativeTimeType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Minyan {
+public class Minyan  implements Serializable {
 
     @SerializedName("day")
     @Expose
@@ -55,6 +56,7 @@ public class Minyan {
     private void setPrayType(String name) {
         try {
             prayType = PrayType.getType(name);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -66,8 +68,21 @@ public class Minyan {
 
     public void setPrayType(PrayType prayType) {
         this.prayType = prayType;
-    }
+        switch (prayType) {
+            case MORNING:
+                day = "shacharit";
+                break;
+            case AFTER_NOON:
+                day = "mincha";
+                break;
+            case EVENING:
+                day = "maariv";
+                break;
+            default:
+                day = "shacharit"; //TODO: fix it !!!!!!!!!!!!!!!!!!
+        }
 
+    }
     public void setTime(String stringTime) {
         this.stringTime = stringTime;
         String[] parts;
@@ -86,6 +101,33 @@ public class Minyan {
 
     public void setPrayDayType(PrayDayType prayDayType) {
         this.prayDayType = prayDayType;
+        switch (prayDayType) {
+            case SUNDAY:
+                day= "sunday";
+                break;
+            case MONDAY:
+                day= "monday";
+                break;
+            case TUESDAY:
+                day= "tuesday";
+                break;
+            case WEDNESDAY :
+                day= "wednesday";
+                break;
+            case THURSDAY :
+                day= "thursday";
+                break;
+            case FRIDAY :
+                day= "friday";
+                break;
+            case SATURDAY :
+                day= "saturday";
+                break;
+            default:  //TODO fix it!!!!!!!!!!!!!!!!!!!!!!!
+                day= "sunday";//TODO return the right value for spacial cases like -rosh-hodesh..
+                break;
+        }
+
     }
 
     public Date getLastUpdate() {

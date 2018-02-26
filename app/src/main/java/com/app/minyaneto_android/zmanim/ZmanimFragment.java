@@ -2,6 +2,7 @@ package com.app.minyaneto_android.zmanim;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,11 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.app.minyaneto_android.Injection;
 import com.app.minyaneto_android.R;
+import com.app.minyaneto_android.location.LocationRepository;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class ZmanimFragment extends Fragment implements ZmanimContract.View {
 
@@ -26,22 +29,24 @@ public class ZmanimFragment extends Fragment implements ZmanimContract.View {
     private ZmanimContract.UserActionsListener listener;
     private SimpleDateFormat formatter;
     private ContentAdapter adapter;
+    private ZmanimListener mListener;
 
     public ZmanimFragment() {
-        formatter = new SimpleDateFormat("HH:mm");
+        formatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        listener = new ZmanimPresenter(Injection.getZmanimCalendarProvider(),
-                Injection.getLocationProvider(getContext()),
-                this);
+        Location location = LocationRepository.getInstance().getLastKnownLocation();
+        listener = new ZmanimPresenter(new ZmanimCalendarProvider(), location, TimeZone.getDefault(), this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        mListener.onSetActionBarTitle(getResources().getString(R.string.zmanim_fragment));
+
         listener.showZmanim();
     }
 
@@ -84,6 +89,11 @@ public class ZmanimFragment extends Fragment implements ZmanimContract.View {
     @Override
     public void displayTzaisHakochavim(Date zman) {
         displayZmanInPosition(zman, 4);
+    }
+
+    @Override
+    public void displayNoLocationFound() {
+
     }
 
     private void displayZmanInPosition(Date zman, int position) {
@@ -133,6 +143,30 @@ public class ZmanimFragment extends Fragment implements ZmanimContract.View {
         public int getItemCount() {
             return zmanim.length;
         }
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof ZmanimListener) {
+            mListener = (ZmanimListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement ZmanimListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener.onSetActionBarTitle(null);
+        mListener = null;
+    }
+
+
+    public interface ZmanimListener {
+        void onSetActionBarTitle(String title);
     }
 
 }

@@ -11,11 +11,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.minyaneto_android.R;
+import com.app.minyaneto_android.location.LocationRepository;
 import com.app.minyaneto_android.directions.FetchUrl;
 import com.app.minyaneto_android.directions.RouteListener;
 import com.app.minyaneto_android.models.minyan.Minyan;
@@ -48,6 +54,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -71,14 +79,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private static final int MAX_DISTANCE_FROM_LAST_LOCATION = 2000;
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
     // Location updates intervals in sec
-    private static final int UPDATE_INTERVAL = 10000; // 10 sec
-    private static final int FATEST_INTERVAL = 5000; // 5 sec
-    private static final int DISPLACEMENT = 10; // 10 meters
-    LatLngBounds latLngBounds;
-    private Location mLastLocation;
+    private static final int UPDATE_INTERVAL = 60000; // 10 sec
+    private static final int FATEST_INTERVAL = 10000; // 5 sec
+    private static final int DISPLACEMENT = 100; // 10 meters
+    private final LatLng mHarHabait = new LatLng(31.7780628, 35.2353691);
     private GoogleApiClient mGoogleApiClient;
     // boolean flag to toggle periodic location updates
-    private boolean mRequestingLocationUpdates = false;
+    private boolean mCurrentlyRequestingLocationUpdates = false;
     private LocationRequest mLocationRequest;
     private GoogleMap mMap;
     private List<Marker> synagoguesMarkers;
@@ -88,6 +95,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     public SupportMapFragment mMapFragment;
     private Marker mAddSynagogueMarker;
     private Polyline mRoutePolyline;
+    private LinearLayout searchModeLinearLayout;
+    private TextView searchModeTextView;
+    private ImageButton searchModeExitImageButton;
+    private boolean searchMode = false;
 
     public static MapFragment newInstance() {
 
@@ -113,8 +124,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_map, container, false);
+        searchModeLinearLayout = view.findViewById(R.id.map_search_mode_linearlayout_fragment_map);
+        searchModeExitImageButton = view.findViewById(R.id.exit_search_mode_fragment_map);
+        searchModeTextView = view.findViewById(R.id.search_message_fragment_map);
 
-        init();
+        searchModeExitImageButton.setOnClickListener(this);
+
+        initMap();
 
         return view;
     }
@@ -134,20 +150,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     public void onRefreshMap() {
 
         mMapFragment.getMapAsync(this);
-
+        searchModeLinearLayout.setVisibility(View.GONE);
+        searchMode = false;
     }
 
-    public LatLng[] onGetBounds() {
-        LatLng[] latLngs = new LatLng[2];
-
-        latLngBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
-        latLngs[0] = latLngBounds.northeast;
-        latLngs[1] = latLngBounds.southwest;
-        return latLngs;
-    }
-
-
-    private void init() {
+    private void initMap() {
 
         mMapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.FM_map);
 
@@ -193,6 +200,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
 
         moveCamera(latLng);
+    }
+
+    public void startSearchMode(String msg) {
+        searchMode = true;
+        searchModeLinearLayout.setVisibility(View.VISIBLE);
+        searchModeExitImageButton.setVisibility(View.VISIBLE);
+
+        searchModeTextView.setText(getString(R.string.searchModeMsg) + msg);
+        stopLocationUpdates();
+    }
+
+    public void stopSearchMode() {
+        searchMode = false;
+        searchModeLinearLayout.setVisibility(View.GONE);
+        startLocationUpdates();
     }
 
     public void updateMarker(Place place) {
@@ -264,12 +286,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         super.onResume();
 
         checkPlayServices();
-
-        // Resuming the periodic location updates
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && mRequestingLocationUpdates) {
-            startLocationUpdates();
-        }
-
+        startLocationUpdates();
     }
 
     @Override
@@ -294,6 +311,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
+        if(null != searchModeLinearLayout){
+            searchModeLinearLayout.setVisibility(View.GONE);
+        }
         mMap = googleMap;
 
         mMap.setOnMarkerClickListener(this);
@@ -326,11 +346,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
                 LatLng pos = mMap.getCameraPosition().target;
 
-                if (calculateDistance(lastLatLng, pos) > MAX_DISTANCE_FROM_LAST_LOCATION) {
+                if (lastLatLng!=null &&calculateDistance(lastLatLng, pos) > MAX_DISTANCE_FROM_LAST_LOCATION) {
 
                     lastLatLng = pos;
 
-                    //updateSynagogues(pos);
+                    // mListener.onUpdateSynagogues(lastLatLng);
                 }
             }
 
@@ -340,58 +360,86 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (requestCode == PERMISSIONS_REQUEST_RESOLUTION_REQUIRED) {
-
             if (resultCode != 0) {
-
                 onRefreshMap();
-
             } else {
-
-                LatLng myLoc = new LatLng(31.7780628, 35.2353691);
-
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLoc, 15));
-
-                updateCurrentLocation(myLoc);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mHarHabait, 15));
+                defaultLocation();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    private void defaultLocation() {
+        updateCurrentLocation(mHarHabait);
+        searchModeLinearLayout.setVisibility(View.VISIBLE);
+        searchModeExitImageButton.setVisibility(View.GONE);
+        searchModeTextView.setText(getContext().getString(R.string.default_location));
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
+            case PERMISSIONS_REQUEST_RESOLUTION_REQUIRED: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    handleLocationSetting();
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
             case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
 
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     handleLocationSetting();
+                } else {
+                    defaultLocation();
                 }
 
                 break;
             }
+
+
+            // other 'case' lines to check for other
+            // permissions this app might request.
         }
     }
 
     private void handleLocationSetting() {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.
+                checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-        if (!Permissions.checkPermissionForGPS(getActivity()))
             return;
-
-        LocationManager service = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
-        boolean enabled = false;
-
-        if (service != null) {
-
-            enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
         }
 
+        if (Permissions.checkPermissionForGPS(getActivity())) {
 
-        if (!enabled) {
+            LocationManager service = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-            displayLocationSettingsRequest(getActivity());
+            boolean enabled = false;
+
+            if (service != null) {
+
+                enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            }
+
+
+            if (!enabled) {
+
+                displayLocationSettingsRequest(getActivity());
+            }
         }
     }
 
@@ -447,25 +495,29 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         });
     }
 
-    private void updateCurrentLocation(LatLng mLocation) {
+    private void updateCurrentLocation(LatLng latLng) {
 
-        if (mLocation == null || mLocation.equals(lastLatLng)) return;
+        if (latLng == mHarHabait) {
+            mListener.onUpdateSynagogues(latLng);
+            return;
+        }
+        if (latLng == null || latLng.equals(lastLatLng)) return;
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(mLocation)      // Sets the center of the map to Mountain View
+                .target(latLng)      // Sets the center of the map to Mountain View
                 .zoom(15)                   // Sets the zoom
                 // .bearing(90)                // Sets the orientation of the camera to east
                 .tilt(30)                   // Sets the tilt of the camera to 30 degrees
                 .build();                   // Creates a CameraPosition from the builder
 
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        mMap.addMarker(new MarkerOptions().position(mLocation));
+        mMap.addMarker(new MarkerOptions().position(latLng));
 
         enableMyLocationIcon();
 
-        lastLatLng = mLocation;
+        lastLatLng = latLng;
 
-        mListener.onUpdateSynagogues(mLocation);
+        mListener.onUpdateSynagogues(latLng);
     }
 
     public void updateMarkers(ArrayList<Synagogue> synagogues) {
@@ -479,10 +531,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         for (Synagogue synagogue : synagogues) {
 
+            synagogue.refreshData();
             Marker m = mMap.addMarker(new MarkerOptions().position(
                     synagogue.getGeo())
                     .title(synagogue.getName() + " - " + synagogue.getNosach())
-                    //.snippet(synagogue.getMinyans().size() > 0 ? format.format(getCurrentMinyan(synagogue.getMinyans())) : "")
+//                    .snippet(synagogue.getMinyans().size() > 0 ? format.format(getCurrentMinyan(synagogue.getMinyans())) : "")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
             synagoguesMarkers.add(m);
         }
@@ -492,12 +545,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private Date getCurrentMinyan(ArrayList<Minyan> minyans) {
         Collections.sort(minyans, new Comparator<Minyan>() {
             public int compare(Minyan minyan1, Minyan minyan2) {
-                Date date1 = DateUtility.getDate(minyan1, getContext());
-                Date date2 = DateUtility.getDate(minyan2, getContext());
+                Date date1 = DateUtility.getDate(minyan1);
+                Date date2 = DateUtility.getDate(minyan2);
                 return date1.compareTo(date2);
             }
         });
-        return DateUtility.getDate(minyans.get(0), getContext());
+        return DateUtility.getDate(minyans.get(0));
     }
 
     private long calculateDistance(LatLng location1, LatLng location2) {
@@ -547,30 +600,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
-    /**
-     * Method to display the location on UI
-     */
     private void displayLocation() {
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.
                 checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            //defaultLocation();
             return;
         }
+
         if (mGoogleApiClient == null)
             return;
-        mLastLocation = LocationServices.FusedLocationApi
-                .getLastLocation(mGoogleApiClient);
+        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        LocationRepository.getInstance().setLastKnownLocation(location);
 
-        if (mLastLocation != null) {
-            double latitude = mLastLocation.getLatitude();
-            double longitude = mLastLocation.getLongitude();
-            updateCurrentLocation(new LatLng(latitude, longitude));
-            mRequestingLocationUpdates = false;
-
+        if (location != null) {
+            updateCurrentLocation(new LatLng(location.getLatitude(), location.getLongitude()));
         } else {
-            mRequestingLocationUpdates = true;
-            startLocationUpdates();
+            if (!startLocationUpdates()&&(mCurrentlyRequestingLocationUpdates || mGoogleApiClient.isConnected() ))
+                defaultLocation();
         }
     }
 
@@ -615,38 +663,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         return true;
     }
 
-    /**
-     * Starting the location updates
-     */
-    protected void startLocationUpdates() {
-
+    protected boolean startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
+            return false;
         }
 
-        if (mGoogleApiClient == null || !mGoogleApiClient.isConnected())
-            return;
+        if (mGoogleApiClient == null || !mGoogleApiClient.isConnected() || mCurrentlyRequestingLocationUpdates || searchMode)
+            return false;
 
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-
+        mCurrentlyRequestingLocationUpdates = true;
+        return true;
     }
 
-    /**
-     * Stopping location updates
-     */
     protected void stopLocationUpdates() {
-
-        if (mGoogleApiClient == null || !mGoogleApiClient.isConnected())
+        if (mGoogleApiClient == null || !mGoogleApiClient.isConnected() || !mCurrentlyRequestingLocationUpdates)
             return;
-
-        LocationServices.FusedLocationApi.removeLocationUpdates(
-                mGoogleApiClient, this);
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        mCurrentlyRequestingLocationUpdates = false;
     }
 
-    /**
-     * Google api callback methods
-     */
     @Override
     public void onConnectionFailed(ConnectionResult result) {
 
@@ -654,35 +691,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onConnected(Bundle arg0) {
-
-        // Once connected with google api, get the location
-        displayLocation();
-
-        if (mRequestingLocationUpdates) {
-
-            startLocationUpdates();
-        }
+        //displayLocation();
+        startLocationUpdates();
     }
 
     @Override
     public void onConnectionSuspended(int arg0) {
-
         mGoogleApiClient.connect();
     }
 
     @Override
     public void onLocationChanged(Location location) {
-
-        // Assign the new location
-        mLastLocation = location;
-
-        // Displaying the new location on UI
+        LocationRepository.getInstance().setLastKnownLocation(location);
         displayLocation();
-    }
-
-    public Location getLastLocation() {
-
-        return mLastLocation;
     }
 
     public void moveCamera(LatLng lng) {
@@ -707,5 +728,34 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         for (Marker m : synagoguesMarkers) {
             m.setVisible(isVisible);
         }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+
+            case R.id.exit_search_mode_fragment_map:
+
+                exitSearchMode();
+
+                break;
+        }
+
+    }
+
+    private void exitSearchMode() {
+        searchMode = false;
+        startLocationUpdates();
+        searchModeLinearLayout.setVisibility(View.GONE);
+        onRefreshMap();
+    }
+
+    public interface OnFragmentInteractionListener {
+
+        void onUpdateSynagogues(LatLng latLng);
+
+        void onMarkerClick(int position);
+
+        void onMapLongClick(LatLng latLng);
     }
 }

@@ -39,6 +39,11 @@ public class FragmentHelper {
 
         if (mActivityRunning.isRunning()) {
 
+            if(fragment.isAdded())
+            {
+                return;
+            }
+
             FragmentTransaction fragmentTransaction =
                     this.mFragmentActivity.getSupportFragmentManager().beginTransaction();
 
@@ -64,6 +69,11 @@ public class FragmentHelper {
 
         if (mActivityRunning.isRunning()) {
 
+            if(fragment.isAdded())
+            {
+                return;
+            }
+
             FragmentTransaction fragmentTransaction =
                     this.mFragmentActivity.getSupportFragmentManager().beginTransaction();
 
@@ -84,6 +94,11 @@ public class FragmentHelper {
                                 String tagToBackStack) {
 
         if (mActivityRunning.isRunning()) {
+
+            if(fragment.isAdded())
+            {
+                return;
+            }
 
             FragmentTransaction fragmentTransaction =
                     this.mFragmentActivity.getSupportFragmentManager().beginTransaction();

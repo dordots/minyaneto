@@ -1,6 +1,5 @@
 package com.app.minyaneto_android.ui.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,10 +7,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.location.AndroidLocationProvider;
+import com.app.minyaneto_android.location.LocationRepository;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.time.ExactTime;
 import com.app.minyaneto_android.models.time.TimeUtility;
+import com.app.minyaneto_android.utilities.SynagogeUtils;
 
 import java.util.List;
 import java.util.Locale;
@@ -19,11 +19,9 @@ import java.util.Locale;
 public class MinyanAdapter extends RecyclerView.Adapter<MinyanAdapter.MinyanViewHolder> {
 
     private List<Minyan> minyans;
-    private Context context;
 
-    public MinyanAdapter(List<Minyan> minyans, Context context) {
+    public MinyanAdapter(List<Minyan> minyans) {
         this.minyans = minyans;
-        this.context = context;
     }
 
     @Override
@@ -41,12 +39,13 @@ public class MinyanAdapter extends RecyclerView.Adapter<MinyanAdapter.MinyanView
     @Override
     public void onBindViewHolder(MinyanViewHolder holder, int position) {
         Minyan minyan = minyans.get(position);
-        holder.prayTypeTextView.setText(minyan.getPrayType().name());
+        holder.prayTypeTextView.setText(SynagogeUtils.getTextFromEnum(holder.prayTypeTextView.getContext(),minyan.getPrayType()));
         ExactTime time = TimeUtility.extractSpecificTime(
                 minyan.getPrayTime(),
-                new AndroidLocationProvider(context).getLocation().getValue());
+                LocationRepository.getInstance().getLastKnownLocation());
+
         holder.prayerTimeTextView.setText(String.format(Locale.getDefault(), "%02d:%02d", time.getHour(), time.getMinutes()));
-        holder.prayDayTypeTextView.setText(minyan.getPrayDayType().name());
+        holder.prayDayTypeTextView.setText(SynagogeUtils.getTextFromEnum(holder.prayDayTypeTextView.getContext(),minyan.getPrayDayType()));
     }
 
 
