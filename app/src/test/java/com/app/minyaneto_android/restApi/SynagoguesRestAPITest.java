@@ -7,7 +7,6 @@ import com.app.minyaneto_android.data.MinyanScheduleData;
 import com.app.minyaneto_android.data.SynagogueData;
 import com.app.minyaneto_android.data.SynagogueIdData;
 import com.app.minyaneto_android.data.SynagogueToServerData;
-import com.app.minyaneto_android.data.SynagogueWrapperData;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -41,15 +40,13 @@ public class SynagoguesRestAPITest {
     public void getSynagogue() throws Exception {
         SynagoguesRestAPI api = RestAPIUtility.createSynagoguesRestAPI();
         String synagogueName = "test_synagogue";
-        Call<SynagogueWrapperData> call = api.getSynagogue("AWG4o-siXhnPh-4nqCDV");
+        Call<SynagogueData> call = api.getSynagogue("AWG4o-siXhnPh-4nqCDV");
 
-        Response<SynagogueWrapperData> response = call.execute();
+        Response<SynagogueData> response = call.execute();
 
-        SynagogueWrapperData body = response.body();
-        assertNotNull(body);
-        SynagogueData result = body.getSynagogue();
+        SynagogueData result = response.body();
         assertNotNull(result);
-        assertEquals(synagogueName, result.getName());
+        assertTrue(result.getName().contains(synagogueName));
     }
 
     @Test
@@ -64,12 +61,10 @@ public class SynagoguesRestAPITest {
 
         SynagogueIdData idData = response.body();
         assertNotNull(idData);
-        SynagogueWrapperData body = api
+        SynagogueData result = api
                 .getSynagogue(idData.getId())
                 .execute()
                 .body();
-        assertNotNull(body);
-        SynagogueData result = body.getSynagogue();
         assertNotNull(result);
         assertEquals(synagogueName, result.getName());
     }
@@ -84,12 +79,10 @@ public class SynagoguesRestAPITest {
         Response<Void> response = call.execute();
 
         assertTrue(response.isSuccessful());
-        SynagogueWrapperData body = api
+        SynagogueData result = api
                 .getSynagogue("AWG4o-siXhnPh-4nqCDV")
                 .execute()
                 .body();
-        assertNotNull(body);
-        SynagogueData result = body.getSynagogue();
         assertNotNull(result);
         assertEquals(synagogueName, result.getName());
     }

@@ -6,7 +6,6 @@ import com.app.minyaneto_android.data.DataTransformer;
 import com.app.minyaneto_android.data.SynagogueData;
 import com.app.minyaneto_android.data.SynagogueIdData;
 import com.app.minyaneto_android.data.SynagogueToServerData;
-import com.app.minyaneto_android.data.SynagogueWrapperData;
 import com.app.minyaneto_android.restApi.ResponseListener;
 import com.app.minyaneto_android.restApi.SynagoguesRestAPI;
 import com.google.android.gms.maps.model.LatLng;
@@ -59,18 +58,18 @@ public class SynagoguesSource {
                 SynagogueIdData idData = response.body();
                 if (idData != null) {
                     String id = idData.getId();
-                    api.getSynagogue(id).enqueue(new Callback<SynagogueWrapperData>() {
+                    api.getSynagogue(id).enqueue(new Callback<SynagogueData>() {
                         @Override
-                        public void onResponse(Call<SynagogueWrapperData> call, Response<SynagogueWrapperData> response) {
-                            SynagogueWrapperData data = response.body();
+                        public void onResponse(Call<SynagogueData> call, Response<SynagogueData> response) {
+                            SynagogueData data = response.body();
                             if (data != null) {
-                                SynagogueDomain synagogue = transformer.transform(data.getSynagogue());
+                                SynagogueDomain synagogue = transformer.transform(data);
                                 cache.putSynagogue(synagogue);
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<SynagogueWrapperData> call, Throwable t) {
+                        public void onFailure(Call<SynagogueData> call, Throwable t) {
 
                         }
                     });

@@ -3,7 +3,6 @@ package com.app.minyaneto_android.restApi;
 import com.app.minyaneto_android.data.SynagogueData;
 import com.app.minyaneto_android.data.SynagogueIdData;
 import com.app.minyaneto_android.data.SynagogueToServerData;
-import com.app.minyaneto_android.data.SynagogueWrapperData;
 
 import java.util.List;
 
@@ -26,10 +25,10 @@ public interface SynagoguesRestAPI {
     Call<Void> updateSynagogue(@Path("id") String id, @Body SynagogueToServerData synagogue);
 
     @GET("synagogues/{id}")
-    Call<SynagogueWrapperData> getSynagogue(@Path("id") String id);
+    Call<SynagogueData> getSynagogue(@Path("id") String id);
 
     @GET("synagogues")
     Call<List<SynagogueData>> getSynagogues(@Query("max_hits") int maxHits,
-                                              @Query("center") String center,
-                                              @Query("radius") String radius);
+                                            @Query("center") String center,
+                                            @Query("radius") String radius);
 }
