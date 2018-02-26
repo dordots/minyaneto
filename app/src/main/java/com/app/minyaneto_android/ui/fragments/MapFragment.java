@@ -11,19 +11,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.location.LocationRepository;
 import com.app.minyaneto_android.directions.FetchUrl;
 import com.app.minyaneto_android.directions.RouteListener;
+import com.app.minyaneto_android.location.LocationRepository;
 import com.app.minyaneto_android.models.minyan.Minyan;
 import com.app.minyaneto_android.models.synagogue.Synagogue;
 import com.app.minyaneto_android.models.time.DateUtility;
@@ -49,11 +47,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -71,7 +66,7 @@ import java.util.List;
 public class MapFragment extends Fragment implements OnMapReadyCallback,
         ActivityCompat.OnRequestPermissionsResultCallback,
         GoogleMap.OnMarkerClickListener, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleMap.OnMapLongClickListener, RouteListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleMap.OnMapLongClickListener, RouteListener, View.OnClickListener {
 
     public static final String TAG = MapFragment.class.getSimpleName();
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -311,7 +306,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-        if(null != searchModeLinearLayout){
+        if (null != searchModeLinearLayout) {
             searchModeLinearLayout.setVisibility(View.GONE);
         }
         mMap = googleMap;
@@ -346,7 +341,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
                 LatLng pos = mMap.getCameraPosition().target;
 
-                if (lastLatLng!=null &&calculateDistance(lastLatLng, pos) > MAX_DISTANCE_FROM_LAST_LOCATION) {
+                if (lastLatLng != null && calculateDistance(lastLatLng, pos) > MAX_DISTANCE_FROM_LAST_LOCATION) {
 
                     lastLatLng = pos;
 
@@ -617,7 +612,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         if (location != null) {
             updateCurrentLocation(new LatLng(location.getLatitude(), location.getLongitude()));
         } else {
-            if (!startLocationUpdates()&&(mCurrentlyRequestingLocationUpdates || mGoogleApiClient.isConnected() ))
+            if (!startLocationUpdates() && (mCurrentlyRequestingLocationUpdates || mGoogleApiClient.isConnected()))
                 defaultLocation();
         }
     }
@@ -748,14 +743,5 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         startLocationUpdates();
         searchModeLinearLayout.setVisibility(View.GONE);
         onRefreshMap();
-    }
-
-    public interface OnFragmentInteractionListener {
-
-        void onUpdateSynagogues(LatLng latLng);
-
-        void onMarkerClick(int position);
-
-        void onMapLongClick(LatLng latLng);
     }
 }

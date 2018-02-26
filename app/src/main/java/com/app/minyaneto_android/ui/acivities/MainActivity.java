@@ -438,6 +438,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onGetDistanse(double meters, String drivingTime) {
+
+    }
+
+    @Override
     public void onMapLongClick(LatLng latLng) {
         if (!mFragmentHelper.isContains(AddSynagogueFragment.TAG)) {
             return;
