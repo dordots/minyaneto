@@ -1,9 +1,11 @@
 package com.app.minyaneto_android.restApi;
 
+import com.app.minyaneto_android.data.SynagogueData;
 import com.app.minyaneto_android.data.SynagogueIdData;
 import com.app.minyaneto_android.data.SynagogueToServerData;
 import com.app.minyaneto_android.data.SynagogueWrapperData;
-import com.app.minyaneto_android.data.SynagoguesWrapperData;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -27,7 +29,7 @@ public interface SynagoguesRestAPI {
     Call<SynagogueWrapperData> getSynagogue(@Path("id") String id);
 
     @GET("synagogues")
-    Call<SynagoguesWrapperData> getSynagoguesWrapperData(@Query("max_hits") int maxHits,
-                                                         @Query("center") String center,
-                                                         @Query("radius") String radius);
+    Call<List<SynagogueData>> getSynagogues(@Query("max_hits") int maxHits,
+                                              @Query("center") String center,
+                                              @Query("radius") String radius);
 }

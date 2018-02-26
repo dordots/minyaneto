@@ -8,7 +8,6 @@ import com.app.minyaneto_android.data.SynagogueData;
 import com.app.minyaneto_android.data.SynagogueIdData;
 import com.app.minyaneto_android.data.SynagogueToServerData;
 import com.app.minyaneto_android.data.SynagogueWrapperData;
-import com.app.minyaneto_android.data.SynagoguesWrapperData;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -29,15 +28,13 @@ public class SynagoguesRestAPITest {
     @Test
     public void getSynagogues() throws Exception {
         SynagoguesRestAPI api = RestAPIUtility.createSynagoguesRestAPI();
-        Call<SynagoguesWrapperData> call = api.getSynagoguesWrapperData(20, "31.786,35.186", "3km");
+        Call<List<SynagogueData>> call = api.getSynagogues(20, "31.786,35.186", "3km");
 
-        Response<SynagoguesWrapperData> response = call.execute();
+        Response<List<SynagogueData>> response = call.execute();
 
-        SynagoguesWrapperData body = response.body();
-        assertNotNull(body);
-        List<SynagogueData> synagogues = body.getSynagogues();
+        List<SynagogueData> synagogues = response.body();
         assertNotNull(synagogues);
-        assertEquals(8, synagogues.size());
+        assertEquals(9, synagogues.size());
     }
 
     @Test
