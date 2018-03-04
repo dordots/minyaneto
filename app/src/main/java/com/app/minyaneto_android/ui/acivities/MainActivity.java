@@ -2,7 +2,6 @@ package com.app.minyaneto_android.ui.acivities;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,9 +36,7 @@ import com.app.minyaneto_android.utilities.LocationHelper;
 import com.app.minyaneto_android.utilities.fragment.ActivityRunning;
 import com.app.minyaneto_android.utilities.fragment.FragmentHelper;
 import com.app.minyaneto_android.utilities.user.Alerts;
-import com.app.minyaneto_android.utilities.user.ApplicationManager;
 import com.app.minyaneto_android.zmanim.ZmanimFragment;
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
@@ -258,12 +255,8 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onUpdateSynagogues(final LatLng latLngCenter) {
         //TODO- choose the name of Tfila - according to this time
-        if (mFragmentHelper.isContains(SynagoguesFragment.TAG)) {
-            if (null != mapFragment) {
-                if (isShowSynagoguesFragment) {
-                    updateSynagogues(latLngCenter, new Date(), null, null);
-                }
-            }
+        if (mFragmentHelper.isContains(SynagoguesFragment.TAG) && null != mapFragment && isShowSynagoguesFragment) {
+            updateSynagogues(latLngCenter, new Date(), null, null);
         }
     }
 
