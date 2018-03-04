@@ -3,10 +3,10 @@ package com.app.minyaneto_android.utilities;
 import android.content.Context;
 
 import com.app.minyaneto_android.R;
+import com.app.minyaneto_android.data.WeekDay;
 import com.app.minyaneto_android.models.minyan.PrayType;
 import com.app.minyaneto_android.models.time.RelativeTimeType;
 
-import java.time.DayOfWeek;
 
 import static java.util.Calendar.FRIDAY;
 import static java.util.Calendar.MONDAY;
@@ -31,7 +31,7 @@ public class SynagogueUtils {
     }
 
 
-    public static String getTextFromEnum(Context context, DayOfWeek prayDayType) {
+    public static String getTextFromEnum(Context context, WeekDay prayDayType) {
         switch (prayDayType.ordinal() + 1) {
             case SUNDAY:
                 return context.getResources().getString(R.string.pray_day_type_s);

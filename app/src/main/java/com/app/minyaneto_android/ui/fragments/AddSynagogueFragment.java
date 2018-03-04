@@ -3,6 +3,7 @@ package com.app.minyaneto_android.ui.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ import com.app.minyaneto_android.models.domain.SynagogueDomain;
 import com.app.minyaneto_android.models.domain.SynagoguesSource;
 import com.app.minyaneto_android.restApi.ResponseListener;
 import com.app.minyaneto_android.restApi.RestAPIUtility;
+import com.app.minyaneto_android.utilities.LocationHelper;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -66,43 +68,26 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         etNameSynagogue = view.findViewById(R.id.add_synagogoe_name);
-
         etAddressSynagogue = view.findViewById(R.id.add_synagogoe_address);
-
         etCommentsSynagogue = view.findViewById(R.id.add_synagogue_comments);
-
         spinnerNosachSynagogue = view.findViewById(R.id.add_synagogoe_nosach);
-
         cbParking = view.findViewById(R.id.add_synagogoe_parking);
-
         cbSefer_tora = view.findViewById(R.id.add_synagogoe_sefer_tora);
-
         cbWheelchair_accessible = view.findViewById(R.id.add_synagogoe_accessible);
-
         cbLessons = view.findViewById(R.id.add_synagogoe_lessons);
-
         btnAddSynagogue = view.findViewById(R.id.add_synagogoe_btn_add);
-
         etAddressSynagogue.setOnClickListener(this);
-
         btnAddSynagogue.setOnClickListener(this);
-
     }
 
     private void getAddress() {
-
         try {
-
             Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).zzim(etAddressSynagogue.getText().toString()).build(getActivity());
-
             startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
-
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
             Toast.makeText(getContext(), getResources().getString(R.string.no_address), Toast.LENGTH_SHORT).show();
         }
-
     }
 
     public void updateLatLng(LatLng latLng) {
@@ -110,7 +95,6 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
     }
 
     private void addSynagogue() {
-
         if (etNameSynagogue.getText().toString().equals("") || etAddressSynagogue.getText().toString().equals("")) {
             Toast.makeText(getContext(), getResources().getString(R.string.check), Toast.LENGTH_SHORT).show();
             return;
@@ -126,7 +110,7 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
                 cbParking.isChecked(),
                 cbSefer_tora.isChecked(),
                 cbWheelchair_accessible.isChecked(),
-                LocationRepository.getInstance().getLastKnownLatLng()
+                mLatLng
         );
 
         SynagoguesSource source = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(), new DataTransformer(), SynagogueCache.getInstance());
@@ -148,14 +132,31 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+
             if (resultCode == Activity.RESULT_OK) {
                 Place place = PlacePicker.getPlace(getActivity(), data);
-                updateSynagogueAddress(place.getAddress().toString());
-                mListener.onUpdateMarker(place);
-                mListener.onGetTheSynagoguesAround(place.getLatLng());
-                updateLatLng(place.getLatLng());
+                mLatLng = place.getLatLng();
+                String address = place.getAddress().toString();
+                updateSynagogueAddress(address);
+                mListener.onUpdateMarker(mLatLng, address);
+                mListener.onGetTheSynagoguesAround(mLatLng);
+                updateLatLng(mLatLng);
+                updateSynagogueAddress(address);
             }
         }
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Location location = LocationRepository.getInstance().getLastKnownLocation();
+        mLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+        String address = LocationHelper.getAddressLineFromLatLng(getContext(), mLatLng);
+        if (mListener != null) {
+            mListener.onUpdateMarker(mLatLng, address);
+        }
+        updateSynagogueAddress(address);
     }
 
 
@@ -194,7 +195,7 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
 
         void onSetActionBarTitle(String title);
 
-        void onUpdateMarker(Place place);
+        void onUpdateMarker(LatLng latLng, String address);
 
         void onGetTheSynagoguesAround(LatLng lng);
     }

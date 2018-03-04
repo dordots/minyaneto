@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -22,7 +23,9 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.app.minyaneto_android.R;
+import com.app.minyaneto_android.location.LocationRepository;
 import com.app.minyaneto_android.models.minyan.PrayType;
+import com.app.minyaneto_android.utilities.LocationHelper;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -52,7 +55,7 @@ public class SearchMinyanFragment extends Fragment implements
     Button btnSearchSynagogue;
     Date date;
     private SearchListener mListener;
-    private Place mPlace;
+    private LatLng mLatLng;
 
     public static SearchMinyanFragment getInstance() {
         return new SearchMinyanFragment();
@@ -61,42 +64,31 @@ public class SearchMinyanFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         return inflater.inflate(R.layout.fragment_search_minyan, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         date = new Date();
-
         etSearchAddress = view.findViewById(R.id.search_minyan_address);
-
         spinnerNosachSynagogue = view.findViewById(R.id.search_nosach);
-
         spinnerNameTfila = view.findViewById(R.id.search_synagogoe_name);
-
         cbSearchByNosach = view.findViewById(R.id.seach_by_nosach);
-
         choose_nosach = view.findViewById(R.id.search_by_nosach_true);
-
         btnChooseADate = view.findViewById(R.id.search_choose_date);
-
         btnChooseATime = view.findViewById(R.id.search_choose_time);
-
         btnSearchSynagogue = view.findViewById(R.id.search_minyan_btn_search);
-
         etSearchAddress.setOnClickListener(this);
-
         btnChooseADate.setOnClickListener(this);
-
         btnChooseATime.setOnClickListener(this);
-
         btnSearchSynagogue.setOnClickListener(this);
-
         cbSearchByNosach.setOnCheckedChangeListener(this);
 
+        SimpleDateFormat format = new SimpleDateFormat("MM.dd.yy");
+        btnChooseADate.setText(format.format(date));
+        format = new SimpleDateFormat("HH:mm");
+        btnChooseATime.setText(format.format(date));
     }
 
 
@@ -124,65 +116,62 @@ public class SearchMinyanFragment extends Fragment implements
     }
 
     private void getAddress() {
-
         try {
-
             Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).zzim(etSearchAddress.getText().toString()).build(getActivity());
-
             startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
-
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
             Toast.makeText(getContext(), getResources().getString(R.string.no_address), Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private void searchSynagogues() {
-
-        if (etSearchAddress.getText().toString().equals("") || null == mPlace ||
-                btnChooseADate.getText() == getString(R.string.choose_a_date) ||
-                btnChooseATime.getText() == getString(R.string.choose_a_time)) {
+        if (etSearchAddress.getText().toString().equals("") || null == mLatLng) {
             Toast.makeText(getContext(), getResources().getString(R.string.check_search), Toast.LENGTH_SHORT).show();
             return;
         }
-
         String nosach = null;
-
         if (cbSearchByNosach.isChecked())
             nosach = (String) spinnerNosachSynagogue.getSelectedItem();
-
         PrayType prayType = PrayType.values()[spinnerNameTfila.getSelectedItemPosition()];
-
         if (mListener != null) {
-            mListener.onUpdateMarker(mPlace);
-            LatLng latLng = mPlace.getLatLng();
-            mListener.onSearch(etSearchAddress.getText().toString(), latLng, date, prayType, nosach);
+            mListener.onUpdateMarker(mLatLng, etSearchAddress.getText().toString());
+            mListener.onSearch(etSearchAddress.getText().toString(), mLatLng, date, prayType, nosach);
         }
     }
 
     public void updateSynagogueAddress(String address) {
-
         etSearchAddress.setText(address);
-
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            mPlace = PlacePicker.getPlace(getActivity(), data);
+            Place mPlace = PlacePicker.getPlace(getActivity(), data);
+            mLatLng = mPlace.getLatLng();
+            String address = mPlace.getAddress().toString();
             if (mListener != null) {
-                mListener.onUpdateMarker(mPlace);
+                mListener.onUpdateMarker(mLatLng, address);
             }
-            updateSynagogueAddress(mPlace.getAddress().toString());
+            updateSynagogueAddress(address);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Location location = LocationRepository.getInstance().getLastKnownLocation();
+        mLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+        String address = LocationHelper.getAddressLineFromLatLng(getContext(), mLatLng);
+        if (mListener != null) {
+            mListener.onUpdateMarker(mLatLng, address);
+        }
+        updateSynagogueAddress(address);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
         mListener.onSetActionBarTitle(getResources().getString(R.string.search_minyan_fragment));
     }
 
@@ -199,76 +188,47 @@ public class SearchMinyanFragment extends Fragment implements
 
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
-
             case R.id.search_minyan_btn_search:
-
                 searchSynagogues();
-
                 break;
-
             case R.id.search_minyan_address:
-
                 getAddress();
-
                 break;
-
             case R.id.search_choose_date:
-
                 chooseDate();
-
                 break;
-
             case R.id.search_choose_time:
-
                 chooseTime();
-
                 break;
         }
     }
 
     @Override
     public void onCheckedChanged(CompoundButton v, boolean isChecked) {
-
         switch (v.getId()) {
-
             case R.id.seach_by_nosach:
-
                 choose_nosach.setVisibility(isChecked ? View.VISIBLE : View.INVISIBLE);
-
                 break;
         }
     }
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
         Date d = new Date(year, month, dayOfMonth);
-
         d.setHours(date.getHours());
-
         d.setMinutes(date.getMinutes());
-
         date = d;
-
         SimpleDateFormat format = new SimpleDateFormat("MM.dd.yy");
-
         btnChooseADate.setText(format.format(date));
-
     }
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
         date.setHours(hourOfDay);
-
         date.setMinutes(minute);
-
         SimpleDateFormat format = new SimpleDateFormat("HH:mm");
-
         btnChooseATime.setText(format.format(date));
-
     }
 
 
@@ -278,8 +238,7 @@ public class SearchMinyanFragment extends Fragment implements
 
         void onSetActionBarTitle(String title);
 
-        void onUpdateMarker(Place place);
+        void onUpdateMarker(LatLng latLng, String address);
 
     }
-
 }

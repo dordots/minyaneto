@@ -92,14 +92,14 @@ public class TimeUtility {
             //TODO calculate real time -like rosh hodesh..
             Calendar cal = Calendar.getInstance();
             cal.setTime(date);
-            if (date.getDay() != minyan.getDayOfWeek().ordinal())
+            if (date.getDay() != minyan.getWeekDay().ordinal())
                 continue;
-            cal.set(Calendar.DAY_OF_WEEK, minyan.getDayOfWeek().ordinal() + 1);
+            cal.set(Calendar.DAY_OF_WEEK, minyan.getWeekDay().ordinal() + 1);
             ExactTime exactTime = extractSpecificTime(minyan.getPrayTime(), LocationRepository.getInstance().getLastKnownLocation());
             cal.set(Calendar.HOUR_OF_DAY, exactTime.getHour());
             cal.set(Calendar.MINUTE, exactTime.getMinutes());
             Date f = cal.getTime();
-            if (minyan.getDayOfWeek().ordinal() == date.getDay() && f.after(date)) {
+            if (minyan.getWeekDay().ordinal() == date.getDay() && f.after(date)) {
                 result.append(" ,").append(format.format(f));
                 myResult.add(format.format(f));
             }

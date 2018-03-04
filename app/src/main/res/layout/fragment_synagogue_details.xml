@@ -112,7 +112,6 @@
         android:id="@+id/synagogoe_details_add_minyan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="16dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:clickable="true"

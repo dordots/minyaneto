@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,17 +36,18 @@ import com.app.minyaneto_android.restApi.ResponseListener;
 import com.app.minyaneto_android.restApi.RestAPIUtility;
 import com.app.minyaneto_android.utilities.SynagogueUtils;
 
-import java.time.DayOfWeek;
 import java.util.ArrayList;
 
-public class AddMinyanFragment extends Fragment {
+public class AddMinyanFragment extends Fragment implements View.OnClickListener {
 
     public static final String TAG = AddMinyanFragment.class.getSimpleName();
     private static SynagogueDomain mSynagogue;
+    private static DataTransformer transformer;
     boolean inRelativeTimeMode;
     private Spinner spinnerPrayType;
     private EditText etMinutes;
     private Spinner spinnerRelativeTimeType;
+    private Button btnAddMinyan;
     private TimePicker timePicker;
     private CheckBox cbSunday;
     private CheckBox cbMonday;
@@ -58,11 +60,11 @@ public class AddMinyanFragment extends Fragment {
     private AddMinyanListener mListener;
 
     public AddMinyanFragment() {
-        // Required empty public constructor
     }
 
     public static AddMinyanFragment newInstance(String id) {
         mSynagogue = SynagogueCache.getInstance().getSynagogue(id);
+        transformer = new DataTransformer();
         return new AddMinyanFragment();
     }
 
@@ -79,7 +81,7 @@ public class AddMinyanFragment extends Fragment {
         cbThursday = view.findViewById(R.id.add_minyan_thursday);
         cbFriday = view.findViewById(R.id.add_minyan_friday);
         cbSaturday = view.findViewById(R.id.add_minyan_saterday);
-        Button btnAddMinyan = view.findViewById(R.id.add_minyan_btn);
+        btnAddMinyan = view.findViewById(R.id.add_minyan_btn);
         timePicker = view.findViewById(R.id.timePicker);
         linearLayoutRelativeTime = view.findViewById(R.id.liner_layout_relative_time);
 
@@ -107,12 +109,7 @@ public class AddMinyanFragment extends Fragment {
             }
         });
         ((RadioButton) view.findViewById(R.id.add_minyan_exact_time)).setChecked(true);
-        btnAddMinyan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addMinyan();
-            }
-        });
+        btnAddMinyan.setOnClickListener(this);
 
         ArrayList<String> prayTypeNames = new ArrayList<>(PrayType.values().length);
         for (PrayType prayType : PrayType.values()) {
@@ -137,36 +134,40 @@ public class AddMinyanFragment extends Fragment {
         PrayType prayType = PrayType.values()[spinnerPrayType.getSelectedItemPosition()];
         PrayTime time = getPrayTime();
 
-        if (cbSunday.isChecked()) {
-            mSynagogue.addMinyan(new MinyanScheduleDomain(DayOfWeek.valueOf("SUNDAY"), prayType, time));
-        }
-        if (cbMonday.isChecked()) {
-            mSynagogue.addMinyan(new MinyanScheduleDomain(DayOfWeek.valueOf("MONDAY"), prayType, time));
-        }
-        if (cbTuesday.isChecked()) {
-            mSynagogue.addMinyan(new MinyanScheduleDomain(DayOfWeek.valueOf("TUESDAY"), prayType, time));
-        }
-        if (cbWednesday.isChecked()) {
-            mSynagogue.addMinyan(new MinyanScheduleDomain(DayOfWeek.valueOf("WEDNESDAY"), prayType, time));
-        }
-        if (cbThursday.isChecked()) {
-            mSynagogue.addMinyan(new MinyanScheduleDomain(DayOfWeek.valueOf("THURSDAY"), prayType, time));
-        }
-        if (cbFriday.isChecked()) {
-            mSynagogue.addMinyan(new MinyanScheduleDomain(DayOfWeek.valueOf("FRIDAY"), prayType, time));
-        }
-        if (cbSaturday.isChecked()) {
-            mSynagogue.addMinyan(new MinyanScheduleDomain(DayOfWeek.valueOf("SATURDAY"), prayType, time));
-        }
-
-        SynagoguesSource source = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(), new DataTransformer(), SynagogueCache.getInstance());
-        source.updateSynagogue(mSynagogue, new ResponseListener<Void>() {
-            @Override
-            public void onResponse(Void response) {
-                Toast.makeText(getContext(), getContext().getResources().getString(R.string.seccess_add_minyan), Toast.LENGTH_SHORT).show();
-                getActivity().onBackPressed();
+        try {
+            if (cbSunday.isChecked()) {
+                mSynagogue.addMinyan(new MinyanScheduleDomain(transformer.transformStringToWeekDay("SUNDAY"), prayType, time));
             }
-        });
+            if (cbMonday.isChecked()) {
+                mSynagogue.addMinyan(new MinyanScheduleDomain(transformer.transformStringToWeekDay("MONDAY"), prayType, time));
+            }
+            if (cbTuesday.isChecked()) {
+                mSynagogue.addMinyan(new MinyanScheduleDomain(transformer.transformStringToWeekDay("TUESDAY"), prayType, time));
+            }
+            if (cbWednesday.isChecked()) {
+                mSynagogue.addMinyan(new MinyanScheduleDomain(transformer.transformStringToWeekDay("WEDNESDAY"), prayType, time));
+            }
+            if (cbThursday.isChecked()) {
+                mSynagogue.addMinyan(new MinyanScheduleDomain(transformer.transformStringToWeekDay("THURSDAY"), prayType, time));
+            }
+            if (cbFriday.isChecked()) {
+                mSynagogue.addMinyan(new MinyanScheduleDomain(transformer.transformStringToWeekDay("FRIDAY"), prayType, time));
+            }
+            if (cbSaturday.isChecked()) {
+                mSynagogue.addMinyan(new MinyanScheduleDomain(transformer.transformStringToWeekDay("SATURDAY"), prayType, time));
+            }
+            SynagoguesSource source = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(), transformer, SynagogueCache.getInstance());
+            source.updateSynagogue(mSynagogue, new ResponseListener<Void>() {
+                @Override
+                public void onResponse(Void response) {
+                    Toast.makeText(getContext(), getContext().getResources().getString(R.string.seccess_add_minyan), Toast.LENGTH_SHORT).show();
+                    getActivity().onBackPressed();
+                }
+            });
+        } catch (Exception e) {
+            Log.w(AddMinyanFragment.class.getSimpleName(),
+                    "Couldn't add synagogue, an exception occurred:\n" + e.getMessage());
+        }
     }
 
     @Override
@@ -182,10 +183,10 @@ public class AddMinyanFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_add_minyan, container, false);
     }
 
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         if (context instanceof AddMinyanListener) {
             mListener = (AddMinyanListener) context;
         } else {
@@ -211,6 +212,15 @@ public class AddMinyanFragment extends Fragment {
         else
             time = new PrayTime(new ExactTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute()));
         return time;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.add_minyan_btn:
+                addMinyan();
+                break;
+        }
     }
 
     public interface AddMinyanListener {

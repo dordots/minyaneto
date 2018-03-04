@@ -9,7 +9,7 @@ public class LocationUtility {
         return calculateDistance(synagogue.getLocation(), latLng);
     }
 
-    private static long calculateDistance(LatLng location1, LatLng location2) {
+    public static long calculateDistance(LatLng location1, LatLng location2) {
         double dLat = Math.toRadians(location1.latitude - location2.latitude);
         double dLon = Math.toRadians(location1.longitude - location2.longitude);
         double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)

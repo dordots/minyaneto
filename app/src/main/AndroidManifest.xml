@@ -15,9 +15,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity
-            android:name=".ui.acivities.MainActivity"
-            android:screenOrientation="userPortrait" />
+        <activity android:name=".ui.acivities.MainActivity">
+
+        </activity>
         <activity
             android:name=".ui.acivities.SplashScreen"
             android:screenOrientation="userPortrait"

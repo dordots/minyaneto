@@ -113,10 +113,7 @@ public class SynagogueDetailsFragment extends DialogFragment {
 
     @Override
     public void onStop() {
-        try {
-            super.onStop();
-        }
-        catch (Exception e){}
+        super.onStop();
     }
 
     @Override

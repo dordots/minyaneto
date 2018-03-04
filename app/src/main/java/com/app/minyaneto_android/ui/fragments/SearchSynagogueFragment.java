@@ -3,6 +3,7 @@ package com.app.minyaneto_android.ui.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,8 @@ import android.widget.Toast;
 
 
 import com.app.minyaneto_android.R;
+import com.app.minyaneto_android.location.LocationRepository;
+import com.app.minyaneto_android.utilities.LocationHelper;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -31,7 +34,7 @@ public class SearchSynagogueFragment extends Fragment implements
     EditText etSearchAddress;
     Button btnSearchSynagogue;
     private SearchListener mListener;
-    private Place mPlace;
+    private LatLng mLatLng;
 
     public static SearchSynagogueFragment getInstance() {
 
@@ -76,9 +79,8 @@ public class SearchSynagogueFragment extends Fragment implements
         }
 
         if (mListener != null) {
-            mListener.onUpdateMarker(mPlace);
-            LatLng latLng = mPlace.getLatLng();
-            mListener.onSearchSynagogue(etSearchAddress.getText().toString(), latLng);
+            mListener.onUpdateMarker(mLatLng, etSearchAddress.getText().toString());
+            mListener.onSearchSynagogue(etSearchAddress.getText().toString(), mLatLng);
         }
     }
 
@@ -91,18 +93,30 @@ public class SearchSynagogueFragment extends Fragment implements
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            mPlace = PlacePicker.getPlace(getActivity(), data);
+            Place mPlace = PlacePicker.getPlace(getActivity(), data);
+            mLatLng = mPlace.getLatLng();
             if (mListener != null) {
-                mListener.onUpdateMarker(mPlace);
+                mListener.onUpdateMarker(mLatLng, mPlace.getAddress().toString());
             }
             updateSynagogueAddress(mPlace.getAddress().toString());
         }
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        Location location = LocationRepository.getInstance().getLastKnownLocation();
+        mLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+        String address = LocationHelper.getAddressLineFromLatLng(getContext(), mLatLng);
+        if (mListener != null) {
+            mListener.onUpdateMarker(mLatLng, address);
+        }
+        updateSynagogueAddress(address);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-
         mListener.onSetActionBarTitle(getResources().getString(R.string.search_synagogue_fragment));
     }
 
@@ -135,7 +149,7 @@ public class SearchSynagogueFragment extends Fragment implements
 
         void onSetActionBarTitle(String title);
 
-        void onUpdateMarker(Place place);
+        void onUpdateMarker(LatLng latLng, String address);
 
     }
 

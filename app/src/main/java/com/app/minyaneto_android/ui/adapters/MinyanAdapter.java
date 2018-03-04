@@ -31,7 +31,7 @@ public class MinyanAdapter extends RecyclerView.Adapter<MinyanAdapter.MinyanView
 
     @Override
     public MinyanViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.minyan_cell_layout_synagogue_details, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_minyan_synagogue_details, parent, false);
         MinyanViewHolder minyanViewHolder = new MinyanViewHolder(v);
         return minyanViewHolder;
     }
@@ -45,7 +45,7 @@ public class MinyanAdapter extends RecyclerView.Adapter<MinyanAdapter.MinyanView
                 LocationRepository.getInstance().getLastKnownLocation());
 
         holder.prayerTimeTextView.setText(String.format(Locale.getDefault(), "%02d:%02d", time.getHour(), time.getMinutes()));
-        holder.prayDayTypeTextView.setText(SynagogueUtils.getTextFromEnum(holder.prayDayTypeTextView.getContext(),minyan.getDayOfWeek()));
+        holder.prayDayTypeTextView.setText(SynagogueUtils.getTextFromEnum(holder.prayDayTypeTextView.getContext(),minyan.getWeekDay()));
     }
 
 

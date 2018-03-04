@@ -175,5 +175,6 @@
     <string name="no_minyans_found_for_time">לא נמצאו מניינים בסביבה נכון לשעת החיפוש</string>
     <string name="no_minyans_found">לא נמצאו מניינים קרובים</string>
     <string name="seccess_add_minyan">המניין/ים נוסף/ו בהצלחה.</string>
-    <string name="default_location">חיפוש באזור הכותל המערבי</string>
+    <string name="default_location">חיפוש באזור הר הבית</string>
+    <string name="default_location_msg">לא ניתן למצוא את המיקום שלך.\nמבצע חיפוש באזור הר הבית. \nניתן להדליק את המיקום ולאחר מכן ללחוץ על כפתור רענן.</string>
 </resources>

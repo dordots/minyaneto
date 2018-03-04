@@ -2,6 +2,7 @@ package com.app.minyaneto_android.ui.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +22,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class SynagoguesFragment extends Fragment {
+public class SynagoguesFragment extends Fragment implements View.OnClickListener {
 
     public static final String TAG = SynagoguesFragment.class.getSimpleName();
     private OnSynagoguesListener mListener;
@@ -30,6 +31,7 @@ public class SynagoguesFragment extends Fragment {
     private SynagogueAdapter mAdapter;
     private View mProgress;
     private TextView mError;
+    private FloatingActionButton searchMinyan;
 
 
     public static SynagoguesFragment newInstance() {
@@ -55,26 +57,18 @@ public class SynagoguesFragment extends Fragment {
     }
 
     private void init(View view) {
-
         mSynagogues = new ArrayList<>();
-
         mSynagoguesView = view.findViewById(R.id.FS_synagogues);
-
         mSynagoguesView.setHasFixedSize(true);
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
         mSynagoguesView.setLayoutManager(linearLayoutManager);
-
         mAdapter = new SynagogueAdapter(mSynagogues);
-
         mSynagoguesView.setAdapter(mAdapter);
-
         mProgress = view.findViewById(R.id.FS_progress);
         mError = view.findViewById(R.id.FS_error);
-
+        searchMinyan =view.findViewById(R.id.search_minyan);
+        searchMinyan.setOnClickListener(this);
     }
 
 
@@ -156,11 +150,9 @@ public class SynagoguesFragment extends Fragment {
         });
 
         mAdapter.notifyDataSetChanged();
-
     }
 
     private void sortSynagoguesByLocation() {
-
         Collections.sort(mSynagogues, new Comparator<SynagogueDomain>() {
             public int compare(SynagogueDomain o1, SynagogueDomain o2) {
                 long distance1 = LocationUtility.getDistance(o1);
@@ -168,6 +160,14 @@ public class SynagoguesFragment extends Fragment {
                 return Long.compare(distance1, distance2);
             }
         });
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (mListener != null) {
+
+            mListener.onSearchMinyan();
+        }
     }
 
 
@@ -182,5 +182,7 @@ public class SynagoguesFragment extends Fragment {
         void onOpenRoute(LatLng geo);
 
         void onShowSynagogueDetails(String id);
+
+        void onSearchMinyan();
     }
 }

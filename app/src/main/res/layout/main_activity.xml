@@ -35,7 +35,7 @@
                     android:id="@+id/MA_container_map"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="0.85" />
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
@@ -46,7 +46,7 @@
                     android:id="@+id/MA_container"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1.14" />
 
             </LinearLayout>
 

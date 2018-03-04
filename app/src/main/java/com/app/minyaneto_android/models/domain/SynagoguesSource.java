@@ -28,7 +28,7 @@ public class SynagoguesSource {
         this.cache = cache;
     }
 
-    public void fetchSynagogues(int maxHits, LatLng location, int radiusInKm, final ResponseListener<List<SynagogueDomain>> listener) throws IOException {
+    public void fetchSynagogues(int maxHits, LatLng location, double radiusInKm, final ResponseListener<List<SynagogueDomain>> listener) throws IOException {
         String center = location.latitude + "," + location.longitude;
         String radius = radiusInKm + "km";
         Callback<List<SynagogueData>> callback = new Callback<List<SynagogueData>>() {
@@ -46,6 +46,7 @@ public class SynagoguesSource {
             public void onFailure(Call<List<SynagogueData>> call, Throwable t) {
                 Log.w(SynagoguesSource.class.getSimpleName(),
                         "Couldn't get synagogues data, an exception occurred:\n" + t.getMessage());
+                listener.onResponse(null);
             }
         };
         api.getSynagogues(maxHits, center, radius).enqueue(callback);
@@ -63,8 +64,14 @@ public class SynagoguesSource {
                         public void onResponse(Call<SynagogueData> call, Response<SynagogueData> response) {
                             SynagogueData data = response.body();
                             if (data != null) {
-                                SynagogueDomain synagogue = transformer.transform(data);
-                                cache.putSynagogue(synagogue);
+                                try {
+                                    SynagogueDomain synagogue = transformer.transform(data);
+                                    cache.putSynagogue(synagogue);
+                                } catch (Exception e) {
+                                    Log.w(SynagoguesSource.class.getSimpleName(),
+                                            "Couldn't parse synagogue data from server: " + data.toString());
+                                }
+
                             }
                         }
 
@@ -83,8 +90,13 @@ public class SynagoguesSource {
                         "Couldn't add synagogue, an exception occurred:\n" + t.getMessage());
             }
         };
-        SynagogueToServerData toServer = transformer.transform(synagogue);
-        api.addSynagogue(toServer).enqueue(callback);
+        try {
+            SynagogueToServerData toServer = transformer.transform(synagogue);
+            api.addSynagogue(toServer).enqueue(callback);
+        } catch (Exception e) {
+            Log.w(SynagoguesSource.class.getSimpleName(),
+                    "Couldn't parse synagogue data for send to server: " + synagogue.toString());
+        }
     }
 
     public void updateSynagogue(SynagogueDomain synagogue, final ResponseListener<Void> listener) {
@@ -100,7 +112,12 @@ public class SynagoguesSource {
                         "Couldn't add synagogue, an exception occurred:\n" + t.getMessage());
             }
         };
-        SynagogueToServerData toServer = transformer.transform(synagogue);
-        api.updateSynagogue(synagogue.getId(), toServer).enqueue(callback);
+        try {
+            SynagogueToServerData toServer = transformer.transform(synagogue);
+            api.updateSynagogue(synagogue.getId(), toServer).enqueue(callback);
+        } catch (Exception e) {
+            Log.w(SynagoguesSource.class.getSimpleName(),
+                    "Couldn't parse synagogue data for update server: " + synagogue.toString());
+        }
     }
 }

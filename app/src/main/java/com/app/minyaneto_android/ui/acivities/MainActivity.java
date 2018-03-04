@@ -1,6 +1,8 @@
 package com.app.minyaneto_android.ui.acivities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,6 +36,8 @@ import com.app.minyaneto_android.ui.fragments.SynagoguesFragment;
 import com.app.minyaneto_android.utilities.LocationHelper;
 import com.app.minyaneto_android.utilities.fragment.ActivityRunning;
 import com.app.minyaneto_android.utilities.fragment.FragmentHelper;
+import com.app.minyaneto_android.utilities.user.Alerts;
+import com.app.minyaneto_android.utilities.user.ApplicationManager;
 import com.app.minyaneto_android.zmanim.ZmanimFragment;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
@@ -43,11 +47,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.app.minyaneto_android.Config.ADD_SYNAGOGUE_RADIUS_IN_KM;
 import static com.app.minyaneto_android.Config.DEFAULT_RADIUS_IN_KM;
 import static com.app.minyaneto_android.Config.MAX_HITS_PER_REQUEST;
 
 
 public class MainActivity extends AppCompatActivity implements
+        Alerts.OnCancelDialogListener,
         MapFragment.OnFragmentInteractionListener,
         ActivityCompat.OnRequestPermissionsResultCallback,
         NavigationHelper.OnMenuItemSelectListener,
@@ -63,9 +69,8 @@ public class MainActivity extends AppCompatActivity implements
     public MapFragment mapFragment;
     public SynagoguesFragment synagoguesFragment;
     public AddSynagogueFragment addSynagogueFragment;
-
+    public SearchMinyanFragment searchMinyanFragment;
     private SynagoguesSource synagoguesSource;
-
     private NavigationHelper mNavigationHelper;
     private boolean doubleBackToExitPressedOnce = false;
     private FragmentHelper mFragmentHelper;
@@ -112,18 +117,12 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onMenuSelectHome() {
-
         invalidateOptionsMenu();
-
         returnToMain();
-
         initSynagoguesFragment();
-
         if (mapFragment != null) {
-
             mapFragment.onRefreshMap();
         }
-
     }
 
     @Override
@@ -134,15 +133,10 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onMenuSelectAddSynagogue() {
-
         returnToMain();
-
         if (addSynagogueFragment == null)
-
             addSynagogueFragment = AddSynagogueFragment.getInstance();
-
         mapFragment.stopSearchMode();
-
         mFragmentHelper.replaceFragment(R.id.MA_container, addSynagogueFragment, AddSynagogueFragment.TAG, AddSynagogueFragment.TAG);
     }
 
@@ -153,12 +147,13 @@ public class MainActivity extends AppCompatActivity implements
         mFragmentHelper.replaceFragment(R.id.MA_container, SearchSynagogueFragment.getInstance(), SearchSynagogueFragment.TAG, SearchSynagogueFragment.TAG);
     }
 
-
     @Override
     public void onMenuSelectSearchMinyan() {
         returnToMain();
+        if (null == searchMinyanFragment)
+            searchMinyanFragment = SearchMinyanFragment.getInstance();
         mapFragment.stopSearchMode();
-        mFragmentHelper.replaceFragment(R.id.MA_container, SearchMinyanFragment.getInstance(), SearchMinyanFragment.TAG, SearchMinyanFragment.TAG);
+        mFragmentHelper.replaceFragment(R.id.MA_container, searchMinyanFragment, SearchMinyanFragment.TAG, SearchMinyanFragment.TAG);
     }
 
     @Override
@@ -175,6 +170,13 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onShowSynagogueDetails(String id) {
         showSynagogueDetails(id);
+    }
+
+    @Override
+    public void onSearchMinyan() {
+        returnToMain();
+        mapFragment.stopSearchMode();
+        mFragmentHelper.replaceFragment(R.id.MA_container, SearchMinyanFragment.getInstance(), SearchMinyanFragment.TAG, SearchMinyanFragment.TAG);
     }
 
     @Override
@@ -211,43 +213,40 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onUpdateMarkers(List<SynagogueDomain> mSynagogues) {
-
         mapFragment.updateMarkers(mSynagogues);
-
     }
 
     @Override
     public void onMoveCamera(LatLng latLng, int position) {
-
         mapFragment.moveCamera(latLng);
-
         mapFragment.showInfoMarker(position);
-
     }
 
     @Override
     public void onOpenRoute(LatLng geo) {
-
         Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=" + geo.latitude + "," + geo.longitude));
-
         startActivity(intent);
-
     }
 
     @Override
-    public void onUpdateMarker(Place place) {
-        mapFragment.startSearchMode(place.getName().toString());
-        mapFragment.updateMarker(place);
+    public void onUpdateMarker(LatLng latLng, String address) {
+        mapFragment.startSearchMode(address);
+        mapFragment.updateMarker(latLng, address);
     }
 
     @Override
     public void onGetTheSynagoguesAround(LatLng center) {
         try {
-            synagoguesSource.fetchSynagogues(MAX_HITS_PER_REQUEST, center, DEFAULT_RADIUS_IN_KM, new ResponseListener<List<SynagogueDomain>>() {
+            synagoguesSource.fetchSynagogues(MAX_HITS_PER_REQUEST, center, ADD_SYNAGOGUE_RADIUS_IN_KM, new ResponseListener<List<SynagogueDomain>>() {
                 @Override
                 public void onResponse(List<SynagogueDomain> response) {
-                    if (response != null && response.size() > 0)
-                        Toast.makeText(MainActivity.this, R.string.attention_alert, Toast.LENGTH_SHORT).show();
+                    if (response != null && response.size() > 0) {
+                        // Toast.makeText(MainActivity.this, R.string.attention_alert, Toast.LENGTH_SHORT).show();
+
+                        new AlertDialog.Builder(MainActivity.this)
+                                .setMessage(R.string.attention_alert)
+                                .show();
+                    }
                     mapFragment.updateMarkers(response);
                 }
             });
@@ -275,6 +274,9 @@ public class MainActivity extends AppCompatActivity implements
                 @Override
                 public void onResponse(List<SynagogueDomain> response) {
 
+                    if (null == response) {
+                        synagoguesFragment.updateSynagogues(new ArrayList<SynagogueDomain>(0), "החיפוש לא הצליח");
+                    }
                     List<SynagogueDomain> synagogues = response;
 
                     for (SynagogueDomain s : new ArrayList<>(synagogues)) {
@@ -305,13 +307,11 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+
     @Override
     public void onMarkerClick(int position) {
-
         if (mFragmentHelper.isContains(SynagoguesFragment.TAG)) {
-
             synagoguesFragment.scrollToSynagoguePosition(position);
-
         }
     }
 
@@ -323,9 +323,9 @@ public class MainActivity extends AppCompatActivity implements
 
         String addressLine = LocationHelper.getAddressLineFromLatLng(this, latLng);
         mapFragment.updateMarker(latLng, addressLine);
-
         if (addSynagogueFragment != null) {
             addSynagogueFragment.updateSynagogueAddress(addressLine);
+            addSynagogueFragment.updateLatLng(latLng);
         }
     }
 
@@ -336,7 +336,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-
         if (!mNavigationHelper.closeDrawer()) {
             if (mFragmentHelper.getFragmentsSize() > 2) {
                 super.onBackPressed();
@@ -354,62 +353,42 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void closeWithDoubleClick() {
-
         if (doubleBackToExitPressedOnce) {
-
-
             try {
                 super.onBackPressed();
             } catch (Exception ignored) {
             }
             Intent intent = new Intent(Intent.ACTION_MAIN);
-
             intent.addCategory(Intent.CATEGORY_HOME);
-
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
             startActivity(intent);
-
             this.doubleBackToExitPressedOnce = true;
-
             return;
         }
-
         doubleBackToExitPressedOnce = true;
-
         Toast.makeText(this, R.string.click_back_again, Toast.LENGTH_SHORT).show();
-
         new Handler().postDelayed(new Runnable() {
 
             @Override
             public void run() {
-
                 doubleBackToExitPressedOnce = false;
-
             }
         }, 2000);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
-
             case R.id.actionbar_refresh:
-
                 mapFragment.onRefreshMap();
-
                 break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
         if (null != mapFragment)
             mapFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -418,7 +397,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (null != mapFragment)
             mapFragment.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
@@ -426,25 +404,18 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         MenuInflater inflater = getMenuInflater();
-
         inflater.inflate(R.menu.action_bar_menu, menu);
-
         refresh_btn = menu.findItem(R.id.actionbar_refresh);
         refresh_btn.setVisible(true);
-
         return true;
     }
 
     @Override
     public void onSearchSynagogue(String address, final LatLng center) {
-
         mFragmentHelper.replaceFragment(R.id.MA_container, synagoguesFragment, SynagoguesFragment.TAG, null);
-
         mapFragment.startSearchMode(address);
         isShowSynagoguesFragment = true;
-
         if (null != mapFragment) {
             try {
                 synagoguesSource.fetchSynagogues(MAX_HITS_PER_REQUEST, center, DEFAULT_RADIUS_IN_KM, new ResponseListener<List<SynagogueDomain>>() {
@@ -471,5 +442,15 @@ public class MainActivity extends AppCompatActivity implements
 
     private void showSynagogueDetails(String id) {
         mFragmentHelper.replaceFragment(R.id.MA_main_container, SynagogueDetailsFragment.newInstance(id), SynagogueDetailsFragment.TAG, SynagogueDetailsFragment.TAG);
+    }
+
+    @Override
+    public void onCancelAlertDialog() {
+
+    }
+
+    @Override
+    public void onClickOkAlertDialog() {
+
     }
 }

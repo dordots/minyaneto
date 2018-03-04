@@ -38,7 +38,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
 
     @Override
     public SynagogueViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.tfila_cell_layout_main_screen, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tfila_main_screen, parent, false);
         SynagogueViewHolder SynagogueViewHolder = new SynagogueViewHolder(v);
         return SynagogueViewHolder;
     }
