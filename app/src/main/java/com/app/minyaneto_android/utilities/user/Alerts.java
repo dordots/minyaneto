@@ -92,8 +92,8 @@ public class Alerts {
 
 
     public interface OnCancelDialogListener {
-        public void onCancelAlertDialog();
-        public void onClickOkAlertDialog();
+        void onCancelAlertDialog();
+        void onClickOkAlertDialog();
     }
 
 }

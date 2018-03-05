@@ -69,11 +69,7 @@ public class Permissions {
         }
 
         int result = ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA);
-        if (result == PackageManager.PERMISSION_GRANTED){
-            return true;
-        } else {
-            return false;
-        }
+      return result == PackageManager.PERMISSION_GRANTED;
     }
 
 
@@ -86,11 +82,7 @@ public class Permissions {
         }
 
         int result = ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE);
-        if (result == PackageManager.PERMISSION_GRANTED){
-            return true;
-        } else {
-            return false;
-        }
+      return result == PackageManager.PERMISSION_GRANTED;
     }
 
     public static boolean checkPermissionForGPS(Activity activity){
@@ -102,11 +94,7 @@ public class Permissions {
         }
 
         int result = ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION);
-        if (result == PackageManager.PERMISSION_GRANTED){
-            return true;
-        } else {
-            return false;
-        }
+      return result == PackageManager.PERMISSION_GRANTED;
     }
 
 
@@ -119,11 +107,7 @@ public class Permissions {
         }
 
         int result = ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (result == PackageManager.PERMISSION_GRANTED){
-            return true;
-        } else {
-            return false;
-        }
+      return result == PackageManager.PERMISSION_GRANTED;
     }
 
 

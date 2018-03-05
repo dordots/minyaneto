@@ -39,11 +39,11 @@ public class NavigationHelper implements NavigationView.OnNavigationItemSelected
 
     private void initVariables() {
 
-        Toolbar toolbar = (Toolbar) mActivity.findViewById(R.id.sidebar_action);
+        Toolbar toolbar = mActivity.findViewById(R.id.sidebar_action);
 
         mActivity.setSupportActionBar(toolbar);
 
-        mDrawer = (DrawerLayout) mActivity.findViewById(R.id.drawerLayout);
+        mDrawer = mActivity.findViewById(R.id.drawerLayout);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 mActivity, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -52,7 +52,7 @@ public class NavigationHelper implements NavigationView.OnNavigationItemSelected
 
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) mActivity.findViewById(R.id.sidebar_navigation_view);
+        NavigationView navigationView = mActivity.findViewById(R.id.sidebar_navigation_view);
 
         navigationView.setNavigationItemSelectedListener(this);
 
