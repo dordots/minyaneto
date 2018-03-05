@@ -1,1 +1,1 @@
-include ':app', ':httpClient'
+include ':app'
