@@ -7,10 +7,6 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Created by aviv on 10/02/2018.
- */
-
 public class LocationHelper {
 
     public static String getAddressLineFromLatLng(Context context, LatLng latLng) {
