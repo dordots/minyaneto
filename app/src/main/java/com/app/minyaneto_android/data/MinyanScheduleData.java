@@ -4,40 +4,41 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class MinyanScheduleData {
-    @SerializedName("day")
-    @Expose
-    private String weekDay;
-    @SerializedName("name")
-    @Expose
-    private String prayType;
-    @SerializedName("time")
-    @Expose
-    private String stringTime;
 
-    public MinyanScheduleData(String weekDay, String prayType, String stringTime) {
-        this.weekDay = weekDay;
-        this.prayType = prayType;
-        this.stringTime = stringTime;
-    }
+  @SerializedName("day")
+  @Expose
+  private String weekDay;
+  @SerializedName("name")
+  @Expose
+  private String prayType;
+  @SerializedName("time")
+  @Expose
+  private String stringTime;
 
-    public String getWeekDay() {
-        return weekDay;
-    }
+  public MinyanScheduleData(String weekDay, String prayType, String stringTime) {
+    this.weekDay = weekDay;
+    this.prayType = prayType;
+    this.stringTime = stringTime;
+  }
 
-    public String getPrayType() {
-        return prayType;
-    }
+  public String getWeekDay() {
+    return weekDay;
+  }
 
-    public String getStringTime() {
-        return stringTime;
-    }
+  public String getPrayType() {
+    return prayType;
+  }
 
-    @Override
-    public String toString() {
-        return "MinyanScheduleData{" +
-                "weekDay='" + weekDay + '\'' +
-                ", prayType='" + prayType + '\'' +
-                ", stringTime='" + stringTime + '\'' +
-                '}';
-    }
+  public String getStringTime() {
+    return stringTime;
+  }
+
+  @Override
+  public String toString() {
+    return "MinyanScheduleData{" +
+        "weekDay='" + weekDay + '\'' +
+        ", prayType='" + prayType + '\'' +
+        ", stringTime='" + stringTime + '\'' +
+        '}';
+  }
 }

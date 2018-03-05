@@ -10,18 +10,19 @@ import android.net.NetworkInfo;
  */
 public class ApplicationManager {
 
-	/**
-	 * Checks if the device has Internet connection.
-	 * 
-	 * @return <code>true</code> if the phone is connected to the Internet.
-	 */
-	public static boolean isNetworkAvailable(Context context) {
+  /**
+   * Checks if the device has Internet connection.
+   *
+   * @return <code>true</code> if the phone is connected to the Internet.
+   */
+  public static boolean isNetworkAvailable(Context context) {
 
-		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    ConnectivityManager connectivityManager = (ConnectivityManager) context
+        .getSystemService(Context.CONNECTIVITY_SERVICE);
 
-		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 
-		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 
-	}
+  }
 }

@@ -9,7 +9,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-
 import com.app.minyaneto_android.R;
 
 
@@ -19,126 +18,127 @@ import com.app.minyaneto_android.R;
 
 public class NavigationHelper implements NavigationView.OnNavigationItemSelectedListener {
 
-    private AppCompatActivity mActivity;
+  private AppCompatActivity mActivity;
 
-    private DrawerLayout mDrawer;
+  private DrawerLayout mDrawer;
 
-    private OnMenuItemSelectListener mListener;
-
-
-    public NavigationHelper(AppCompatActivity mActivity, OnMenuItemSelectListener listener) {
-
-        this.mActivity = mActivity;
-
-        mListener = listener;
-
-        initVariables();
+  private OnMenuItemSelectListener mListener;
 
 
-    }
+  public NavigationHelper(AppCompatActivity mActivity, OnMenuItemSelectListener listener) {
 
-    private void initVariables() {
+    this.mActivity = mActivity;
 
-        Toolbar toolbar = mActivity.findViewById(R.id.sidebar_action);
+    mListener = listener;
 
-        mActivity.setSupportActionBar(toolbar);
-
-        mDrawer = mActivity.findViewById(R.id.drawerLayout);
-
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                mActivity, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
-        mDrawer.addDrawerListener(toggle);
-
-        toggle.syncState();
-
-        NavigationView navigationView = mActivity.findViewById(R.id.sidebar_navigation_view);
-
-        navigationView.setNavigationItemSelectedListener(this);
-
-        ActionBar supportActionBar = mActivity.getSupportActionBar();
-
-        if (supportActionBar != null) {
-
-            supportActionBar.setHomeButtonEnabled(true);
-        }
+    initVariables();
 
 
-    }
+  }
 
-    boolean closeDrawer() {
+  private void initVariables() {
 
-        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
+    Toolbar toolbar = mActivity.findViewById(R.id.sidebar_action);
 
-            mDrawer.closeDrawer(GravityCompat.START);
+    mActivity.setSupportActionBar(toolbar);
 
-            return true;
-        }
+    mDrawer = mActivity.findViewById(R.id.drawerLayout);
 
-        return false;
+    ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        mActivity, mDrawer, toolbar, R.string.navigation_drawer_open,
+        R.string.navigation_drawer_close);
+
+    mDrawer.addDrawerListener(toggle);
+
+    toggle.syncState();
+
+    NavigationView navigationView = mActivity.findViewById(R.id.sidebar_navigation_view);
+
+    navigationView.setNavigationItemSelectedListener(this);
+
+    ActionBar supportActionBar = mActivity.getSupportActionBar();
+
+    if (supportActionBar != null) {
+
+      supportActionBar.setHomeButtonEnabled(true);
     }
 
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+  }
 
-        switch (item.getItemId()) {
+  boolean closeDrawer() {
 
-            case R.id.sidebar_home:
+    if (mDrawer.isDrawerOpen(GravityCompat.START)) {
 
-                mListener.onMenuSelectHome();
+      mDrawer.closeDrawer(GravityCompat.START);
 
-                break;
-
-            case R.id.sidebar_searchMinyan:
-
-                mListener.onMenuSelectSearchMinyan();
-
-                break;
-
-            case R.id.sidebar_searchSynagogue:
-
-                mListener.onMenuSelectSearchSynagogue();
-
-                break;
-
-            case R.id.sidebar_addSynagogue:
-
-                mListener.onMenuSelectAddSynagogue();
-
-                break;
-
-            case R.id.sidebar_about:
-
-                mListener.onMenuSelectAbout();
-
-                break;
-
-            case R.id.sidebar_zmanim:
-
-                mListener.onMenuSelectZmanim();
-
-                break;
-        }
-
-        closeDrawer();
-
-        return true;
+      return true;
     }
 
+    return false;
+  }
 
-    public interface OnMenuItemSelectListener {
 
-        void onMenuSelectAddSynagogue();
+  @Override
+  public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        void onMenuSelectSearchSynagogue();
+    switch (item.getItemId()) {
 
-        void onMenuSelectSearchMinyan();
+      case R.id.sidebar_home:
 
-        void onMenuSelectAbout();
+        mListener.onMenuSelectHome();
 
-        void onMenuSelectHome();
+        break;
 
-        void onMenuSelectZmanim();
+      case R.id.sidebar_searchMinyan:
+
+        mListener.onMenuSelectSearchMinyan();
+
+        break;
+
+      case R.id.sidebar_searchSynagogue:
+
+        mListener.onMenuSelectSearchSynagogue();
+
+        break;
+
+      case R.id.sidebar_addSynagogue:
+
+        mListener.onMenuSelectAddSynagogue();
+
+        break;
+
+      case R.id.sidebar_about:
+
+        mListener.onMenuSelectAbout();
+
+        break;
+
+      case R.id.sidebar_zmanim:
+
+        mListener.onMenuSelectZmanim();
+
+        break;
     }
+
+    closeDrawer();
+
+    return true;
+  }
+
+
+  public interface OnMenuItemSelectListener {
+
+    void onMenuSelectAddSynagogue();
+
+    void onMenuSelectSearchSynagogue();
+
+    void onMenuSelectSearchMinyan();
+
+    void onMenuSelectAbout();
+
+    void onMenuSelectHome();
+
+    void onMenuSelectZmanim();
+  }
 }
