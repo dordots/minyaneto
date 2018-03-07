@@ -38,11 +38,14 @@ import com.app.minyaneto_android.utilities.fragment.FragmentHelper;
 import com.app.minyaneto_android.utilities.user.Alerts;
 import com.app.minyaneto_android.zmanim.ZmanimFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.testfairy.TestFairy;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import timber.log.Timber;
 
 import static com.app.minyaneto_android.Config.ADD_SYNAGOGUE_RADIUS_IN_KM;
 import static com.app.minyaneto_android.Config.DEFAULT_RADIUS_IN_KM;
@@ -79,6 +82,10 @@ public class MainActivity extends AppCompatActivity implements
         getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LOCALE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+
+        TestFairy.begin(this, "6f4c3da555567854de9cc48b9844007c2c63eeb2");
+        Timber.d("start");
+
         synagoguesSource = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(), new DataTransformer(), SynagogueCache.getInstance());
         mFragmentHelper = new FragmentHelper(this, new ActivityRunning());
         mNavigationHelper = new NavigationHelper(this, this);

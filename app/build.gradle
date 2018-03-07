@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 
 repositories {
     mavenCentral()
+    jcenter()
     maven {
         url 'https://maven.google.com/'
         name 'Google'
@@ -69,7 +70,9 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.7.3'
     implementation files('libs/zmanim-1.4.0alpha.jar')
     implementation 'android.arch.lifecycle:extensions:1.0.0'
-    implementation 'android.arch.lifecycle:extensions:1.0.0'
+    implementation 'testfairy:testfairy-android-sdk:1.5.7@aar'
+    implementation 'com.jakewharton.timber:timber:4.5.1'
+
 
     testImplementation 'junit:junit:4.12'
     testImplementation "org.mockito:mockito-core:$rootProject.ext.mockitoVersion"
