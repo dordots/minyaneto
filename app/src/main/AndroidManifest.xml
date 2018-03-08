@@ -16,12 +16,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".ui.acivities.MainActivity">
-
-        </activity>
-        <activity
-            android:name=".ui.acivities.SplashScreen"
-            android:screenOrientation="userPortrait"
-            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

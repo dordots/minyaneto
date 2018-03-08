@@ -5,24 +5,24 @@ import com.google.gson.annotations.SerializedName;
 
 public class LatLngStringData {
 
-    @SerializedName("lat")
-    @Expose
-    private String lat;
+  @SerializedName("lat")
+  @Expose
+  private String lat;
 
-    @SerializedName("lon")
-    @Expose
-    private String lon;
+  @SerializedName("lon")
+  @Expose
+  private String lon;
 
-    public LatLngStringData(String lat, String lon) {
-        this.lat = lat;
-        this.lon = lon;
-    }
+  public LatLngStringData(String lat, String lon) {
+    this.lat = lat;
+    this.lon = lon;
+  }
 
-    public String getLat() {
-        return lat;
-    }
+  public String getLat() {
+    return lat;
+  }
 
-    public String getLon() {
-        return lon;
-    }
+  public String getLon() {
+    return lon;
+  }
 }

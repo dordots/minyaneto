@@ -1,91 +1,91 @@
 package com.app.minyaneto_android.models.domain;
 
 import com.google.android.gms.maps.model.LatLng;
-
 import java.util.List;
 
 public class SynagogueDomain {
-    private String address;
-    private Boolean classes;
-    private String comments;
-    private String id;
-    private List<MinyanScheduleDomain> minyans;
-    private String name;
-    private String nosach;
-    private Boolean parking;
-    private Boolean seferTora;
-    private Boolean wheelchairAccessible;
-    private LatLng location;
 
-    public SynagogueDomain(String address,
-                           Boolean classes,
-                           String comments,
-                           String id,
-                           List<MinyanScheduleDomain> minyans,
-                           String name,
-                           String nosach,
-                           Boolean parking,
-                           Boolean seferTora,
-                           Boolean wheelchairAccessible,
-                           LatLng location) {
-        this.address = address;
-        this.classes = classes;
-        this.comments = comments;
-        this.id = id;
-        this.minyans = minyans;
-        this.name = name;
-        this.nosach = nosach;
-        this.parking = parking;
-        this.seferTora = seferTora;
-        this.wheelchairAccessible = wheelchairAccessible;
-        this.location = location;
-    }
+  private String address;
+  private Boolean classes;
+  private String comments;
+  private String id;
+  private List<MinyanScheduleDomain> minyans;
+  private String name;
+  private String nosach;
+  private Boolean parking;
+  private Boolean seferTora;
+  private Boolean wheelchairAccessible;
+  private LatLng location;
 
-    public String getAddress() {
-        return address;
-    }
+  public SynagogueDomain(String address,
+      Boolean classes,
+      String comments,
+      String id,
+      List<MinyanScheduleDomain> minyans,
+      String name,
+      String nosach,
+      Boolean parking,
+      Boolean seferTora,
+      Boolean wheelchairAccessible,
+      LatLng location) {
+    this.address = address;
+    this.classes = classes;
+    this.comments = comments;
+    this.id = id;
+    this.minyans = minyans;
+    this.name = name;
+    this.nosach = nosach;
+    this.parking = parking;
+    this.seferTora = seferTora;
+    this.wheelchairAccessible = wheelchairAccessible;
+    this.location = location;
+  }
 
-    public Boolean getClasses() {
-        return classes;
-    }
+  public String getAddress() {
+    return address;
+  }
 
-    public String getComments() {
-        return comments;
-    }
+  public Boolean getClasses() {
+    return classes;
+  }
 
-    public String getId() {
-        return id;
-    }
+  public String getComments() {
+    return comments;
+  }
 
-    public List<MinyanScheduleDomain> getMinyans() {
-        return minyans;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public List<MinyanScheduleDomain> getMinyans() {
+    return minyans;
+  }
 
-    public String getNosach() {
-        return nosach;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public Boolean getParking() {
-        return parking;
-    }
+  public String getNosach() {
+    return nosach;
+  }
 
-    public Boolean getSeferTora() {
-        return seferTora;
-    }
+  public Boolean getParking() {
+    return parking;
+  }
 
-    public Boolean getWheelchairAccessible() {
-        return wheelchairAccessible;
-    }
+  public Boolean getSeferTora() {
+    return seferTora;
+  }
 
-    public LatLng getLocation() {
-        return location;
-    }
+  public Boolean getWheelchairAccessible() {
+    return wheelchairAccessible;
+  }
 
-    public void addMinyan(MinyanScheduleDomain minyan) {
-        minyans.add(minyan);
-    }
+  public LatLng getLocation() {
+    return location;
+  }
+
+  public void addMinyan(MinyanScheduleDomain minyan) {
+    minyans.add(minyan);
+  }
 }

@@ -6,25 +6,26 @@ import com.app.minyaneto_android.models.time.PrayTime;
 
 
 public class MinyanScheduleDomain {
-    private WeekDay weekDay;
-    private PrayType prayType;
-    private PrayTime prayTime;
 
-    public MinyanScheduleDomain(WeekDay weekDay, PrayType prayType, PrayTime prayTime) {
-        this.weekDay = weekDay;
-        this.prayType = prayType;
-        this.prayTime = prayTime;
-    }
+  private WeekDay weekDay;
+  private PrayType prayType;
+  private PrayTime prayTime;
 
-    public WeekDay getWeekDay() {
-        return weekDay;
-    }
+  public MinyanScheduleDomain(WeekDay weekDay, PrayType prayType, PrayTime prayTime) {
+    this.weekDay = weekDay;
+    this.prayType = prayType;
+    this.prayTime = prayTime;
+  }
 
-    public PrayType getPrayType() {
-        return prayType;
-    }
+  public WeekDay getWeekDay() {
+    return weekDay;
+  }
 
-    public PrayTime getPrayTime() {
-        return prayTime;
-    }
+  public PrayType getPrayType() {
+    return prayType;
+  }
+
+  public PrayTime getPrayTime() {
+    return prayTime;
+  }
 }

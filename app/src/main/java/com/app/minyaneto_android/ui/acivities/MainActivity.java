@@ -1,5 +1,9 @@
 package com.app.minyaneto_android.ui.acivities;
 
+import static com.app.minyaneto_android.Config.ADD_SYNAGOGUE_RADIUS_IN_KM;
+import static com.app.minyaneto_android.Config.DEFAULT_RADIUS_IN_KM;
+import static com.app.minyaneto_android.Config.MAX_HITS_PER_REQUEST;
+
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
-
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.data.DataTransformer;
 import com.app.minyaneto_android.models.domain.MinyanScheduleDomain;
@@ -39,19 +42,11 @@ import com.app.minyaneto_android.utilities.fragment.FragmentHelper;
 import com.app.minyaneto_android.utilities.user.Alerts;
 import com.app.minyaneto_android.zmanim.ZmanimFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.testfairy.TestFairy;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import timber.log.Timber;
-
-import static com.app.minyaneto_android.Config.ADD_SYNAGOGUE_RADIUS_IN_KM;
-import static com.app.minyaneto_android.Config.DEFAULT_RADIUS_IN_KM;
-import static com.app.minyaneto_android.Config.MAX_HITS_PER_REQUEST;
-
 
 public class MainActivity extends AppCompatActivity implements
     Alerts.OnCancelDialogListener,
@@ -301,38 +296,45 @@ public class MainActivity extends AppCompatActivity implements
               if (null == response) {
                 synagoguesFragment
                     .updateSynagogues(new ArrayList<SynagogueDomain>(0), "החיפוש לא הצליח");
-              }
-              List<SynagogueDomain> synagogues = response;
+              } else
 
-              for (SynagogueDomain s : new ArrayList<>(synagogues)) {
-                if ((s.getMinyans().size() == 0) ||
-                    (nosach != null && !nosach.equals(s.getNosach()))) {
-                  synagogues.remove(s);
-                  continue;
-                }
+              {
+                List<SynagogueDomain> synagogues = response;
 
-                for (MinyanScheduleDomain m : new ArrayList<>(s.getMinyans())) {
-                  if (name != null && m.getPrayType() != name) {
-                    s.getMinyans().remove(m);
+                for (SynagogueDomain s : new ArrayList<>(synagogues)) {
+                  if ((s.getMinyans().size() == 0) ||
+                      (nosach != null && !nosach.equals(s.getNosach()))) {
+                    synagogues.remove(s);
+                    continue;
+                  }
+
+                  for (MinyanScheduleDomain m : new ArrayList<>(s.getMinyans())) {
+                    if (name != null && m.getPrayType() != name) {
+                      s.getMinyans().remove(m);
+                    }
+                  }
+                  if ("".equals(TimeUtility.getTimes(s.getMinyans(), date))) {
+                    synagogues.remove(s);
                   }
                 }
-                if ("".equals(TimeUtility.getTimes(s.getMinyans(), date))) {
-                  synagogues.remove(s);
+                if (null == name) {
+                  synagoguesFragment.updateSynagogues(synagogues,
+                      getResources().getString(R.string.no_minyans_found));
+                } else {
+                  synagoguesFragment.updateSynagogues(synagogues,
+                      getResources().getString(R.string.no_minyans_found_for_time));
                 }
-              }
-              if (null == name) {
-                synagoguesFragment.updateSynagogues(synagogues,
-                    getResources().getString(R.string.no_minyans_found));
-              } else {
-                synagoguesFragment.updateSynagogues(synagogues,
-                    getResources().getString(R.string.no_minyans_found_for_time));
               }
 
             }
           });
-    } catch (IOException e) {
+    } catch (
+        IOException e)
+
+    {
       e.printStackTrace();
     }
+
   }
 
 

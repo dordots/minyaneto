@@ -6,19 +6,19 @@ package com.app.minyaneto_android.utilities.fragment;
 public class ActivityRunning {
 
 
-    private boolean isRunning = true ;
+  private boolean isRunning = true;
 
-    public ActivityRunning() {
+  public ActivityRunning() {
 
-    }
+  }
 
-    public boolean isRunning() {
-        return isRunning;
-    }
+  public boolean isRunning() {
+    return isRunning;
+  }
 
-    public void setRunning(boolean running) {
-        isRunning = running;
-    }
+  public void setRunning(boolean running) {
+    isRunning = running;
+  }
 
 
 }

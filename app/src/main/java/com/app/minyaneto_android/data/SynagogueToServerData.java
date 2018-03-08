@@ -2,112 +2,112 @@ package com.app.minyaneto_android.data;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 public class SynagogueToServerData {
-    @SerializedName("address")
-    @Expose
-    private String address;
 
-    @SerializedName("classes")
-    @Expose
-    private Boolean classes;
+  @SerializedName("address")
+  @Expose
+  private String address;
 
-    @SerializedName("comments")
-    @Expose
-    private String comments;
+  @SerializedName("classes")
+  @Expose
+  private Boolean classes;
 
-    @SerializedName("geo")
-    @Expose
-    private LatLngDoubleData latLngDoubleData;
+  @SerializedName("comments")
+  @Expose
+  private String comments;
 
-    @SerializedName("minyans")
-    @Expose
-    private List<MinyanScheduleData> minyans;
+  @SerializedName("geo")
+  @Expose
+  private LatLngDoubleData latLngDoubleData;
 
-    @SerializedName("name")
-    @Expose
-    private String name;
+  @SerializedName("minyans")
+  @Expose
+  private List<MinyanScheduleData> minyans;
 
-    @SerializedName("nosach")
-    @Expose
-    private String nosach;
+  @SerializedName("name")
+  @Expose
+  private String name;
 
-    @SerializedName("parking")
-    @Expose
-    private Boolean parking;
+  @SerializedName("nosach")
+  @Expose
+  private String nosach;
 
-    @SerializedName("sefer-tora")
-    @Expose
-    private Boolean seferTora;
+  @SerializedName("parking")
+  @Expose
+  private Boolean parking;
 
-    @SerializedName("wheelchair-accessible")
-    @Expose
-    private Boolean wheelchairAccessible;
+  @SerializedName("sefer-tora")
+  @Expose
+  private Boolean seferTora;
 
-    public SynagogueToServerData(
-            String address,
-            Boolean classes,
-            String comments,
-            LatLngDoubleData latLngDoubleData,
-            List<MinyanScheduleData> minyans,
-            String name,
-            String nosach,
-            Boolean parking,
-            Boolean seferTora,
-            Boolean wheelchairAccessible) {
+  @SerializedName("wheelchair-accessible")
+  @Expose
+  private Boolean wheelchairAccessible;
 
-        this.address = address;
-        this.classes = classes;
-        this.comments = comments;
-        this.latLngDoubleData = latLngDoubleData;
-        this.minyans = minyans;
-        this.name = name;
-        this.nosach = nosach;
-        this.parking = parking;
-        this.seferTora = seferTora;
-        this.wheelchairAccessible = wheelchairAccessible;
-    }
+  public SynagogueToServerData(
+      String address,
+      Boolean classes,
+      String comments,
+      LatLngDoubleData latLngDoubleData,
+      List<MinyanScheduleData> minyans,
+      String name,
+      String nosach,
+      Boolean parking,
+      Boolean seferTora,
+      Boolean wheelchairAccessible) {
 
-    public String getName() {
-        return name;
-    }
+    this.address = address;
+    this.classes = classes;
+    this.comments = comments;
+    this.latLngDoubleData = latLngDoubleData;
+    this.minyans = minyans;
+    this.name = name;
+    this.nosach = nosach;
+    this.parking = parking;
+    this.seferTora = seferTora;
+    this.wheelchairAccessible = wheelchairAccessible;
+  }
 
-    public String getAddress() {
-        return address;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public Boolean getClasses() {
-        return classes;
-    }
+  public String getAddress() {
+    return address;
+  }
 
-    public String getComments() {
-        return comments;
-    }
+  public Boolean getClasses() {
+    return classes;
+  }
 
-    public LatLngDoubleData getLatLngDoubleData() {
-        return latLngDoubleData;
-    }
+  public String getComments() {
+    return comments;
+  }
 
-    public List<MinyanScheduleData> getMinyans() {
-        return minyans;
-    }
+  public LatLngDoubleData getLatLngDoubleData() {
+    return latLngDoubleData;
+  }
 
-    public String getNosach() {
-        return nosach;
-    }
+  public List<MinyanScheduleData> getMinyans() {
+    return minyans;
+  }
 
-    public Boolean getParking() {
-        return parking;
-    }
+  public String getNosach() {
+    return nosach;
+  }
 
-    public Boolean getSeferTora() {
-        return seferTora;
-    }
+  public Boolean getParking() {
+    return parking;
+  }
 
-    public Boolean getWheelchairAccessible() {
-        return wheelchairAccessible;
-    }
+  public Boolean getSeferTora() {
+    return seferTora;
+  }
+
+  public Boolean getWheelchairAccessible() {
+    return wheelchairAccessible;
+  }
 
 }

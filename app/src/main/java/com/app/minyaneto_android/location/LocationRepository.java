@@ -1,33 +1,33 @@
 package com.app.minyaneto_android.location;
 
 import android.location.Location;
-
-import com.app.minyaneto_android.utilities.LocationHelper;
 import com.google.android.gms.maps.model.LatLng;
 
 public class LocationRepository {
-    private static LocationRepository instance = new LocationRepository();
-    private Location lastKnownLocation;
 
-    private LocationRepository() {
-    }
+  private static LocationRepository instance = new LocationRepository();
+  private Location lastKnownLocation;
 
-    public static LocationRepository getInstance() {
-        return instance;
-    }
+  private LocationRepository() {
+  }
 
-    public Location getLastKnownLocation() {
-        return lastKnownLocation;
-    }
+  public static LocationRepository getInstance() {
+    return instance;
+  }
 
-    public void setLastKnownLocation(Location lastKnownLocation) {
-        this.lastKnownLocation = lastKnownLocation;
-    }
+  public Location getLastKnownLocation() {
+    return lastKnownLocation;
+  }
 
-    public LatLng getLastKnownLatLng() {
-        Location location = getLastKnownLocation();
-        if(null==location)
-            return  null;
-        return new LatLng(location.getLatitude(), location.getLongitude());
+  public void setLastKnownLocation(Location lastKnownLocation) {
+    this.lastKnownLocation = lastKnownLocation;
+  }
+
+  public LatLng getLastKnownLatLng() {
+    Location location = getLastKnownLocation();
+    if (null == location) {
+      return null;
     }
+    return new LatLng(location.getLatitude(), location.getLongitude());
+  }
 }
