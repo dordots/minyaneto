@@ -5,9 +5,9 @@ import android.app.FragmentManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
+import timber.log.Timber;
 
 /**
  * Created by david vardi.
@@ -17,192 +17,117 @@ import java.util.List;
 public class FragmentHelper {
 
   private static final String TAG = FragmentHelper.class.getSimpleName();
-
   private final FragmentActivity mFragmentActivity;
-
   private List<AddFragment> commitFragments = new ArrayList<>();
-
   private ActivityRunning mActivityRunning;
 
-
   public FragmentHelper(FragmentActivity fragmentActivity, ActivityRunning activityRunning) {
-
     this.mFragmentActivity = fragmentActivity;
-
     this.mActivityRunning = activityRunning;
-
   }
 
-
   public void addFragment(int containerId, Fragment fragment, String tag, String tagToBackStack) {
-
     if (mActivityRunning.isRunning()) {
-
       if (fragment.isAdded()) {
         return;
       }
-
       FragmentTransaction fragmentTransaction =
           this.mFragmentActivity.getSupportFragmentManager().beginTransaction();
-
       if (tagToBackStack != null) {
-
         fragmentTransaction.addToBackStack(tagToBackStack);
-
       }
-
       fragmentTransaction.add(containerId, fragment, tag);
-
       fragmentTransaction.commit();
-
     } else {
-
       addToListCommit(containerId, fragment, tag, tagToBackStack, AddFragment.Action.ADD);
-
     }
   }
-
 
   public void addFragment(int containerId, Fragment fragment, String tag) {
 
     if (mActivityRunning.isRunning()) {
-
       if (fragment.isAdded()) {
         return;
       }
-
       FragmentTransaction fragmentTransaction =
           this.mFragmentActivity.getSupportFragmentManager().beginTransaction();
-
       fragmentTransaction.add(containerId, fragment, tag);
-
       fragmentTransaction.commit();
-
     } else {
-
       addToListCommit(containerId, fragment, tag, null, AddFragment.Action.ADD);
-
     }
-
   }
-
 
   public void replaceFragment(int containerId, Fragment fragment, String tag,
       String tagToBackStack) {
 
     if (mActivityRunning.isRunning()) {
-
       if (fragment.isAdded()) {
         return;
       }
-
       FragmentTransaction fragmentTransaction =
           this.mFragmentActivity.getSupportFragmentManager().beginTransaction();
-
       if (tagToBackStack != null) {
-
         fragmentTransaction.addToBackStack(tagToBackStack);
-
       }
-
       fragmentTransaction.replace(containerId, fragment, tag);
-
       fragmentTransaction.commit();
-
     } else {
-
       addToListCommit(containerId, fragment, tag, tagToBackStack, AddFragment.Action.REPLACE);
-
     }
   }
 
-
   public void popBackStack(String name) {
-
-    if (mActivityRunning.isRunning())
-
-    {
+    if (mActivityRunning.isRunning()) {
       mFragmentActivity.getSupportFragmentManager()
           .popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     } else {
-
       addToListCommit(0, null, name, null, AddFragment.Action.POP);
-
     }
-
   }
-
 
   public void removeAllFragments() {
-
     List<Fragment> fragments = mFragmentActivity.getSupportFragmentManager().getFragments();
-
     mFragmentActivity.getSupportFragmentManager().popBackStack();
-
     mFragmentActivity.getSupportFragmentManager()
         .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
     if (fragments != null) {
-
       for (Fragment fragment : fragments) {
-
         removeFragment(fragment);
-
       }
-
     }
 
   }
-
 
   public void removeFragment(String tag, boolean popBackStack) {
 
     if (mActivityRunning.isRunning()) {
-
-      Log.d(TAG, " removeFragment  mActivityRunning");
-
+      Timber.d(" removeFragment  mActivityRunning");
       Fragment fragment =
           mFragmentActivity.getSupportFragmentManager().findFragmentByTag(tag);
-
       removeFragment(fragment);
-
       if (popBackStack) {
-
         mFragmentActivity.getSupportFragmentManager().popBackStack();
-
       }
-
     } else {
-
-      Log.d(TAG, " ! removeFragment  ! mActivityRunning");
-
+      Timber.d(" ! removeFragment  ! mActivityRunning");
       addToListCommit(0, null, tag, popBackStack, null, AddFragment.Action.REMOVE);
-
     }
-
   }
 
 
   public void removeFragment(Fragment fragment) {
 
     if (fragment != null) {
-
-      Log.d(TAG, "removeFragment");
-
+      Timber.d("removeFragment");
       FragmentTransaction fragmentTransaction =
           this.mFragmentActivity.getSupportFragmentManager().beginTransaction();
-
       fragmentTransaction.remove(fragment)
-
           .commit();
     } else {
-
-      Log.d(TAG, "! removeFragment");
-
+      Timber.d("! removeFragment");
     }
-
   }
-
 
   public void commitAll() {
 

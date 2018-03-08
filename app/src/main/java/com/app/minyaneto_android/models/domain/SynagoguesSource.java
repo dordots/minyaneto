@@ -1,6 +1,5 @@
 package com.app.minyaneto_android.models.domain;
 
-import android.util.Log;
 import com.app.minyaneto_android.data.DataTransformer;
 import com.app.minyaneto_android.data.SynagogueData;
 import com.app.minyaneto_android.data.SynagogueIdData;
@@ -13,6 +12,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class SynagoguesSource {
 
@@ -45,8 +45,7 @@ public class SynagoguesSource {
 
       @Override
       public void onFailure(Call<List<SynagogueData>> call, Throwable t) {
-        Log.w(SynagoguesSource.class.getSimpleName(),
-            "Couldn't get synagogues data, an exception occurred:\n" + t.getMessage());
+        Timber.w(t, "Couldn't get synagogues data, an exception occurred:");
         listener.onResponse(null);
       }
     };
@@ -69,8 +68,7 @@ public class SynagoguesSource {
                   SynagogueDomain synagogue = transformer.transform(data);
                   cache.putSynagogue(synagogue);
                 } catch (Exception e) {
-                  Log.w(SynagoguesSource.class.getSimpleName(),
-                      "Couldn't parse synagogue data from server: " + data.toString());
+                  Timber.w(e, "Couldn't parse synagogue data from server: " + data.toString());
                 }
 
               }
@@ -87,16 +85,14 @@ public class SynagoguesSource {
 
       @Override
       public void onFailure(Call<SynagogueIdData> call, Throwable t) {
-        Log.w(SynagoguesSource.class.getSimpleName(),
-            "Couldn't add synagogue, an exception occurred:\n" + t.getMessage());
+        Timber.w(t, "Couldn't add synagogue, an exception occurred:");
       }
     };
     try {
       SynagogueToServerData toServer = transformer.transform(synagogue);
       api.addSynagogue(toServer).enqueue(callback);
     } catch (Exception e) {
-      Log.w(SynagoguesSource.class.getSimpleName(),
-          "Couldn't parse synagogue data for send to server: " + synagogue.toString());
+      Timber.w(e, "Couldn't parse synagogue data for send to server: %s", synagogue.toString());
     }
   }
 
@@ -109,16 +105,14 @@ public class SynagoguesSource {
 
       @Override
       public void onFailure(Call<Void> call, Throwable t) {
-        Log.w(SynagoguesSource.class.getSimpleName(),
-            "Couldn't add synagogue, an exception occurred:\n" + t.getMessage());
+        Timber.w(t, "Couldn't add synagogue, an exception occurred:");
       }
     };
     try {
       SynagogueToServerData toServer = transformer.transform(synagogue);
       api.updateSynagogue(synagogue.getId(), toServer).enqueue(callback);
     } catch (Exception e) {
-      Log.w(SynagoguesSource.class.getSimpleName(),
-          "Couldn't parse synagogue data for update server: " + synagogue.toString());
+      Timber.w(e, "Couldn't parse synagogue data for update server: " + synagogue.toString());
     }
   }
 }

@@ -1,6 +1,5 @@
 package com.app.minyaneto_android.data;
 
-import android.util.Log;
 import com.app.minyaneto_android.models.domain.MinyanScheduleDomain;
 import com.app.minyaneto_android.models.domain.SynagogueDomain;
 import com.app.minyaneto_android.models.minyan.PrayType;
@@ -11,6 +10,7 @@ import com.app.minyaneto_android.models.time.RelativeTimeType;
 import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.List;
+import timber.log.Timber;
 
 public class DataTransformer {
 
@@ -20,8 +20,7 @@ public class DataTransformer {
       try {
         synagogues.add(transform(data));
       } catch (Exception e) {
-        Log.w(DataTransformer.class.getSimpleName(),
-            "Couldn't parse synagogues data from server: " + data.toString());
+        Timber.w("Couldn't parse synagogues data from server: %s", data);
       }
     }
     return synagogues;
@@ -34,8 +33,7 @@ public class DataTransformer {
         MinyanScheduleDomain model = transform(data);
         minyans.add(model);
       } catch (Exception e) {
-        Log.w(DataTransformer.class.getSimpleName(),
-            "Couldn't parse minyan data from server: " + data.toString());
+        Timber.w("Couldn't parse minyan data from server: %s", data);
       }
     }
     return minyans;
