@@ -1,27 +1,5 @@
 apply plugin: 'com.android.application'
-
-repositories {
-    mavenCentral()
-    jcenter()
-    maven {
-        url 'https://maven.google.com/'
-        name 'Google'
-    }
-}
-
-static def downloadJarsToLibs(fileName, url) {
-    def f = new File('app\\libs\\' + fileName)
-    if (!f.exists()) {
-        new URL(url).withInputStream { i -> f.withOutputStream { it << i } }
-    }
-}
-
-task downloadHostedJars() {
-    new File("app/libs").mkdirs()
-    def jars = ['zmanim-1.4.0alpha.jar': 'https://github.com/KosherJava/zmanim/raw/master/lib/zmanim-1.4.0alpha.jar'
-    ]
-    jars.each { fn, url -> downloadJarsToLibs(fn, url) }
-}
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 26
@@ -79,4 +57,22 @@ dependencies {
     testImplementation "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
     testImplementation "android.arch.core:core-testing:1.0.0"
     testImplementation "org.robolectric:robolectric:3.5.1"
+    compile('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
+        transitive = true;
+    }
+
+}
+
+static def downloadJarsToLibs(fileName, url) {
+    def f = new File('app\\libs\\' + fileName)
+    if (!f.exists()) {
+        new URL(url).withInputStream { i -> f.withOutputStream { it << i } }
+    }
+}
+
+task downloadHostedJars() {
+    new File("app/libs").mkdirs()
+    def jars = ['zmanim-1.4.0alpha.jar': 'https://github.com/KosherJava/zmanim/raw/master/lib/zmanim-1.4.0alpha.jar'
+    ]
+    jars.each { fn, url -> downloadJarsToLibs(fn, url) }
 }
