@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +34,7 @@ import com.app.minyaneto_android.restApi.ResponseListener;
 import com.app.minyaneto_android.restApi.RestAPIUtility;
 import com.app.minyaneto_android.utilities.SynagogueUtils;
 import java.util.ArrayList;
+import timber.log.Timber;
 
 public class AddMinyanFragment extends Fragment implements View.OnClickListener {
 
@@ -185,8 +185,7 @@ public class AddMinyanFragment extends Fragment implements View.OnClickListener 
         }
       });
     } catch (Exception e) {
-      Log.w(AddMinyanFragment.class.getSimpleName(),
-          "Couldn't add synagogue, an exception occurred:\n" + e.getMessage());
+      Timber.w(e, "Couldn't get synagogues data, an exception occurred:");
     }
   }
 
@@ -223,16 +222,16 @@ public class AddMinyanFragment extends Fragment implements View.OnClickListener 
   @NonNull
   private PrayTime getPrayTime() {
     PrayTime time;
-      if (inRelativeTimeMode) {
-          time = new PrayTime(new RelativeTime(
-              (RelativeTimeType) spinnerRelativeTimeType.getSelectedItem(),
-              Integer.parseInt(etMinutes.getText().toString())));
-      } else if (Build.VERSION.SDK_INT >= 23) {
-          time = new PrayTime(new ExactTime(timePicker.getHour(), timePicker.getMinute()));
-      } else {
-          time = new PrayTime(
-              new ExactTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute()));
-      }
+    if (inRelativeTimeMode) {
+      time = new PrayTime(new RelativeTime(
+          (RelativeTimeType) spinnerRelativeTimeType.getSelectedItem(),
+          Integer.parseInt(etMinutes.getText().toString())));
+    } else if (Build.VERSION.SDK_INT >= 23) {
+      time = new PrayTime(new ExactTime(timePicker.getHour(), timePicker.getMinute()));
+    } else {
+      time = new PrayTime(
+          new ExactTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute()));
+    }
     return time;
   }
 

@@ -1,26 +1,5 @@
 apply plugin: 'com.android.application'
-
-repositories {
-    mavenCentral()
-    maven {
-        url 'https://maven.google.com/'
-        name 'Google'
-    }
-}
-
-static def downloadJarsToLibs(fileName, url) {
-    def f = new File('app\\libs\\' + fileName)
-    if (!f.exists()) {
-        new URL(url).withInputStream { i -> f.withOutputStream { it << i } }
-    }
-}
-
-task downloadHostedJars() {
-    new File("app/libs").mkdirs()
-    def jars = ['zmanim-1.4.0alpha.jar': 'https://github.com/KosherJava/zmanim/raw/master/lib/zmanim-1.4.0alpha.jar'
-    ]
-    jars.each { fn, url -> downloadJarsToLibs(fn, url) }
-}
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 26
@@ -69,11 +48,31 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.7.3'
     implementation files('libs/zmanim-1.4.0alpha.jar')
     implementation 'android.arch.lifecycle:extensions:1.0.0'
-    implementation 'android.arch.lifecycle:extensions:1.0.0'
+    implementation 'testfairy:testfairy-android-sdk:1.5.7@aar'
+    implementation 'com.jakewharton.timber:timber:4.5.1'
+
 
     testImplementation 'junit:junit:4.12'
     testImplementation "org.mockito:mockito-core:$rootProject.ext.mockitoVersion"
     testImplementation "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
     testImplementation "android.arch.core:core-testing:1.0.0"
     testImplementation "org.robolectric:robolectric:3.5.1"
+    compile('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
+        transitive = true;
+    }
+
+}
+
+static def downloadJarsToLibs(fileName, url) {
+    def f = new File('app\\libs\\' + fileName)
+    if (!f.exists()) {
+        new URL(url).withInputStream { i -> f.withOutputStream { it << i } }
+    }
+}
+
+task downloadHostedJars() {
+    new File("app/libs").mkdirs()
+    def jars = ['zmanim-1.4.0alpha.jar': 'https://github.com/KosherJava/zmanim/raw/master/lib/zmanim-1.4.0alpha.jar'
+    ]
+    jars.each { fn, url -> downloadJarsToLibs(fn, url) }
 }

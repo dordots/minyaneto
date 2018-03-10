@@ -25,6 +25,7 @@ import com.app.minyaneto_android.models.domain.SynagogueDomain;
 import com.app.minyaneto_android.models.domain.SynagoguesSource;
 import com.app.minyaneto_android.models.minyan.PrayType;
 import com.app.minyaneto_android.models.time.TimeUtility;
+import com.app.minyaneto_android.monitoring.TestFairyInstaller;
 import com.app.minyaneto_android.restApi.ResponseListener;
 import com.app.minyaneto_android.restApi.RestAPIUtility;
 import com.app.minyaneto_android.ui.fragments.AboutFragment;
@@ -45,7 +46,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements
     Alerts.OnCancelDialogListener,
@@ -77,6 +78,10 @@ public class MainActivity extends AppCompatActivity implements
     getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LOCALE);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main_activity);
+
+    TestFairyInstaller.install(this);
+    Timber.d("onCreate");
+
     synagoguesSource = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(),
         new DataTransformer(), SynagogueCache.getInstance());
     mFragmentHelper = new FragmentHelper(this, new ActivityRunning());
@@ -291,7 +296,9 @@ public class MainActivity extends AppCompatActivity implements
               if (null == response) {
                 synagoguesFragment
                     .updateSynagogues(new ArrayList<SynagogueDomain>(0), "החיפוש לא הצליח");
-              } else {
+              } else
+
+              {
                 List<SynagogueDomain> synagogues = response;
 
                 for (SynagogueDomain s : new ArrayList<>(synagogues)) {
@@ -318,11 +325,16 @@ public class MainActivity extends AppCompatActivity implements
                       getResources().getString(R.string.no_minyans_found_for_time));
                 }
               }
+
             }
           });
-    } catch (IOException e) {
+    } catch (
+        IOException e)
+
+    {
       e.printStackTrace();
     }
+
   }
 
 
