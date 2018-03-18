@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LOCALE);
+    setTheme(R.style.AppTheme);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main_activity);
 

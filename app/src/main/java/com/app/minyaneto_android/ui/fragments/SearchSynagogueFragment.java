@@ -109,11 +109,18 @@ public class SearchSynagogueFragment extends Fragment implements
     super.onStart();
     Location location = LocationRepository.getInstance().getLastKnownLocation();
     mLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-    String address = LocationHelper.getAddressLineFromLatLng(getContext(), mLatLng);
-    if (mListener != null) {
-      mListener.onUpdateMarker(mLatLng, address);
-    }
-    updateSynagogueAddress(address);
+    new Runnable(){
+
+      @Override
+      public void run() {
+        String address = LocationHelper.getAddressLineFromLatLng(getContext(), mLatLng);
+        if (mListener != null) {
+          mListener.onUpdateMarker(mLatLng, address);
+        }
+        updateSynagogueAddress(address);
+      }
+
+    }.run();
   }
 
   @Override

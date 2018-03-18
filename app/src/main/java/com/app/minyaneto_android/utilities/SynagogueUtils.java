@@ -54,7 +54,7 @@ public class SynagogueUtils {
       case DAWN:
         return context.getResources().getString(R.string.relative_time_dawn);
       case SUNSET:
-        return context.getResources().getString(R.string.relative_time_sunrise);
+        return context.getResources().getString(R.string.relative_time_sunset);
       case SUNRISE:
         return context.getResources().getString(R.string.relative_time_sunrise);
       case STARS_OUT:

@@ -154,11 +154,18 @@ public class SearchMinyanFragment extends Fragment implements
     if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
       Place mPlace = PlacePicker.getPlace(getActivity(), data);
       mLatLng = mPlace.getLatLng();
-      String address = mPlace.getAddress().toString();
-      if (mListener != null) {
-        mListener.onUpdateMarker(mLatLng, address);
-      }
-      updateSynagogueAddress(address);
+      new Runnable(){
+
+        @Override
+        public void run() {
+          String address = LocationHelper.getAddressLineFromLatLng(getContext(), mLatLng);
+          if (mListener != null) {
+            mListener.onUpdateMarker(mLatLng, address);
+          }
+          updateSynagogueAddress(address);
+        }
+
+      }.run();
     }
   }
 

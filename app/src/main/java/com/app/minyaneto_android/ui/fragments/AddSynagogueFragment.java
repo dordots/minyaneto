@@ -1,10 +1,12 @@
 package com.app.minyaneto_android.ui.fragments;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -49,7 +51,7 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
   Button btnAddSynagogue;
   LatLng mLatLng;
   private AddSynagogueListener mListener;
-
+  ProgressDialog progress;
   public static AddSynagogueFragment getInstance() {
 
     return new AddSynagogueFragment();
@@ -115,6 +117,8 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
         cbWheelchair_accessible.isChecked(),
         mLatLng
     );
+    progress = ProgressDialog.show(getContext(),"og title",
+        "dialog message", true);
 
     SynagoguesSource source = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(),
         new DataTransformer(), SynagogueCache.getInstance());
@@ -125,6 +129,10 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
             getContext().getResources().getString(R.string.seccess_add_synagogue),
             Toast.LENGTH_SHORT).show();
         mListener.onAddSynagogue(response);
+        if(null != progress){
+          progress.dismiss();
+          progress=null;
+        }
       }
     });
   }
@@ -158,11 +166,19 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
     super.onStart();
     Location location = LocationRepository.getInstance().getLastKnownLocation();
     mLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-    String address = LocationHelper.getAddressLineFromLatLng(getContext(), mLatLng);
-    if (mListener != null) {
-      mListener.onUpdateMarker(mLatLng, address);
-    }
-    updateSynagogueAddress(address);
+    new Runnable(){
+
+      @Override
+      public void run() {
+        String address = LocationHelper.getAddressLineFromLatLng(getContext(), mLatLng);
+        if (mListener != null) {
+          mListener.onUpdateMarker(mLatLng, address);
+        }
+        updateSynagogueAddress(address);
+      }
+
+    }.run();
+
   }
 
 
