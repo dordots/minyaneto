@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class SynagoguesFragment extends Fragment implements View.OnClickListener {
@@ -30,6 +31,8 @@ public class SynagoguesFragment extends Fragment implements View.OnClickListener
   private View mProgress;
   private TextView mError;
   private FloatingActionButton searchMinyan;
+  private Date mDate;
+  private LatLng mLatLng;
 
 
   public static SynagoguesFragment newInstance() {
@@ -61,7 +64,7 @@ public class SynagoguesFragment extends Fragment implements View.OnClickListener
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
     linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     mSynagoguesView.setLayoutManager(linearLayoutManager);
-    mAdapter = new SynagogueAdapter(mSynagogues);
+    mAdapter = new SynagogueAdapter(mSynagogues,mDate,mLatLng);
     mSynagoguesView.setAdapter(mAdapter);
     mProgress = view.findViewById(R.id.FS_progress);
     mError = view.findViewById(R.id.FS_error);
@@ -95,7 +98,9 @@ public class SynagoguesFragment extends Fragment implements View.OnClickListener
 
   }
 
-  public void updateSynagogues(List<SynagogueDomain> synagogues, String msg) {
+  public void updateSynagogues(List<SynagogueDomain> synagogues, String msg, Date date, LatLng center) {
+    mDate=date;
+    mLatLng=center;
     mSynagogues.clear();
     if (synagogues.size() == 0) {
       mError.setVisibility(View.VISIBLE);
@@ -105,6 +110,8 @@ public class SynagoguesFragment extends Fragment implements View.OnClickListener
       mSynagogues.addAll(synagogues);
     }
     mProgress.setVisibility(View.GONE);
+    mAdapter = new SynagogueAdapter(mSynagogues,mDate,mLatLng);
+    mSynagoguesView.setAdapter(mAdapter);
     updateAdapter();
   }
 

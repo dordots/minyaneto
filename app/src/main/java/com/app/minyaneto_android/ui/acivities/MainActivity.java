@@ -296,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements
 
               if (null == response) {
                 synagoguesFragment
-                    .updateSynagogues(new ArrayList<SynagogueDomain>(0), "החיפוש לא הצליח");
+                    .updateSynagogues(new ArrayList<SynagogueDomain>(0),"החיפוש לא הצליח",date,center);
               } else
 
               {
@@ -308,22 +308,22 @@ public class MainActivity extends AppCompatActivity implements
                     synagogues.remove(s);
                     continue;
                   }
-
-                  for (MinyanScheduleDomain m : new ArrayList<>(s.getMinyans())) {
-                    if (name != null && m.getPrayType() != name) {
-                      s.getMinyans().remove(m);
-                    }
-                  }
+//
+//                  for (MinyanScheduleDomain m : new ArrayList<>(s.getMinyans())) {
+//                    if (name != null && m.getPrayType() != name) {
+//                      s.getMinyans().remove(m);
+//                    }
+//                  }
                   if ("".equals(TimeUtility.getTimes(s.getMinyans(), date))) {
                     synagogues.remove(s);
                   }
                 }
                 if (null == name) {
                   synagoguesFragment.updateSynagogues(synagogues,
-                      getResources().getString(R.string.no_minyans_found));
+                      getResources().getString(R.string.no_minyans_found),date,center);
                 } else {
                   synagoguesFragment.updateSynagogues(synagogues,
-                      getResources().getString(R.string.no_minyans_found_for_time));
+                      getResources().getString(R.string.no_minyans_found_for_time),date,center);
                 }
               }
 
@@ -459,7 +459,7 @@ public class MainActivity extends AppCompatActivity implements
               @Override
               public void onResponse(List<SynagogueDomain> response) {
                 synagoguesFragment.updateSynagogues(response,
-                    getResources().getString(R.string.no_synagogues_found));
+                    getResources().getString(R.string.no_synagogues_found), null, center);
               }
             });
       } catch (IOException e) {

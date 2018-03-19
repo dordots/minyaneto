@@ -105,13 +105,14 @@ public class TimeUtility {
         myResult.add(format.format(f));
       }
     }
+    final Date finalDate = date;
     Collections.sort(myResult, new Comparator<String>() {
       public int compare(String o1, String o2) {
-        Date date1 = new Date();
+        Date date1 = finalDate;
         date1.setHours(Integer.parseInt(o1.split(":")[0]));
         date1.setMinutes(Integer.parseInt(o1.split(":")[1]));
 
-        Date date2 = new Date();
+        Date date2 = finalDate;
         date2.setHours(Integer.parseInt(o2.split(":")[0]));
         date2.setMinutes(Integer.parseInt(o2.split(":")[1]));
 

@@ -12,6 +12,7 @@ import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.location.LocationUtility;
 import com.app.minyaneto_android.models.domain.SynagogueDomain;
 import com.app.minyaneto_android.models.time.TimeUtility;
+import com.google.android.gms.maps.model.LatLng;
 import java.util.Date;
 import java.util.List;
 
@@ -20,9 +21,13 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
   private List<SynagogueDomain> synagogues;
   private SynagogueClickListener myClickListener;
   private int rowIndex = -1;
+  private Date mDate;
+  private LatLng mLatLng;
 
-  public SynagogueAdapter(List<SynagogueDomain> synagogues) {
+  public SynagogueAdapter(List<SynagogueDomain> synagogues, Date date, LatLng latLng) {
     this.synagogues = synagogues;
+    mDate=date;
+    mLatLng=latLng;
   }
 
   public void setMyClickListener(SynagogueClickListener listener) {
@@ -46,14 +51,12 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
   public void onBindViewHolder(SynagogueViewHolder holder, final int position) {
     SynagogueDomain synagogue = synagogues.get(position);
     holder.nameTextView.setText(synagogue.getName());
-    // holder.walkingTime.setText(synagogue.getWalking_time()+"");
-    // holder.drivigTime.setText(synagogue.getDriving_time()+"");
 
     if (synagogue.getMinyans().size() > 0) {
       //TODO real time from minyans
-      holder.prayerTimeTextView.setText(TimeUtility.getTimes(synagogue.getMinyans(), new Date()));
+      holder.prayerTimeTextView.setText(TimeUtility.getTimes(synagogue.getMinyans(), mDate));
     }
-    double distance = LocationUtility.getDistance(synagogue);
+    double distance = LocationUtility.calculateDistance(synagogue.getLocation(), mLatLng);
     if (distance < 1000) {
       holder.distanceSynagogueTextView.setText(String.format("%.2f ", distance) + "מ'");
     } else {
