@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -50,8 +49,9 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
   CheckBox cbLessons;
   Button btnAddSynagogue;
   LatLng mLatLng;
-  private AddSynagogueListener mListener;
   ProgressDialog progress;
+  private AddSynagogueListener mListener;
+
   public static AddSynagogueFragment getInstance() {
 
     return new AddSynagogueFragment();
@@ -117,7 +117,7 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
         cbWheelchair_accessible.isChecked(),
         mLatLng
     );
-    progress = ProgressDialog.show(getContext(),"og title",
+    progress = ProgressDialog.show(getContext(), "og title",
         "dialog message", true);
 
     SynagoguesSource source = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(),
@@ -129,9 +129,9 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
             getContext().getResources().getString(R.string.seccess_add_synagogue),
             Toast.LENGTH_SHORT).show();
         mListener.onAddSynagogue(response);
-        if(null != progress){
+        if (null != progress) {
           progress.dismiss();
-          progress=null;
+          progress = null;
         }
       }
     });
@@ -166,7 +166,7 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
     super.onStart();
     Location location = LocationRepository.getInstance().getLastKnownLocation();
     mLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-    new Runnable(){
+    new Runnable() {
 
       @Override
       public void run() {
