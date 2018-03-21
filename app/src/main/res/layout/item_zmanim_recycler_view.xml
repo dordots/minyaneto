@@ -9,7 +9,6 @@
   android:layout_marginStart="@dimen/card_margin_horizontal_big_activity"
   android:layout_marginEnd="@dimen/card_margin_horizontal_big_activity"
   android:background="@color/white"
-  android:foreground="?attr/selectableItemBackground"
   tools:cardCornerRadius="@dimen/card_recycler_corner_radius"
   tools:cardElevation="@dimen/card_recycler_elevation">
 
@@ -41,6 +40,7 @@
       android:layout_centerVertical="true"
       android:textColor="@color/red"
       android:textSize="@dimen/extra_large_text_font"
+      tools:ignore="RelativeOverlap"
       tools:text="05:16"/>
 
   </RelativeLayout>
