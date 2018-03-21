@@ -50,9 +50,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * Created by david vardi.
- */
 public class MapFragment extends Fragment implements OnMapReadyCallback,
     ActivityCompat.OnRequestPermissionsResultCallback,
     GoogleMap.OnMarkerClickListener, GoogleApiClient.ConnectionCallbacks,
@@ -475,9 +472,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         .addApi(LocationServices.API).build();
   }
 
-  /**
-   * Creating location request object
-   */
   protected void createLocationRequest() {
     mLocationRequest = new LocationRequest();
     mLocationRequest.setInterval(UPDATE_INTERVAL);
@@ -486,9 +480,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
   }
 
-  /**
-   * Method to verify google play services on the device
-   */
   private boolean checkPlayServices() {
     int resultCode = GoogleApiAvailability.getInstance()
         .isGooglePlayServicesAvailable(getActivity());

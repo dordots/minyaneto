@@ -12,117 +12,67 @@ import android.view.MenuItem;
 import com.app.minyaneto_android.R;
 
 
-/**
- * Created by david vardi.
- */
-
 public class NavigationHelper implements NavigationView.OnNavigationItemSelectedListener {
 
   private AppCompatActivity mActivity;
-
   private DrawerLayout mDrawer;
-
   private OnMenuItemSelectListener mListener;
 
-
   public NavigationHelper(AppCompatActivity mActivity, OnMenuItemSelectListener listener) {
-
     this.mActivity = mActivity;
-
     mListener = listener;
-
     initVariables();
-
-
   }
 
   private void initVariables() {
-
     Toolbar toolbar = mActivity.findViewById(R.id.sidebar_action);
-
     mActivity.setSupportActionBar(toolbar);
-
     mDrawer = mActivity.findViewById(R.id.drawerLayout);
-
     ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
         mActivity, mDrawer, toolbar, R.string.navigation_drawer_open,
         R.string.navigation_drawer_close);
-
     mDrawer.addDrawerListener(toggle);
-
     toggle.syncState();
-
     NavigationView navigationView = mActivity.findViewById(R.id.sidebar_navigation_view);
-
     navigationView.setNavigationItemSelectedListener(this);
-
     ActionBar supportActionBar = mActivity.getSupportActionBar();
-
     if (supportActionBar != null) {
-
       supportActionBar.setHomeButtonEnabled(true);
     }
-
-
   }
 
   boolean closeDrawer() {
-
     if (mDrawer.isDrawerOpen(GravityCompat.START)) {
-
       mDrawer.closeDrawer(GravityCompat.START);
-
       return true;
     }
-
     return false;
   }
 
 
   @Override
   public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
     switch (item.getItemId()) {
-
       case R.id.sidebar_home:
-
         mListener.onMenuSelectHome();
-
         break;
-
       case R.id.sidebar_searchMinyan:
-
         mListener.onMenuSelectSearchMinyan();
-
         break;
-
       case R.id.sidebar_searchSynagogue:
-
         mListener.onMenuSelectSearchSynagogue();
-
         break;
-
       case R.id.sidebar_addSynagogue:
-
         mListener.onMenuSelectAddSynagogue();
-
         break;
-
       case R.id.sidebar_about:
-
         mListener.onMenuSelectAbout();
-
         break;
-
       case R.id.sidebar_zmanim:
-
         mListener.onMenuSelectZmanim();
-
         break;
     }
-
     closeDrawer();
-
     return true;
   }
 
