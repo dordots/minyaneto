@@ -37,6 +37,6 @@ public class SynagoguesSourceTest {
       new SynagoguesSource(api, transformer, cache).fetchSynagogues(20, location, 3, null);
     } catch (Exception ignored) {
     }
-    verify(transformer).transformSynagoguesDataList(ArgumentMatchers.<SynagogueData>anyList());
+    verify(transformer).transformSynagoguesFromServer(ArgumentMatchers.<SynagogueData>anyList());
   }
 }

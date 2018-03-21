@@ -37,7 +37,7 @@ public class SynagoguesSource {
           Response<List<SynagogueData>> response) {
         List<SynagogueData> data = response.body();
         if (data != null) {
-          List<Synagogue> synagogueList = transformer.transformSynagoguesDataList(data);
+          List<Synagogue> synagogueList = transformer.transformSynagoguesFromServer(data);
           cache.putSynagogues(synagogueList);
           listener.onResponse(synagogueList);
         }
@@ -65,7 +65,7 @@ public class SynagoguesSource {
               SynagogueData data = response.body();
               if (data != null) {
                 try {
-                  Synagogue synagogue = transformer.transform(data);
+                  Synagogue synagogue = transformer.transformFromServer(data);
                   cache.putSynagogue(synagogue);
                 } catch (Exception e) {
                   Timber.w(e, "Couldn't parse synagogue data from server: " + data.toString());
@@ -89,7 +89,7 @@ public class SynagoguesSource {
       }
     };
     try {
-      SynagogueToServerData toServer = transformer.transform(synagogue);
+      SynagogueToServerData toServer = transformer.transformToServer(synagogue);
       api.addSynagogue(toServer).enqueue(callback);
     } catch (Exception e) {
       Timber.w(e, "Couldn't parse synagogue data for send to server: %s", synagogue.toString());
@@ -109,7 +109,7 @@ public class SynagoguesSource {
       }
     };
     try {
-      SynagogueToServerData toServer = transformer.transform(synagogue);
+      SynagogueToServerData toServer = transformer.transformToServer(synagogue);
       api.updateSynagogue(synagogue.getId(), toServer).enqueue(callback);
     } catch (Exception e) {
       Timber.w(e, "Couldn't parse synagogue data for update server: " + synagogue.toString());

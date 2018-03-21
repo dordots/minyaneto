@@ -14,23 +14,23 @@ import timber.log.Timber;
 
 public class DataTransformer {
 
-  public List<Synagogue> transformSynagoguesDataList(List<SynagogueData> dataList) {
+  public List<Synagogue> transformSynagoguesFromServer(List<SynagogueData> dataList) {
     List<Synagogue> synagogues = new ArrayList<>();
     for (SynagogueData data : dataList) {
       try {
-        synagogues.add(transform(data));
+        synagogues.add(transformFromServer(data));
       } catch (Exception e) {
-        Timber.w("Couldn't parse synagogues data from server: %s", data);
+        Timber.w("Couldn't parse synagogue data from server: %s", data);
       }
     }
     return synagogues;
   }
 
-  public List<MinyanSchedule> transformMinyanDataList(List<MinyanScheduleData> dataList) {
+  public List<MinyanSchedule> transformMinyansFromServer(List<MinyanScheduleData> dataList) {
     ArrayList<MinyanSchedule> minyans = new ArrayList<>();
     for (MinyanScheduleData data : dataList) {
       try {
-        MinyanSchedule model = transform(data);
+        MinyanSchedule model = transformFromServer(data);
         minyans.add(model);
       } catch (Exception e) {
         Timber.w("Couldn't parse minyan data from server: %s", data);
@@ -39,38 +39,29 @@ public class DataTransformer {
     return minyans;
   }
 
-  private List<MinyanScheduleData> transformMinyanToDataList(List<MinyanSchedule> minyans)
-      throws Exception {
-    List<MinyanScheduleData> list = new ArrayList<>();
-    for (MinyanSchedule minyan : minyans) {
-      list.add(transform(minyan));
-    }
-    return list;
-  }
-
-  public Synagogue transform(SynagogueData data) throws Exception {
+  public Synagogue transformFromServer(SynagogueData data) throws Exception {
     return new Synagogue(
         data.getAddress(),
         data.getClasses(),
         data.getComments(),
         data.getId(),
-        transformMinyanDataList(data.getMinyans()),
+        transformMinyansFromServer(data.getMinyans()),
         data.getName(),
         data.getNosach(),
         data.getParking(),
         data.getSeferTora(),
         data.getWheelchairAccessible(),
-        transform(data.getLatLngStringData()));
+        transformFromServer(data.getLatLngStringData()));
   }
 
-  public SynagogueToServerData transform(Synagogue synagogue) throws Exception {
+  public SynagogueToServerData transformToServer(Synagogue synagogue) throws Exception {
     LatLng latLng = synagogue.getLocation();
     return new SynagogueToServerData(
         synagogue.getAddress(),
         synagogue.getClasses(),
         synagogue.getComments(),
         new LatLngDoubleData(latLng.latitude, latLng.longitude),
-        transformMinyanToDataList(synagogue.getMinyans()),
+        transformMinyansToServer(synagogue.getMinyans()),
         synagogue.getName(),
         synagogue.getNosach(),
         synagogue.getParking(),
@@ -78,14 +69,23 @@ public class DataTransformer {
         synagogue.getWheelchairAccessible());
   }
 
-  private MinyanSchedule transform(MinyanScheduleData data) throws Exception {
+  private List<MinyanScheduleData> transformMinyansToServer(List<MinyanSchedule> minyans)
+      throws Exception {
+    List<MinyanScheduleData> list = new ArrayList<>();
+    for (MinyanSchedule minyan : minyans) {
+      list.add(transformToServer(minyan));
+    }
+    return list;
+  }
+
+  private MinyanSchedule transformFromServer(MinyanScheduleData data) throws Exception {
     return new MinyanSchedule(
         transformStringToWeekDay(data.getWeekDay().toUpperCase()),
         transformStringToPrayType(data.getPrayType()),
         transformStringToTime(data.getStringTime()));
   }
 
-  private MinyanScheduleData transform(MinyanSchedule minyan) throws Exception {
+  private MinyanScheduleData transformToServer(MinyanSchedule minyan) throws Exception {
     return new MinyanScheduleData(
         transformWeekDayToString(minyan.getWeekDay()),
         transformPrayTypeToString(minyan.getPrayType()),
@@ -181,7 +181,7 @@ public class DataTransformer {
     throw new Exception(data.toString() + " not found.");
   }
 
-  private LatLng transform(LatLngStringData data) throws Exception {
+  private LatLng transformFromServer(LatLngStringData data) throws Exception {
     return new LatLng(Double.parseDouble(data.getLat()), Double.parseDouble(data.getLon()));
   }
 
