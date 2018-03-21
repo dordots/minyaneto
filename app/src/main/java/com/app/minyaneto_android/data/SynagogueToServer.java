@@ -4,7 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
-public class SynagogueToServerData {
+public class SynagogueToServer {
 
   @SerializedName("address")
   @Expose
@@ -20,11 +20,11 @@ public class SynagogueToServerData {
 
   @SerializedName("geo")
   @Expose
-  private LatLngDoubleData latLngDoubleData;
+  private LatLngDoubleServer latLngDoubleServer;
 
   @SerializedName("minyans")
   @Expose
-  private List<MinyanScheduleData> minyans;
+  private List<MinyanScheduleFromServer> minyans;
 
   @SerializedName("name")
   @Expose
@@ -46,12 +46,12 @@ public class SynagogueToServerData {
   @Expose
   private Boolean wheelchairAccessible;
 
-  public SynagogueToServerData(
+  public SynagogueToServer(
       String address,
       Boolean classes,
       String comments,
-      LatLngDoubleData latLngDoubleData,
-      List<MinyanScheduleData> minyans,
+      LatLngDoubleServer latLngDoubleServer,
+      List<MinyanScheduleFromServer> minyans,
       String name,
       String nosach,
       Boolean parking,
@@ -61,7 +61,7 @@ public class SynagogueToServerData {
     this.address = address;
     this.classes = classes;
     this.comments = comments;
-    this.latLngDoubleData = latLngDoubleData;
+    this.latLngDoubleServer = latLngDoubleServer;
     this.minyans = minyans;
     this.name = name;
     this.nosach = nosach;
@@ -86,11 +86,11 @@ public class SynagogueToServerData {
     return comments;
   }
 
-  public LatLngDoubleData getLatLngDoubleData() {
-    return latLngDoubleData;
+  public LatLngDoubleServer getLatLngDoubleServer() {
+    return latLngDoubleServer;
   }
 
-  public List<MinyanScheduleData> getMinyans() {
+  public List<MinyanScheduleFromServer> getMinyans() {
     return minyans;
   }
 

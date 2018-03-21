@@ -5,11 +5,11 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
 import android.support.annotation.NonNull;
-import com.app.minyaneto_android.data.LatLngDoubleData;
-import com.app.minyaneto_android.data.MinyanScheduleData;
-import com.app.minyaneto_android.data.SynagogueData;
-import com.app.minyaneto_android.data.SynagogueIdData;
-import com.app.minyaneto_android.data.SynagogueToServerData;
+import com.app.minyaneto_android.data.IdFromServer;
+import com.app.minyaneto_android.data.LatLngDoubleServer;
+import com.app.minyaneto_android.data.MinyanScheduleFromServer;
+import com.app.minyaneto_android.data.SynagogueFromServer;
+import com.app.minyaneto_android.data.SynagogueToServer;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -23,11 +23,11 @@ public class SynagoguesRestAPITest {
   @Test
   public void getSynagogues() throws Exception {
     SynagoguesRestAPI api = RestAPIUtility.createSynagoguesRestAPI();
-    Call<List<SynagogueData>> call = api.getSynagogues(20, "31.786,35.186", "3km");
+    Call<List<SynagogueFromServer>> call = api.getSynagogues(20, "31.786,35.186", "3km");
 
-    Response<List<SynagogueData>> response = call.execute();
+    Response<List<SynagogueFromServer>> response = call.execute();
 
-    List<SynagogueData> synagogues = response.body();
+    List<SynagogueFromServer> synagogues = response.body();
     assertNotNull(synagogues);
     assertEquals(9, synagogues.size());
   }
@@ -36,11 +36,11 @@ public class SynagoguesRestAPITest {
   public void getSynagogue() throws Exception {
     SynagoguesRestAPI api = RestAPIUtility.createSynagoguesRestAPI();
     String synagogueName = "test_synagogue";
-    Call<SynagogueData> call = api.getSynagogue("AWG4o-siXhnPh-4nqCDV");
+    Call<SynagogueFromServer> call = api.getSynagogue("AWG4o-siXhnPh-4nqCDV");
 
-    Response<SynagogueData> response = call.execute();
+    Response<SynagogueFromServer> response = call.execute();
 
-    SynagogueData result = response.body();
+    SynagogueFromServer result = response.body();
     assertNotNull(result);
     assertTrue(result.getName().contains(synagogueName));
   }
@@ -50,14 +50,14 @@ public class SynagoguesRestAPITest {
   public void addSynagogue() throws Exception {
     SynagoguesRestAPI api = RestAPIUtility.createSynagoguesRestAPI();
     String synagogueName = "test_synagogue";
-    SynagogueToServerData synagogue = generateSynagogueData(synagogueName);
-    Call<SynagogueIdData> call = api.addSynagogue(synagogue);
+    SynagogueToServer synagogue = generateSynagogueData(synagogueName);
+    Call<IdFromServer> call = api.addSynagogue(synagogue);
 
-    Response<SynagogueIdData> response = call.execute();
+    Response<IdFromServer> response = call.execute();
 
-    SynagogueIdData idData = response.body();
+    IdFromServer idData = response.body();
     assertNotNull(idData);
-    SynagogueData result = api
+    SynagogueFromServer result = api
         .getSynagogue(idData.getId())
         .execute()
         .body();
@@ -69,13 +69,13 @@ public class SynagoguesRestAPITest {
   public void updateSynagogue() throws Exception {
     SynagoguesRestAPI api = RestAPIUtility.createSynagoguesRestAPI();
     String synagogueName = String.format("test_synagogue%d", new Random().nextInt(1000));
-    SynagogueToServerData synagogue = generateSynagogueData(synagogueName);
+    SynagogueToServer synagogue = generateSynagogueData(synagogueName);
     Call<Void> call = api.updateSynagogue("AWG4o-siXhnPh-4nqCDV", synagogue);
 
     Response<Void> response = call.execute();
 
     assertTrue(response.isSuccessful());
-    SynagogueData result = api
+    SynagogueFromServer result = api
         .getSynagogue("AWG4o-siXhnPh-4nqCDV")
         .execute()
         .body();
@@ -84,13 +84,13 @@ public class SynagoguesRestAPITest {
   }
 
   @NonNull
-  private SynagogueToServerData generateSynagogueData(String synagogueName) {
-    SynagogueToServerData synagogue = new SynagogueToServerData(
+  private SynagogueToServer generateSynagogueData(String synagogueName) {
+    SynagogueToServer synagogue = new SynagogueToServer(
         "no_where",
         false,
         "no_comments",
-        new LatLngDoubleData(34.024, 28.168),
-        Collections.<MinyanScheduleData>emptyList(),
+        new LatLngDoubleServer(34.024, 28.168),
+        Collections.<MinyanScheduleFromServer>emptyList(),
         synagogueName,
         "test_nosach",
         false,

@@ -1,9 +1,9 @@
 package com.app.minyaneto_android.models.domain;
 
 import com.app.minyaneto_android.data.DataTransformer;
-import com.app.minyaneto_android.data.SynagogueData;
-import com.app.minyaneto_android.data.SynagogueIdData;
-import com.app.minyaneto_android.data.SynagogueToServerData;
+import com.app.minyaneto_android.data.IdFromServer;
+import com.app.minyaneto_android.data.SynagogueFromServer;
+import com.app.minyaneto_android.data.SynagogueToServer;
 import com.app.minyaneto_android.restApi.ResponseListener;
 import com.app.minyaneto_android.restApi.SynagoguesRestAPI;
 import com.google.android.gms.maps.model.LatLng;
@@ -31,11 +31,11 @@ public class SynagoguesSource {
       final ResponseListener<List<Synagogue>> listener) throws IOException {
     String center = location.latitude + "," + location.longitude;
     String radius = radiusInKm + "km";
-    Callback<List<SynagogueData>> callback = new Callback<List<SynagogueData>>() {
+    Callback<List<SynagogueFromServer>> callback = new Callback<List<SynagogueFromServer>>() {
       @Override
-      public void onResponse(Call<List<SynagogueData>> call,
-          Response<List<SynagogueData>> response) {
-        List<SynagogueData> data = response.body();
+      public void onResponse(Call<List<SynagogueFromServer>> call,
+          Response<List<SynagogueFromServer>> response) {
+        List<SynagogueFromServer> data = response.body();
         if (data != null) {
           List<Synagogue> synagogueList = transformer.transformSynagoguesFromServer(data);
           cache.putSynagogues(synagogueList);
@@ -44,7 +44,7 @@ public class SynagoguesSource {
       }
 
       @Override
-      public void onFailure(Call<List<SynagogueData>> call, Throwable t) {
+      public void onFailure(Call<List<SynagogueFromServer>> call, Throwable t) {
         Timber.w(t, "Couldn't get synagogues data, an exception occurred:");
         listener.onResponse(null);
       }
@@ -53,16 +53,17 @@ public class SynagoguesSource {
   }
 
   public void addSynagogue(Synagogue synagogue, final ResponseListener<String> listener) {
-    Callback<SynagogueIdData> callback = new Callback<SynagogueIdData>() {
+    Callback<IdFromServer> callback = new Callback<IdFromServer>() {
       @Override
-      public void onResponse(Call<SynagogueIdData> call, Response<SynagogueIdData> response) {
-        SynagogueIdData idData = response.body();
+      public void onResponse(Call<IdFromServer> call, Response<IdFromServer> response) {
+        IdFromServer idData = response.body();
         if (idData != null) {
           String id = idData.getId();
-          api.getSynagogue(id).enqueue(new Callback<SynagogueData>() {
+          api.getSynagogue(id).enqueue(new Callback<SynagogueFromServer>() {
             @Override
-            public void onResponse(Call<SynagogueData> call, Response<SynagogueData> response) {
-              SynagogueData data = response.body();
+            public void onResponse(Call<SynagogueFromServer> call,
+                Response<SynagogueFromServer> response) {
+              SynagogueFromServer data = response.body();
               if (data != null) {
                 try {
                   Synagogue synagogue = transformer.transformFromServer(data);
@@ -75,7 +76,7 @@ public class SynagoguesSource {
             }
 
             @Override
-            public void onFailure(Call<SynagogueData> call, Throwable t) {
+            public void onFailure(Call<SynagogueFromServer> call, Throwable t) {
 
             }
           });
@@ -84,12 +85,12 @@ public class SynagoguesSource {
       }
 
       @Override
-      public void onFailure(Call<SynagogueIdData> call, Throwable t) {
+      public void onFailure(Call<IdFromServer> call, Throwable t) {
         Timber.w(t, "Couldn't add synagogue, an exception occurred:");
       }
     };
     try {
-      SynagogueToServerData toServer = transformer.transformToServer(synagogue);
+      SynagogueToServer toServer = transformer.transformToServer(synagogue);
       api.addSynagogue(toServer).enqueue(callback);
     } catch (Exception e) {
       Timber.w(e, "Couldn't parse synagogue data for send to server: %s", synagogue.toString());
@@ -109,7 +110,7 @@ public class SynagoguesSource {
       }
     };
     try {
-      SynagogueToServerData toServer = transformer.transformToServer(synagogue);
+      SynagogueToServer toServer = transformer.transformToServer(synagogue);
       api.updateSynagogue(synagogue.getId(), toServer).enqueue(callback);
     } catch (Exception e) {
       Timber.w(e, "Couldn't parse synagogue data for update server: " + synagogue.toString());

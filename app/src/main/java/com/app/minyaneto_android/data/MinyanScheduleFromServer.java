@@ -3,7 +3,7 @@ package com.app.minyaneto_android.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class MinyanScheduleData {
+public class MinyanScheduleFromServer {
 
   @SerializedName("day")
   @Expose
@@ -15,7 +15,7 @@ public class MinyanScheduleData {
   @Expose
   private String stringTime;
 
-  public MinyanScheduleData(String weekDay, String prayType, String stringTime) {
+  public MinyanScheduleFromServer(String weekDay, String prayType, String stringTime) {
     this.weekDay = weekDay;
     this.prayType = prayType;
     this.stringTime = stringTime;
@@ -35,7 +35,7 @@ public class MinyanScheduleData {
 
   @Override
   public String toString() {
-    return "MinyanScheduleData{" +
+    return "MinyanScheduleFromServer{" +
         "weekDay='" + weekDay + '\'' +
         ", prayType='" + prayType + '\'' +
         ", stringTime='" + stringTime + '\'' +

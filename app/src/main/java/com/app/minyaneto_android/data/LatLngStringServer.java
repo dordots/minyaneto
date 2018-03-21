@@ -3,7 +3,7 @@ package com.app.minyaneto_android.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class LatLngStringData {
+public class LatLngStringServer {
 
   @SerializedName("lat")
   @Expose
@@ -13,7 +13,7 @@ public class LatLngStringData {
   @Expose
   private String lon;
 
-  public LatLngStringData(String lat, String lon) {
+  public LatLngStringServer(String lat, String lon) {
     this.lat = lat;
     this.lon = lon;
   }

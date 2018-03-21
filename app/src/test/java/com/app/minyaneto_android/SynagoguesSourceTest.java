@@ -4,7 +4,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import com.app.minyaneto_android.data.DataTransformer;
-import com.app.minyaneto_android.data.SynagogueData;
+import com.app.minyaneto_android.data.SynagogueFromServer;
 import com.app.minyaneto_android.models.domain.SynagogueCache;
 import com.app.minyaneto_android.models.domain.SynagoguesSource;
 import com.app.minyaneto_android.restApi.SynagoguesRestAPI;
@@ -37,6 +37,7 @@ public class SynagoguesSourceTest {
       new SynagoguesSource(api, transformer, cache).fetchSynagogues(20, location, 3, null);
     } catch (Exception ignored) {
     }
-    verify(transformer).transformSynagoguesFromServer(ArgumentMatchers.<SynagogueData>anyList());
+    verify(transformer)
+        .transformSynagoguesFromServer(ArgumentMatchers.<SynagogueFromServer>anyList());
   }
 }
