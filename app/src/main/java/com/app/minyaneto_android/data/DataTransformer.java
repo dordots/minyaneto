@@ -1,7 +1,7 @@
 package com.app.minyaneto_android.data;
 
-import com.app.minyaneto_android.models.domain.MinyanScheduleDomain;
-import com.app.minyaneto_android.models.domain.SynagogueDomain;
+import com.app.minyaneto_android.models.domain.MinyanSchedule;
+import com.app.minyaneto_android.models.domain.Synagogue;
 import com.app.minyaneto_android.models.minyan.PrayType;
 import com.app.minyaneto_android.models.time.ExactTime;
 import com.app.minyaneto_android.models.time.PrayTime;
@@ -14,8 +14,8 @@ import timber.log.Timber;
 
 public class DataTransformer {
 
-  public List<SynagogueDomain> transformSynagoguesDataList(List<SynagogueData> dataList) {
-    List<SynagogueDomain> synagogues = new ArrayList<>();
+  public List<Synagogue> transformSynagoguesDataList(List<SynagogueData> dataList) {
+    List<Synagogue> synagogues = new ArrayList<>();
     for (SynagogueData data : dataList) {
       try {
         synagogues.add(transform(data));
@@ -26,11 +26,11 @@ public class DataTransformer {
     return synagogues;
   }
 
-  public List<MinyanScheduleDomain> transformMinyanDataList(List<MinyanScheduleData> dataList) {
-    ArrayList<MinyanScheduleDomain> minyans = new ArrayList<>();
+  public List<MinyanSchedule> transformMinyanDataList(List<MinyanScheduleData> dataList) {
+    ArrayList<MinyanSchedule> minyans = new ArrayList<>();
     for (MinyanScheduleData data : dataList) {
       try {
-        MinyanScheduleDomain model = transform(data);
+        MinyanSchedule model = transform(data);
         minyans.add(model);
       } catch (Exception e) {
         Timber.w("Couldn't parse minyan data from server: %s", data);
@@ -39,17 +39,17 @@ public class DataTransformer {
     return minyans;
   }
 
-  private List<MinyanScheduleData> transformMinyanToDataList(List<MinyanScheduleDomain> minyans)
+  private List<MinyanScheduleData> transformMinyanToDataList(List<MinyanSchedule> minyans)
       throws Exception {
     List<MinyanScheduleData> list = new ArrayList<>();
-    for (MinyanScheduleDomain minyan : minyans) {
+    for (MinyanSchedule minyan : minyans) {
       list.add(transform(minyan));
     }
     return list;
   }
 
-  public SynagogueDomain transform(SynagogueData data) throws Exception {
-    return new SynagogueDomain(
+  public Synagogue transform(SynagogueData data) throws Exception {
+    return new Synagogue(
         data.getAddress(),
         data.getClasses(),
         data.getComments(),
@@ -63,7 +63,7 @@ public class DataTransformer {
         transform(data.getLatLngStringData()));
   }
 
-  public SynagogueToServerData transform(SynagogueDomain synagogue) throws Exception {
+  public SynagogueToServerData transform(Synagogue synagogue) throws Exception {
     LatLng latLng = synagogue.getLocation();
     return new SynagogueToServerData(
         synagogue.getAddress(),
@@ -78,14 +78,14 @@ public class DataTransformer {
         synagogue.getWheelchairAccessible());
   }
 
-  private MinyanScheduleDomain transform(MinyanScheduleData data) throws Exception {
-    return new MinyanScheduleDomain(
+  private MinyanSchedule transform(MinyanScheduleData data) throws Exception {
+    return new MinyanSchedule(
         transformStringToWeekDay(data.getWeekDay().toUpperCase()),
         transformStringToPrayType(data.getPrayType()),
         transformStringToTime(data.getStringTime()));
   }
 
-  private MinyanScheduleData transform(MinyanScheduleDomain minyan) throws Exception {
+  private MinyanScheduleData transform(MinyanSchedule minyan) throws Exception {
     return new MinyanScheduleData(
         transformWeekDayToString(minyan.getWeekDay()),
         transformPrayTypeToString(minyan.getPrayType()),

@@ -19,9 +19,9 @@ import android.widget.Toast;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.data.DataTransformer;
 import com.app.minyaneto_android.location.LocationRepository;
-import com.app.minyaneto_android.models.domain.MinyanScheduleDomain;
+import com.app.minyaneto_android.models.domain.MinyanSchedule;
+import com.app.minyaneto_android.models.domain.Synagogue;
 import com.app.minyaneto_android.models.domain.SynagogueCache;
-import com.app.minyaneto_android.models.domain.SynagogueDomain;
 import com.app.minyaneto_android.models.domain.SynagoguesSource;
 import com.app.minyaneto_android.restApi.ResponseListener;
 import com.app.minyaneto_android.restApi.RestAPIUtility;
@@ -104,12 +104,12 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
           .show();
       return;
     }
-    final SynagogueDomain s = new SynagogueDomain(
+    final Synagogue s = new Synagogue(
         etAddressSynagogue.getText().toString(),
         cbLessons.isChecked(),
         etCommentsSynagogue.getText().toString(),
         "ignored_id",
-        Collections.<MinyanScheduleDomain>emptyList(),
+        Collections.<MinyanSchedule>emptyList(),
         etNameSynagogue.getText().toString(),
         (String) spinnerNosachSynagogue.getSelectedItem(),
         cbParking.isChecked(),

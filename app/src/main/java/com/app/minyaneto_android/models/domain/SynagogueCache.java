@@ -7,7 +7,7 @@ import java.util.Map;
 public class SynagogueCache {
 
   private static SynagogueCache instance = new SynagogueCache();
-  private Map<String, SynagogueDomain> map;
+  private Map<String, Synagogue> map;
 
   private SynagogueCache() {
     map = new HashMap<>();
@@ -17,16 +17,16 @@ public class SynagogueCache {
     return instance;
   }
 
-  public SynagogueDomain getSynagogue(String id) {
+  public Synagogue getSynagogue(String id) {
     return map.get(id);
   }
 
-  public void putSynagogue(SynagogueDomain synagogue) {
+  public void putSynagogue(Synagogue synagogue) {
     map.put(synagogue.getId(), synagogue);
   }
 
-  public void putSynagogues(List<SynagogueDomain> synagogues) {
-    for (SynagogueDomain synagogue : synagogues) {
+  public void putSynagogues(List<Synagogue> synagogues) {
+    for (Synagogue synagogue : synagogues) {
       putSynagogue(synagogue);
     }
   }

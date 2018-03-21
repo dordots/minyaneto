@@ -21,7 +21,7 @@ import android.widget.TextView;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.location.LocationRepository;
 import com.app.minyaneto_android.location.LocationUtility;
-import com.app.minyaneto_android.models.domain.SynagogueDomain;
+import com.app.minyaneto_android.models.domain.Synagogue;
 import com.app.minyaneto_android.utilities.Permissions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -391,13 +391,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     mListener.onUpdateSynagogues(latLng);
   }
 
-  public void updateMarkers(List<SynagogueDomain> synagogues) {
+  public void updateMarkers(List<Synagogue> synagogues) {
     if (mMap == null) {
       return;
     }
     mMap.clear();
     synagoguesMarkers = new ArrayList<>();
-    for (SynagogueDomain synagogue : synagogues) {
+    for (Synagogue synagogue : synagogues) {
       Marker m = mMap.addMarker(new MarkerOptions().position(
           synagogue.getLocation())
           .title(synagogue.getName() + " - " + synagogue.getNosach())

@@ -28,7 +28,7 @@ public class SynagoguesSource {
   }
 
   public void fetchSynagogues(int maxHits, LatLng location, double radiusInKm,
-      final ResponseListener<List<SynagogueDomain>> listener) throws IOException {
+      final ResponseListener<List<Synagogue>> listener) throws IOException {
     String center = location.latitude + "," + location.longitude;
     String radius = radiusInKm + "km";
     Callback<List<SynagogueData>> callback = new Callback<List<SynagogueData>>() {
@@ -37,7 +37,7 @@ public class SynagoguesSource {
           Response<List<SynagogueData>> response) {
         List<SynagogueData> data = response.body();
         if (data != null) {
-          List<SynagogueDomain> synagogueList = transformer.transformSynagoguesDataList(data);
+          List<Synagogue> synagogueList = transformer.transformSynagoguesDataList(data);
           cache.putSynagogues(synagogueList);
           listener.onResponse(synagogueList);
         }
@@ -52,7 +52,7 @@ public class SynagoguesSource {
     api.getSynagogues(maxHits, center, radius).enqueue(callback);
   }
 
-  public void addSynagogue(SynagogueDomain synagogue, final ResponseListener<String> listener) {
+  public void addSynagogue(Synagogue synagogue, final ResponseListener<String> listener) {
     Callback<SynagogueIdData> callback = new Callback<SynagogueIdData>() {
       @Override
       public void onResponse(Call<SynagogueIdData> call, Response<SynagogueIdData> response) {
@@ -65,7 +65,7 @@ public class SynagoguesSource {
               SynagogueData data = response.body();
               if (data != null) {
                 try {
-                  SynagogueDomain synagogue = transformer.transform(data);
+                  Synagogue synagogue = transformer.transform(data);
                   cache.putSynagogue(synagogue);
                 } catch (Exception e) {
                   Timber.w(e, "Couldn't parse synagogue data from server: " + data.toString());
@@ -96,7 +96,7 @@ public class SynagoguesSource {
     }
   }
 
-  public void updateSynagogue(SynagogueDomain synagogue, final ResponseListener<Void> listener) {
+  public void updateSynagogue(Synagogue synagogue, final ResponseListener<Void> listener) {
     Callback<Void> callback = new Callback<Void>() {
       @Override
       public void onResponse(Call<Void> call, Response<Void> response) {

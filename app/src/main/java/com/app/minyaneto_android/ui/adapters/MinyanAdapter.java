@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.location.LocationRepository;
-import com.app.minyaneto_android.models.domain.MinyanScheduleDomain;
+import com.app.minyaneto_android.models.domain.MinyanSchedule;
 import com.app.minyaneto_android.models.time.ExactTime;
 import com.app.minyaneto_android.models.time.TimeUtility;
 import com.app.minyaneto_android.utilities.SynagogueUtils;
@@ -16,9 +16,9 @@ import java.util.Locale;
 
 public class MinyanAdapter extends RecyclerView.Adapter<MinyanAdapter.MinyanViewHolder> {
 
-  private List<MinyanScheduleDomain> minyans;
+  private List<MinyanSchedule> minyans;
 
-  public MinyanAdapter(List<MinyanScheduleDomain> minyans) {
+  public MinyanAdapter(List<MinyanSchedule> minyans) {
     this.minyans = minyans;
   }
 
@@ -37,7 +37,7 @@ public class MinyanAdapter extends RecyclerView.Adapter<MinyanAdapter.MinyanView
 
   @Override
   public void onBindViewHolder(MinyanViewHolder holder, int position) {
-    MinyanScheduleDomain minyan = minyans.get(position);
+    MinyanSchedule minyan = minyans.get(position);
     holder.prayTypeTextView.setText(
         SynagogueUtils.getTextFromEnum(holder.prayTypeTextView.getContext(), minyan.getPrayType()));
     ExactTime time = TimeUtility.extractSpecificTime(

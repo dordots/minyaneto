@@ -14,8 +14,8 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import com.app.minyaneto_android.R;
+import com.app.minyaneto_android.models.domain.Synagogue;
 import com.app.minyaneto_android.models.domain.SynagogueCache;
-import com.app.minyaneto_android.models.domain.SynagogueDomain;
 import com.app.minyaneto_android.ui.adapters.MinyanAdapter;
 
 
@@ -31,7 +31,7 @@ public class SynagogueDetailsFragment extends DialogFragment {
   CheckBox cbWheelchair_accessible;
   CheckBox cbLessons;
   FloatingActionButton btnAddMinyan;
-  private SynagogueDomain mSynagogue;
+  private Synagogue mSynagogue;
   private WantCahngeFragmentListener mListener;
   private RecyclerView mRecyclerViewMinyans;
 

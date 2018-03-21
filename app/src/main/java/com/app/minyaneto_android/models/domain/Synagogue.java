@@ -3,13 +3,13 @@ package com.app.minyaneto_android.models.domain;
 import com.google.android.gms.maps.model.LatLng;
 import java.util.List;
 
-public class SynagogueDomain {
+public class Synagogue {
 
   private String address;
   private Boolean classes;
   private String comments;
   private String id;
-  private List<MinyanScheduleDomain> minyans;
+  private List<MinyanSchedule> minyans;
   private String name;
   private String nosach;
   private Boolean parking;
@@ -17,11 +17,11 @@ public class SynagogueDomain {
   private Boolean wheelchairAccessible;
   private LatLng location;
 
-  public SynagogueDomain(String address,
+  public Synagogue(String address,
       Boolean classes,
       String comments,
       String id,
-      List<MinyanScheduleDomain> minyans,
+      List<MinyanSchedule> minyans,
       String name,
       String nosach,
       Boolean parking,
@@ -57,7 +57,7 @@ public class SynagogueDomain {
     return id;
   }
 
-  public List<MinyanScheduleDomain> getMinyans() {
+  public List<MinyanSchedule> getMinyans() {
     return minyans;
   }
 
@@ -85,7 +85,7 @@ public class SynagogueDomain {
     return location;
   }
 
-  public void addMinyan(MinyanScheduleDomain minyan) {
+  public void addMinyan(MinyanSchedule minyan) {
     minyans.add(minyan);
   }
 }

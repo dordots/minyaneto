@@ -3,7 +3,7 @@ package com.app.minyaneto_android.models.time;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import com.app.minyaneto_android.location.LocationRepository;
-import com.app.minyaneto_android.models.domain.MinyanScheduleDomain;
+import com.app.minyaneto_android.models.domain.MinyanSchedule;
 import com.app.minyaneto_android.zmanim.ZmanimCalendarProvider;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -80,14 +80,14 @@ public class TimeUtility {
     return geoLocation;
   }
 
-  public static String getTimes(List<MinyanScheduleDomain> minyans, Date date) {
+  public static String getTimes(List<MinyanSchedule> minyans, Date date) {
     if (null == date) {
       date = new Date();
     }
     SimpleDateFormat format = new SimpleDateFormat("HH:mm", Locale.getDefault());
     StringBuilder result = new StringBuilder();
     ArrayList<String> myResult = new ArrayList<>();
-    for (MinyanScheduleDomain minyan : minyans) {
+    for (MinyanSchedule minyan : minyans) {
       //TODO calculate real time -like rosh hodesh..
       Calendar cal = Calendar.getInstance();
       cal.setTime(date);

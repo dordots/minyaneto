@@ -4,7 +4,7 @@ import com.app.minyaneto_android.models.minyan.PrayType;
 import com.google.android.gms.maps.model.LatLng;
 import java.util.Date;
 
-public class ConcreteMinyanDomain {
+public class ConcreteMinyan {
 
   private PrayType prayType;
   private String nosach;
@@ -12,7 +12,7 @@ public class ConcreteMinyanDomain {
   private LatLng location;
   private String synagogueId;
 
-  public ConcreteMinyanDomain(PrayType prayType,
+  public ConcreteMinyan(PrayType prayType,
       String nosach,
       Date time,
       LatLng location,

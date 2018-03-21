@@ -21,9 +21,9 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.data.DataTransformer;
-import com.app.minyaneto_android.models.domain.MinyanScheduleDomain;
+import com.app.minyaneto_android.models.domain.MinyanSchedule;
+import com.app.minyaneto_android.models.domain.Synagogue;
 import com.app.minyaneto_android.models.domain.SynagogueCache;
-import com.app.minyaneto_android.models.domain.SynagogueDomain;
 import com.app.minyaneto_android.models.domain.SynagoguesSource;
 import com.app.minyaneto_android.models.minyan.PrayType;
 import com.app.minyaneto_android.models.time.ExactTime;
@@ -39,7 +39,7 @@ import timber.log.Timber;
 public class AddMinyanFragment extends Fragment implements View.OnClickListener {
 
   public static final String TAG = AddMinyanFragment.class.getSimpleName();
-  private static SynagogueDomain mSynagogue;
+  private static Synagogue mSynagogue;
   private static DataTransformer transformer;
   boolean inRelativeTimeMode;
   private Spinner spinnerPrayType;
@@ -140,37 +140,37 @@ public class AddMinyanFragment extends Fragment implements View.OnClickListener 
     try {
       if (cbSunday.isChecked()) {
         mSynagogue.addMinyan(
-            new MinyanScheduleDomain(transformer.transformStringToWeekDay("SUNDAY"), prayType,
+            new MinyanSchedule(transformer.transformStringToWeekDay("SUNDAY"), prayType,
                 time));
       }
       if (cbMonday.isChecked()) {
         mSynagogue.addMinyan(
-            new MinyanScheduleDomain(transformer.transformStringToWeekDay("MONDAY"), prayType,
+            new MinyanSchedule(transformer.transformStringToWeekDay("MONDAY"), prayType,
                 time));
       }
       if (cbTuesday.isChecked()) {
         mSynagogue.addMinyan(
-            new MinyanScheduleDomain(transformer.transformStringToWeekDay("TUESDAY"), prayType,
+            new MinyanSchedule(transformer.transformStringToWeekDay("TUESDAY"), prayType,
                 time));
       }
       if (cbWednesday.isChecked()) {
         mSynagogue.addMinyan(
-            new MinyanScheduleDomain(transformer.transformStringToWeekDay("WEDNESDAY"), prayType,
+            new MinyanSchedule(transformer.transformStringToWeekDay("WEDNESDAY"), prayType,
                 time));
       }
       if (cbThursday.isChecked()) {
         mSynagogue.addMinyan(
-            new MinyanScheduleDomain(transformer.transformStringToWeekDay("THURSDAY"), prayType,
+            new MinyanSchedule(transformer.transformStringToWeekDay("THURSDAY"), prayType,
                 time));
       }
       if (cbFriday.isChecked()) {
         mSynagogue.addMinyan(
-            new MinyanScheduleDomain(transformer.transformStringToWeekDay("FRIDAY"), prayType,
+            new MinyanSchedule(transformer.transformStringToWeekDay("FRIDAY"), prayType,
                 time));
       }
       if (cbSaturday.isChecked()) {
         mSynagogue.addMinyan(
-            new MinyanScheduleDomain(transformer.transformStringToWeekDay("SATURDAY"), prayType,
+            new MinyanSchedule(transformer.transformStringToWeekDay("SATURDAY"), prayType,
                 time));
       }
       SynagoguesSource source = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(),

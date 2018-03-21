@@ -16,8 +16,8 @@ import android.view.View;
 import android.widget.Toast;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.data.DataTransformer;
+import com.app.minyaneto_android.models.domain.Synagogue;
 import com.app.minyaneto_android.models.domain.SynagogueCache;
-import com.app.minyaneto_android.models.domain.SynagogueDomain;
 import com.app.minyaneto_android.models.domain.SynagoguesSource;
 import com.app.minyaneto_android.models.minyan.PrayType;
 import com.app.minyaneto_android.models.time.TimeUtility;
@@ -217,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
-  public void onUpdateMarkers(List<SynagogueDomain> mSynagogues) {
+  public void onUpdateMarkers(List<Synagogue> mSynagogues) {
     mapFragment.updateMarkers(mSynagogues);
   }
 
@@ -244,9 +244,9 @@ public class MainActivity extends AppCompatActivity implements
   public void onGetTheSynagoguesAround(LatLng center) {
     try {
       synagoguesSource.fetchSynagogues(MAX_HITS_PER_REQUEST, center, ADD_SYNAGOGUE_RADIUS_IN_KM,
-          new ResponseListener<List<SynagogueDomain>>() {
+          new ResponseListener<List<Synagogue>>() {
             @Override
-            public void onResponse(List<SynagogueDomain> response) {
+            public void onResponse(List<Synagogue> response) {
               if (response != null && response.size() > 0) {
                 // Toast.makeText(MainActivity.this, R.string.attention_alert, Toast.LENGTH_SHORT).show();
 
@@ -275,20 +275,20 @@ public class MainActivity extends AppCompatActivity implements
       final Date date, final PrayType name, final String nosach) {
     try {
       synagoguesSource.fetchSynagogues(MAX_HITS_PER_REQUEST, center, DEFAULT_RADIUS_IN_KM,
-          new ResponseListener<List<SynagogueDomain>>() {
+          new ResponseListener<List<Synagogue>>() {
             @Override
-            public void onResponse(List<SynagogueDomain> response) {
+            public void onResponse(List<Synagogue> response) {
 
               if (null == response) {
                 synagoguesFragment
-                    .updateSynagogues(new ArrayList<SynagogueDomain>(0), "החיפוש לא הצליח", date,
+                    .updateSynagogues(new ArrayList<Synagogue>(0), "החיפוש לא הצליח", date,
                         center);
               } else
 
               {
-                List<SynagogueDomain> synagogues = response;
+                List<Synagogue> synagogues = response;
 
-                for (SynagogueDomain s : new ArrayList<>(synagogues)) {
+                for (Synagogue s : new ArrayList<>(synagogues)) {
                   if ((s.getMinyans().size() == 0) ||
                       (nosach != null && !nosach.equals(s.getNosach()))) {
                     synagogues.remove(s);
@@ -409,9 +409,9 @@ public class MainActivity extends AppCompatActivity implements
     if (null != mapFragment) {
       try {
         synagoguesSource.fetchSynagogues(MAX_HITS_PER_REQUEST, center, DEFAULT_RADIUS_IN_KM,
-            new ResponseListener<List<SynagogueDomain>>() {
+            new ResponseListener<List<Synagogue>>() {
               @Override
-              public void onResponse(List<SynagogueDomain> response) {
+              public void onResponse(List<Synagogue> response) {
                 synagoguesFragment.updateSynagogues(response,
                     getResources().getString(R.string.no_synagogues_found), null, center);
               }

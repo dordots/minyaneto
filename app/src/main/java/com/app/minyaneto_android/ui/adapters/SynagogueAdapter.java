@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.location.LocationUtility;
-import com.app.minyaneto_android.models.domain.SynagogueDomain;
+import com.app.minyaneto_android.models.domain.Synagogue;
 import com.app.minyaneto_android.models.time.TimeUtility;
 import com.google.android.gms.maps.model.LatLng;
 import java.util.Date;
@@ -18,13 +18,13 @@ import java.util.List;
 
 public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.SynagogueViewHolder> {
 
-  private List<SynagogueDomain> synagogues;
+  private List<Synagogue> synagogues;
   private SynagogueClickListener myClickListener;
   private int rowIndex = -1;
   private Date mDate;
   private LatLng mLatLng;
 
-  public SynagogueAdapter(List<SynagogueDomain> synagogues, Date date, LatLng latLng) {
+  public SynagogueAdapter(List<Synagogue> synagogues, Date date, LatLng latLng) {
     this.synagogues = synagogues;
     mDate = date;
     mLatLng = latLng;
@@ -49,7 +49,7 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
 
   @Override
   public void onBindViewHolder(SynagogueViewHolder holder, final int position) {
-    SynagogueDomain synagogue = synagogues.get(position);
+    Synagogue synagogue = synagogues.get(position);
     holder.nameTextView.setText(synagogue.getName());
 
     if (synagogue.getMinyans().size() > 0) {

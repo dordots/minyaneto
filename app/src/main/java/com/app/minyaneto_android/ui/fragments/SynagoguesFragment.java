@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.location.LocationUtility;
-import com.app.minyaneto_android.models.domain.SynagogueDomain;
+import com.app.minyaneto_android.models.domain.Synagogue;
 import com.app.minyaneto_android.ui.adapters.SynagogueAdapter;
 import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class SynagoguesFragment extends Fragment implements View.OnClickListener
 
   public static final String TAG = SynagoguesFragment.class.getSimpleName();
   private OnSynagoguesListener mListener;
-  private List<SynagogueDomain> mSynagogues;
+  private List<Synagogue> mSynagogues;
   private RecyclerView mSynagoguesView;
   private SynagogueAdapter mAdapter;
   private View mProgress;
@@ -98,7 +98,7 @@ public class SynagoguesFragment extends Fragment implements View.OnClickListener
 
   }
 
-  public void updateSynagogues(List<SynagogueDomain> synagogues, String msg, Date date,
+  public void updateSynagogues(List<Synagogue> synagogues, String msg, Date date,
       LatLng center) {
     mDate = date;
     mLatLng = center;
@@ -166,8 +166,8 @@ public class SynagoguesFragment extends Fragment implements View.OnClickListener
   }
 
   private void sortSynagoguesByLocation() {
-    Collections.sort(mSynagogues, new Comparator<SynagogueDomain>() {
-      public int compare(SynagogueDomain o1, SynagogueDomain o2) {
+    Collections.sort(mSynagogues, new Comparator<Synagogue>() {
+      public int compare(Synagogue o1, Synagogue o2) {
         long distance1 = LocationUtility.getDistance(o1);
         long distance2 = LocationUtility.getDistance(o2);
         return Long.compare(distance1, distance2);
@@ -188,7 +188,7 @@ public class SynagoguesFragment extends Fragment implements View.OnClickListener
 
     void onSetActionBarTitle(String title);
 
-    void onUpdateMarkers(List<SynagogueDomain> mSynagogues);
+    void onUpdateMarkers(List<Synagogue> mSynagogues);
 
     void onMoveCamera(LatLng latLng, int position);
 
