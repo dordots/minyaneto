@@ -1,94 +1,94 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.fragments.AddSynagogueFragment">
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context=".ui.fragments.AddSynagogueFragment">
 
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="355dp"
+    android:padding="@dimen/text_margin"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:weightSum="0.8">
+
+
+    <EditText
+      android:id="@+id/search_minyan_address"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:hint="@string/enter_your_address"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="355dp"
-        android:background="@color/white"
-        android:orientation="vertical"
-        android:padding="@dimen/text_margin"
-        android:weightSum="0.8">
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_weight="0.1"
+      android:orientation="horizontal">
 
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/choose_name_synagogue"/>
 
-        <EditText
-            android:id="@+id/search_minyan_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/enter_your_address" />
+      <Spinner
+        android:id="@+id/search_synagogoe_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/tfila_name"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/choose_name_synagogue" />
-
-            <Spinner
-                android:id="@+id/search_synagogoe_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:entries="@array/tfila_name" />
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/search_choose_date"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/choose_a_date" />
-
-
-        <Button
-            android:id="@+id/search_choose_time"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/choose_a_time" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.1"
-            android:orientation="horizontal">
-
-            <CheckBox
-                android:id="@+id/seach_by_nosach"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="@string/search_by_nosach" />
-
-            <LinearLayout
-                android:id="@+id/search_by_nosach_true"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingStart="10px"
-                android:visibility="invisible">
-
-                <Spinner
-                    android:id="@+id/search_nosach"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:entries="@array/nosachim" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/search_minyan_btn_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/search"
-            android:textAlignment="center" />
     </LinearLayout>
+
+    <Button
+      android:id="@+id/search_choose_date"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:text="@string/choose_a_date"/>
+
+
+    <Button
+      android:id="@+id/search_choose_time"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:text="@string/choose_a_time"/>
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_weight="0.1"
+      android:orientation="horizontal">
+
+      <CheckBox
+        android:id="@+id/seach_by_nosach"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="@string/search_by_nosach"/>
+
+      <LinearLayout
+        android:id="@+id/search_by_nosach_true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="10px"
+        android:orientation="horizontal"
+        android:visibility="invisible">
+
+        <Spinner
+          android:id="@+id/search_nosach"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:entries="@array/nosachim"/>
+
+      </LinearLayout>
+
+    </LinearLayout>
+
+    <Button
+      android:id="@+id/search_minyan_btn_search"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:text="@string/search"
+      android:textAlignment="center"/>
+  </LinearLayout>
 
 </ScrollView>
