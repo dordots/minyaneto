@@ -1,180 +1,178 @@
 <resources>
 
-    <string name="app_name">מניינטו</string>
-    <string name="side_bar_info">הן אל כביר לא ימאס בתפילת רבים</string>
+  <string name="app_name">מניינטו</string>
+  <string name="side_bar_info">הן אל כביר לא ימאס בתפילת רבים</string>
 
-    <!-- menu -->
-    <string name="sidebar_home">ראשי</string>
-    <string name="sidebar_addSynagogue">הוסף בית כנסת</string>
-    <string name="sidebar_zmanim">זמני היום</string>
-    <string name="sidebar_about">על סטארט-אח</string>
-    <string name="actionbar_refresh_location">רענן מיקום</string>
+  <!-- menu -->
+  <string name="sidebar_home">ראשי</string>
+  <string name="sidebar_addSynagogue">הוסף בית כנסת</string>
+  <string name="sidebar_zmanim">זמני היום</string>
+  <string name="sidebar_about">על סטארט-אח</string>
 
-    <!-- synagogue -->
-    <string name="sefer_tora">ספר תורה</string>
-    <string name="lessons">שיעורים</string>
-    <string name="parking">חניה</string>
-    <string name="accessible">נגישות</string>
+  <!-- synagogue -->
+  <string name="sefer_tora">ספר תורה</string>
+  <string name="lessons">שיעורים</string>
+  <string name="parking">חניה</string>
+  <string name="accessible">נגישות</string>
 
-    <!-- add synagogue -->
-    <string name="enter_name_synagogue">שם בית כנסת</string>
-    <string name="enter_address_synagogue">כתובת בית כנסת</string>
-    <string name="choose_nosach_synagogue">בחר נוסח</string>
-    <string name="choose_address_synagogue">מצא כתובת</string>
+  <!-- add synagogue -->
+  <string name="enter_name_synagogue">שם בית כנסת</string>
+  <string name="enter_address_synagogue">כתובת בית כנסת</string>
+  <string name="choose_nosach_synagogue">בחר נוסח</string>
+  <string name="choose_address_synagogue">מצא כתובת</string>
 
-    <string name="synagogoe_details_title">פרטי בית כנסת</string>
-    <string name="add">הוסף</string>
-    <string name="check">אנא מלא את כל הפרטים.</string>
-    <string name="error_synagogue">בית כנסת זה כבר קיים. לא ניתן להוסיפו שנית.</string>
-    <string name="enter_comment_synagogue">הערות</string>
+  <string name="synagogoe_details_title">פרטי בית כנסת</string>
+  <string name="add">הוסף</string>
+  <string name="check">אנא מלא את כל הפרטים.</string>
+  <string name="error_synagogue">בית כנסת זה כבר קיים. לא ניתן להוסיפו שנית.</string>
+  <string name="enter_comment_synagogue">הערות</string>
 
-    <!-- synagogue details -->
-    <string name="sidebar_addMinyan">הוסף מניין</string>
-    <string name="minyans_list">זמני תפילות</string>
-    <string name="another_info">מידע נוסף</string>
-    <string name="nosach">נוסח </string>
+  <!-- synagogue details -->
+  <string name="sidebar_addMinyan">הוסף מניין</string>
+  <string name="minyans_list">זמני תפילות</string>
+  <string name="another_info">מידע נוסף</string>
+  <string name="nosach">נוסח </string>
 
-    <!-- add minyan -->
-    <string name="minyan_details">פרטי מניין</string>
-    <string name="exact_time">שעה מדויקת</string>
-    <string name="relative_time">שעה יחסית לזמני היום</string>
-    <string name="choose_minyan_pray_type">בחר סוג תפילה</string>
-    <string name="minetes">דקות מזמן</string>
-    <string name="add_minyan_days">באלו ימים מתקיימת התפילה?</string>
-    <string name="add_minyan_every_day">כל יום חול</string>
+  <!-- add minyan -->
+  <string name="minyan_details">פרטי מניין</string>
+  <string name="exact_time">שעה מדויקת</string>
+  <string name="relative_time">שעה יחסית לזמני היום</string>
+  <string name="choose_minyan_pray_type">בחר סוג תפילה</string>
+  <string name="minetes">דקות מזמן</string>
+  <string name="add_minyan_days">באלו ימים מתקיימת התפילה?</string>
+  <string name="add_minyan_every_day">כל יום חול</string>
 
-    <string name="anter_time">הכנס זמן</string>
-    <string name="add_minyan">הוסף מניין</string>
+  <string name="anter_time">הכנס זמן</string>
+  <string name="add_minyan">הוסף מניין</string>
 
-    <!-- about -->
-    <string name="about_startach">סטארט-אח הינו ארגון חברתי התנדבותי בלה בלה בלה</string>
+  <!-- about -->
+  <string name="about_startach">סטארט-אח הינו ארגון חברתי התנדבותי בלה בלה בלה</string>
 
-    <!-- main screen -->
-    <string name="name_synagogue">בית כנסת</string>
-    <string name="time_of_tfila">שעה</string>
-    <string name="distance">מרחק</string>
-    <string name="meters">מ</string>
+  <!-- main screen -->
+  <string name="name_synagogue">בית כנסת</string>
+  <string name="time_of_tfila">שעה</string>
+  <string name="distance">מרחק</string>
+  <string name="meters">מ</string>
 
-    <!-- Nouns -->
-    <string name="nouns_the">ה-</string>
-    <string name="nouns_at">ב-</string>
-    <string name="nouns_minutes">דקות</string>
-    <string name="nouns_after">אחרי</string>
-    <string name="nouns_before">לפני</string>
-    <string name="nouns_pray">תפילת</string>
-    <plurals name="nouns_in_days">
-        <item quantity="one">ביום</item>
-        <item quantity="two">בימים</item>
-        <item quantity="many">בימים</item>
-    </plurals>
+  <!-- Nouns -->
+  <string name="nouns_the">ה-</string>
+  <string name="nouns_at">ב-</string>
+  <string name="nouns_minutes">דקות</string>
+  <string name="nouns_after">אחרי</string>
+  <string name="nouns_before">לפני</string>
+  <string name="nouns_pray">תפילת</string>
+  <plurals name="nouns_in_days">
+    <item quantity="one">ביום</item>
+    <item quantity="two">בימים</item>
+    <item quantity="many">בימים</item>
+  </plurals>
 
-    <!--Nosach Tfila -->
-    <string name="nosach_tfila">נוסח תפילה</string>
-    <string name="nosach_tfila_am">עדות המזרח/ספרדי</string>
-    <string name="nosach_tfila_a">אשכנזי</string>
-    <string name="nosach_tfila_s">ספרד</string>
-    <string name="nosach_tfila_t">תימני</string>
-    <string name="nosach_tfila_ch">חבד</string>
-    <string name="nosach_tfila_byc">לפי החזן</string>
-    <string name="nosach_tfila_other">אחר</string>
-    <string-array name="nosachim">
-        <item>ספרדי</item>
-        <item>אשכנזי</item>
-        <item>תימני</item>
-        <item>חבד</item>
-        <item>לפי החזן</item>
-        <item>אחר</item>
-    </string-array>
+  <!--Nosach Tfila -->
+  <string name="nosach_tfila">נוסח תפילה</string>
+  <string name="nosach_tfila_am">עדות המזרח/ספרדי</string>
+  <string name="nosach_tfila_a">אשכנזי</string>
+  <string name="nosach_tfila_s">ספרד</string>
+  <string name="nosach_tfila_t">תימני</string>
+  <string name="nosach_tfila_ch">חבד</string>
+  <string name="nosach_tfila_byc">לפי החזן</string>
+  <string name="nosach_tfila_other">אחר</string>
+  <string-array name="nosachim">
+    <item>ספרדי</item>
+    <item>אשכנזי</item>
+    <item>תימני</item>
+    <item>חבד</item>
+    <item>לפי החזן</item>
+    <item>אחר</item>
+  </string-array>
 
-    <!-- Pray Type -->
-    <string name="pray_type_morning">שחרית</string>
-    <string name="pray_type_after_noon">מנחה</string>
-    <string name="pray_type_evening">ערבית</string>
+  <!-- Pray Type -->
+  <string name="pray_type_morning">שחרית</string>
+  <string name="pray_type_after_noon">מנחה</string>
+  <string name="pray_type_evening">ערבית</string>
 
-    <string-array name="tfila_name">
-        <item>@string/pray_type_morning</item>
-        <item>@string/pray_type_after_noon</item>
-        <item>@string/pray_type_evening</item>
-    </string-array>
+  <string-array name="tfila_name">
+    <item>@string/pray_type_morning</item>
+    <item>@string/pray_type_after_noon</item>
+    <item>@string/pray_type_evening</item>
+  </string-array>
 
-    <!--Pray Day Type-->
-    <string name="pray_day_type_s">ראשון</string>
-    <string name="pray_day_type_m">שני</string>
-    <string name="pray_day_type_tu">שלישי</string>
-    <string name="pray_day_type_w">רביעי</string>
-    <string name="pray_day_type_th">חמישי</string>
-    <string name="pray_day_type_fr">שישי</string>
-    <string name="pray_day_type_sa">שבת</string>
-    <string name="pray_day_type_fa">צום</string>
-    <string name="pray_day_type_rh">ראש חודש</string>
+  <!--Pray Day Type-->
+  <string name="pray_day_type_s">ראשון</string>
+  <string name="pray_day_type_m">שני</string>
+  <string name="pray_day_type_tu">שלישי</string>
+  <string name="pray_day_type_w">רביעי</string>
+  <string name="pray_day_type_th">חמישי</string>
+  <string name="pray_day_type_fr">שישי</string>
+  <string name="pray_day_type_sa">שבת</string>
+  <string name="pray_day_type_fa">צום</string>
+  <string name="pray_day_type_rh">ראש חודש</string>
 
-    <!-- Relative Time -->
-    <string name="relative_time_dawn">עלות השחר</string>
-    <string name="relative_time_sunrise">זריחה</string>
-    <string name="relative_time_sunset">שקיעה</string>
-    <string name="relative_time_stars_out">"צאת כוכבים"</string>
+  <!-- Relative Time -->
+  <string name="relative_time_dawn">עלות השחר</string>
+  <string name="relative_time_sunrise">זריחה</string>
+  <string name="relative_time_sunset">שקיעה</string>
+  <string name="relative_time_stars_out">"צאת כוכבים"</string>
 
-    <string name="navigation_drawer_open" />
-    <string name="navigation_drawer_close" />
+  <string name="navigation_drawer_open"/>
+  <string name="navigation_drawer_close"/>
 
-    <!-- Fragments' Names -->
-    <string name="about_fragment">אודות</string>
-    <string name="search_synagogue_fragment">חיפוש בית כנסת</string>
-    <string name="search_minyan_fragment">חיפוש מניין</string>
-    <string name="add_synagogue_fragment">הוספת בית כנסת</string>
-    <string name="main_screen_fragment">מניינטו</string>
-    <string name="synagogue_details_fragment">פרטי בית כנסת</string>
-    <string name="add_minyan_fragment">הוספת מניין</string>
-
-
-    <string name="title_activity_maps">Map</string>
-    <string name="route_distance">Distance</string>
-    <string name="route_distance_value">40.2 Km</string>
-    <string name="route_duration">Duration</string>
-    <string name="route_duration_value">48 mins</string>
-    <string name="server_error">Server error. Something when wrong with the server</string>
-
-    <string name="show_synagogue_details">פרטים נוספים</string>
-    <string name="go_there">נווט</string>
-    <string name="wait">אנא המתן...</string>
-    <string name="zmanim_fragment">זמני היום</string>
-    <string name="click_back_again">לחץ שוב ליציאה מהאפליקציה</string>
+  <!-- Fragments' Names -->
+  <string name="about_fragment">אודות</string>
+  <string name="search_synagogue_fragment">חיפוש בית כנסת</string>
+  <string name="search_minyan_fragment">חיפוש מניין</string>
+  <string name="add_synagogue_fragment">הוספת בית כנסת</string>
+  <string name="main_screen_fragment">מניינטו</string>
+  <string name="synagogue_details_fragment">פרטי בית כנסת</string>
+  <string name="add_minyan_fragment">הוספת מניין</string>
 
 
-    <!-- permission massage -->
-    <string name="storage_permission_toast">Storage permission needed. Please allow in App Settings for additional functionality.</string>
-    <string name="location_permission_toast">Location permission needed. Please allow in App Settings for additional functionality.</string>
-    <string name="camera_permission_toast">Camera permission needed. Please allow in App Settings for additional functionality.</string>
+  <string name="title_activity_maps">Map</string>
+  <string name="route_distance">Distance</string>
+  <string name="route_distance_value">40.2 Km</string>
+  <string name="route_duration">Duration</string>
+  <string name="route_duration_value">48 mins</string>
+  <string name="server_error">Server error. Something when wrong with the server</string>
 
-    <!-- Alerts -->
-    <string name="no_internet_connection">אין חיבור לאינטרנט</string>
-    <string name="message_alert_no_interner">For this action internet required</string>
-    <string name="open_internet_settings">הגדרות</string>
-    <string name="select_settings" />
-    <string name="cancel">ביטול</string>
-    <string name="close_app">Close App</string>
-    <string name="prmission" />
-    <string name="ok">אישור</string>
-    <string name="no_gps_connection" />
-    <string name="message_alert_no_gps">For use with this app the GPS is required</string>
-    <string name="no_address">כתובת לא חוקית</string>
-    <string name="enter_your_address">כתובת</string>
-    <string name="check_search">יש למלא את השדות לפני ביצוע החיפוש</string>
-    <string name="search_by_nosach">חפש לפי נוסח</string>
-    <string name="sidebar_searchSynagogue">חפש בית כנסת</string>
-    <string name="search">חפש</string>
-    <string name="choose_a_date">בחר תאריך</string>
-    <string name="choose_a_time">בחר זמן ביום</string>
-    <string name="choose_name_synagogue">תפילת</string>
-    <string name="sidebar_searchMinyan">חפש מניין</string>
-    <string name="attention_alert">שים לב שקיימים בתי כנסת בסביבה</string>
-    <string name="searchModeMsg">חיפוש: </string>
-    <string name="no_synagogues_found">לא נמצאו בתי כנסת.</string>
-    <string name="no_seccess">ההוספה לא הצליחה. נסה שוב</string>
-    <string name="seccess_add_synagogue">בית הכנסת נוסף בהצלחה</string>
-    <string name="no_minyans_found_for_time">לא נמצאו מניינים בסביבה נכון לשעת החיפוש</string>
-    <string name="no_minyans_found">לא נמצאו מניינים קרובים</string>
-    <string name="seccess_add_minyan">המניין/ים נוסף/ו בהצלחה.</string>
-    <string name="default_location">חיפוש באזור הר הבית</string>
-    <string name="default_location_msg">לא ניתן למצוא את המיקום שלך.\nמבצע חיפוש באזור הר הבית. \nניתן להדליק את המיקום ולאחר מכן ללחוץ על כפתור רענן.</string>
+  <string name="show_synagogue_details">פרטים נוספים</string>
+  <string name="go_there">נווט</string>
+  <string name="zmanim_fragment">זמני היום</string>
+  <string name="click_back_again">לחץ שוב ליציאה מהאפליקציה</string>
+
+
+  <!-- permission massage -->
+  <string name="storage_permission_toast">Storage permission needed. Please allow in App Settings for additional functionality.</string>
+  <string name="location_permission_toast">Location permission needed. Please allow in App Settings for additional functionality.</string>
+  <string name="camera_permission_toast">Camera permission needed. Please allow in App Settings for additional functionality.</string>
+
+  <!-- Alerts -->
+  <string name="no_internet_connection">אין חיבור לאינטרנט</string>
+  <string name="message_alert_no_interner">For this action internet required</string>
+  <string name="open_internet_settings">הגדרות</string>
+  <string name="select_settings"/>
+  <string name="cancel">ביטול</string>
+  <string name="close_app">Close App</string>
+  <string name="prmission"/>
+  <string name="ok">אישור</string>
+  <string name="no_gps_connection"/>
+  <string name="message_alert_no_gps">For use with this app the GPS is required</string>
+  <string name="no_address">כתובת לא חוקית</string>
+  <string name="enter_your_address">כתובת</string>
+  <string name="check_search">יש למלא את השדות לפני ביצוע החיפוש</string>
+  <string name="search_by_nosach">חפש לפי נוסח</string>
+  <string name="sidebar_searchSynagogue">חפש בית כנסת</string>
+  <string name="search">חפש</string>
+  <string name="choose_a_date">בחר תאריך</string>
+  <string name="choose_a_time">בחר זמן ביום</string>
+  <string name="choose_name_synagogue">תפילת</string>
+  <string name="sidebar_searchMinyan">חפש מניין</string>
+  <string name="attention_alert">שים לב שקיימים בתי כנסת בסביבה</string>
+  <string name="searchModeMsg">חיפוש: </string>
+  <string name="no_synagogues_found">לא נמצאו בתי כנסת.</string>
+  <string name="no_seccess">ההוספה לא הצליחה. נסה שוב</string>
+  <string name="seccess_add_synagogue">בית הכנסת נוסף בהצלחה</string>
+  <string name="no_minyans_found_for_time">לא נמצאו מניינים בסביבה נכון לשעת החיפוש</string>
+  <string name="no_minyans_found">לא נמצאו מניינים קרובים</string>
+  <string name="seccess_add_minyan">המניין/ים נוסף/ו בהצלחה.</string>
+  <string name="default_location">חיפוש באזור הר הבית</string>
+  <string name="default_location_msg">לא ניתן למצוא את המיקום שלך.\nמבצע חיפוש באזור הר הבית. \nניתן להדליק את המיקום ולאחר מכן ללחוץ על כפתור רענן.</string>
 </resources>

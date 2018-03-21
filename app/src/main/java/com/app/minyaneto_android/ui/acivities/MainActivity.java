@@ -12,14 +12,10 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.data.DataTransformer;
-import com.app.minyaneto_android.models.domain.MinyanScheduleDomain;
 import com.app.minyaneto_android.models.domain.SynagogueCache;
 import com.app.minyaneto_android.models.domain.SynagogueDomain;
 import com.app.minyaneto_android.models.domain.SynagoguesSource;
@@ -71,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements
   private boolean doubleBackToExitPressedOnce = false;
   private FragmentHelper mFragmentHelper;
   private boolean isShowSynagoguesFragment = true;
-  private MenuItem refresh_btn = null;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -202,16 +197,6 @@ public class MainActivity extends AppCompatActivity implements
   public void onSetActionBarTitle(String title) {
     if (title != null && getSupportActionBar() != null) {
       getSupportActionBar().setTitle(title);
-      if (null != refresh_btn) {
-        if (title.equals(getResources().getString(R.string.zmanim_fragment)) ||
-            title.equals(getResources().getString(R.string.sidebar_addMinyan)) ||
-            title.equals(getResources().getString(R.string.synagogue_details_fragment)) ||
-            title.equals(getResources().getString(R.string.about_fragment))) {
-          refresh_btn.setVisible(false);
-        } else {
-          refresh_btn.setVisible(true);
-        }
-      }
     } else if (mFragmentHelper.isContains(SynagoguesFragment.TAG)) {
       onSetActionBarTitle(getResources().getString(R.string.main_screen_fragment));
     } else if (mFragmentHelper.isContains(AddSynagogueFragment.TAG)) {
@@ -296,7 +281,8 @@ public class MainActivity extends AppCompatActivity implements
 
               if (null == response) {
                 synagoguesFragment
-                    .updateSynagogues(new ArrayList<SynagogueDomain>(0),"החיפוש לא הצליח",date,center);
+                    .updateSynagogues(new ArrayList<SynagogueDomain>(0), "החיפוש לא הצליח", date,
+                        center);
               } else
 
               {
@@ -320,10 +306,10 @@ public class MainActivity extends AppCompatActivity implements
                 }
                 if (null == name) {
                   synagoguesFragment.updateSynagogues(synagogues,
-                      getResources().getString(R.string.no_minyans_found),date,center);
+                      getResources().getString(R.string.no_minyans_found), date, center);
                 } else {
                   synagoguesFragment.updateSynagogues(synagogues,
-                      getResources().getString(R.string.no_minyans_found_for_time),date,center);
+                      getResources().getString(R.string.no_minyans_found_for_time), date, center);
                 }
               }
 
@@ -409,17 +395,6 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.actionbar_refresh:
-        mapFragment.onRefreshMap();
-        break;
-    }
-    return super.onOptionsItemSelected(item);
-  }
-
-
-  @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
       @NonNull int[] grantResults) {
     if (null != mapFragment) {
@@ -435,15 +410,6 @@ public class MainActivity extends AppCompatActivity implements
       mapFragment.onActivityResult(requestCode, resultCode, data);
     }
     super.onActivityResult(requestCode, resultCode, data);
-  }
-
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    MenuInflater inflater = getMenuInflater();
-    inflater.inflate(R.menu.action_bar_menu, menu);
-    refresh_btn = menu.findItem(R.id.actionbar_refresh);
-    refresh_btn.setVisible(true);
-    return true;
   }
 
   @Override
