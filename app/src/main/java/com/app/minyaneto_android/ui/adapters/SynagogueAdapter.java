@@ -26,8 +26,8 @@ public class SynagogueAdapter extends RecyclerView.Adapter<SynagogueAdapter.Syna
 
   public SynagogueAdapter(List<SynagogueDomain> synagogues, Date date, LatLng latLng) {
     this.synagogues = synagogues;
-    mDate=date;
-    mLatLng=latLng;
+    mDate = date;
+    mLatLng = latLng;
   }
 
   public void setMyClickListener(SynagogueClickListener listener) {

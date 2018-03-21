@@ -64,7 +64,7 @@ public class SynagoguesFragment extends Fragment implements View.OnClickListener
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
     linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     mSynagoguesView.setLayoutManager(linearLayoutManager);
-    mAdapter = new SynagogueAdapter(mSynagogues,mDate,mLatLng);
+    mAdapter = new SynagogueAdapter(mSynagogues, mDate, mLatLng);
     mSynagoguesView.setAdapter(mAdapter);
     mProgress = view.findViewById(R.id.FS_progress);
     mError = view.findViewById(R.id.FS_error);
@@ -98,9 +98,10 @@ public class SynagoguesFragment extends Fragment implements View.OnClickListener
 
   }
 
-  public void updateSynagogues(List<SynagogueDomain> synagogues, String msg, Date date, LatLng center) {
-    mDate=date;
-    mLatLng=center;
+  public void updateSynagogues(List<SynagogueDomain> synagogues, String msg, Date date,
+      LatLng center) {
+    mDate = date;
+    mLatLng = center;
     mSynagogues.clear();
     if (synagogues.size() == 0) {
       mError.setVisibility(View.VISIBLE);
@@ -110,7 +111,7 @@ public class SynagoguesFragment extends Fragment implements View.OnClickListener
       mSynagogues.addAll(synagogues);
     }
     mProgress.setVisibility(View.GONE);
-    mAdapter = new SynagogueAdapter(mSynagogues,mDate,mLatLng);
+    mAdapter = new SynagogueAdapter(mSynagogues, mDate, mLatLng);
     mSynagoguesView.setAdapter(mAdapter);
     updateAdapter();
   }
@@ -134,27 +135,27 @@ public class SynagoguesFragment extends Fragment implements View.OnClickListener
       @Override
       public void onItemClick(int position) {
 
-          if (position == -1) {
-              return;
-          }
+        if (position == -1) {
+          return;
+        }
 
         mListener.onMoveCamera(mSynagogues.get(position).getLocation(), position);
       }
 
       @Override
       public void onRouteClick(int position) {
-          if (position == -1) {
-              return;
-          }
+        if (position == -1) {
+          return;
+        }
 
         mListener.onOpenRoute(mSynagogues.get(position).getLocation());
       }
 
       @Override
       public void onShowDetailsClick(int position) {
-          if (position == -1) {
-              return;
-          }
+        if (position == -1) {
+          return;
+        }
 
         mListener.onShowSynagogueDetails(mSynagogues.get(position).getId());
 

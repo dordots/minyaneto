@@ -154,7 +154,7 @@ public class SearchMinyanFragment extends Fragment implements
     if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
       Place mPlace = PlacePicker.getPlace(getActivity(), data);
       mLatLng = mPlace.getLatLng();
-      new Runnable(){
+      new Runnable() {
 
         @Override
         public void run() {

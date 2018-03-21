@@ -26,9 +26,8 @@ import com.google.android.gms.maps.model.LatLng;
 public class SearchSynagogueFragment extends Fragment implements
     View.OnClickListener {
 
-  private final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
   public static final String TAG = SearchSynagogueFragment.class.getSimpleName();
-
+  private final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
   EditText etSearchAddress;
   Button btnSearchSynagogue;
   private SearchListener mListener;
@@ -109,7 +108,7 @@ public class SearchSynagogueFragment extends Fragment implements
     super.onStart();
     Location location = LocationRepository.getInstance().getLastKnownLocation();
     mLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-    new Runnable(){
+    new Runnable() {
 
       @Override
       public void run() {

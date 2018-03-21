@@ -4,7 +4,6 @@ package com.app.minyaneto_android.monitoring;
 import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.testfairy.TestFairy;
-
 import timber.log.Timber;
 
 public class MinyanetoDebugTree extends Timber.DebugTree {

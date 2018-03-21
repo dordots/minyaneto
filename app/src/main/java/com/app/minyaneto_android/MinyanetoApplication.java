@@ -2,10 +2,8 @@ package com.app.minyaneto_android;
 
 
 import android.app.Application;
-
 import com.app.minyaneto_android.monitoring.MinyanetoDebugTree;
 import com.app.minyaneto_android.monitoring.MinyanetoReleaseTree;
-
 import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
