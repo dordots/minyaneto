@@ -1,4 +1,4 @@
-package zmanim;
+package com.app.minyaneto_android.zmanim;
 
 import static org.junit.Assert.assertEquals;
 

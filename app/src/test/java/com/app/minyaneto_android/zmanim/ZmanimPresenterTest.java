@@ -1,4 +1,4 @@
-package zmanim;
+package com.app.minyaneto_android.zmanim;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.spy;
@@ -7,9 +7,6 @@ import static org.mockito.Mockito.verify;
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
 import android.location.Location;
 import android.location.LocationManager;
-import com.app.minyaneto_android.zmanim.ZmanimCalendarProvider;
-import com.app.minyaneto_android.zmanim.ZmanimContract;
-import com.app.minyaneto_android.zmanim.ZmanimPresenter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -20,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.robolectric.RobolectricTestRunner;
 
+@SuppressWarnings("SameParameterValue")
 @RunWith(RobolectricTestRunner.class)
 public class ZmanimPresenterTest {
 

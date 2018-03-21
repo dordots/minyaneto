@@ -1,6 +1,5 @@
-package zmanim;
+package com.app.minyaneto_android.zmanim;
 
-import com.app.minyaneto_android.zmanim.ZmanimCalendarProvider;
 import java.util.Calendar;
 import net.sourceforge.zmanim.ComplexZmanimCalendar;
 import net.sourceforge.zmanim.util.GeoLocation;
