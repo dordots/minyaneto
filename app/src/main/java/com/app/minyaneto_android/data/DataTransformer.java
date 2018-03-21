@@ -2,6 +2,7 @@ package com.app.minyaneto_android.data;
 
 import com.app.minyaneto_android.models.domain.MinyanSchedule;
 import com.app.minyaneto_android.models.domain.Synagogue;
+import com.app.minyaneto_android.models.domain.WeekDay;
 import com.app.minyaneto_android.models.minyan.PrayType;
 import com.app.minyaneto_android.models.time.ExactTime;
 import com.app.minyaneto_android.models.time.PrayTime;

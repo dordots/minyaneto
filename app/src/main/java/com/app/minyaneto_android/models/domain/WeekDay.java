@@ -1,4 +1,4 @@
-package com.app.minyaneto_android.data;
+package com.app.minyaneto_android.models.domain;
 
 public enum WeekDay {
   SUNDAY,

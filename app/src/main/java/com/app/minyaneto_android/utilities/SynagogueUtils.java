@@ -10,7 +10,7 @@ import static java.util.Calendar.WEDNESDAY;
 
 import android.content.Context;
 import com.app.minyaneto_android.R;
-import com.app.minyaneto_android.data.WeekDay;
+import com.app.minyaneto_android.models.domain.WeekDay;
 import com.app.minyaneto_android.models.minyan.PrayType;
 import com.app.minyaneto_android.models.time.RelativeTimeType;
 
