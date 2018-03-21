@@ -35,7 +35,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -45,7 +44,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -174,10 +172,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     startLocationUpdates();
   }
 
-  public void updateMarker(Place place) {
-    updateMarker(place.getLatLng(), place.getName().toString());
-  }
-
   @Override
   public void onMapLongClick(LatLng latLng) {
     if (mListener != null) {
@@ -245,12 +239,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
       public void onCameraIdle() {
         CameraPosition cameraPosition = mMap.getCameraPosition();
         if (cameraPosition.zoom < 13.0) {
-          for (Marker m : synagoguesMarkers) {
-            setMarkerVisible(false);
-          }
+          setMarkersVisible(false);
         } else {
           if (Math.floor(cameraPosition.zoom) > Math.floor(lastZoom)) {
-            setMarkerVisible(true);
+            setMarkersVisible(true);
           }
         }
         lastZoom = cameraPosition.zoom;
@@ -364,21 +356,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         final Status status = result.getStatus();
         switch (status.getStatusCode()) {
           case LocationSettingsStatusCodes.SUCCESS:
-//                        Log.i(TAG, "All location settings are satisfied.");
             break;
           case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-//                        Log.i(TAG, "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
             try {
-              // Show the dialog by calling startResolutionForResult(), and check the result
-              // in onActivityResult().
               status
                   .startResolutionForResult(getActivity(), PERMISSIONS_REQUEST_RESOLUTION_REQUIRED);
-            } catch (IntentSender.SendIntentException e) {
-//                            Log.i(TAG, "PendingIntent unable to execute request.");
+            } catch (IntentSender.SendIntentException ignored) {
             }
             break;
           case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-//                        Log.i(TAG, "Location settings are inadequate, and cannot be fixed here. Dialog not created.");
             break;
         }
       }
@@ -411,7 +397,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
     mMap.clear();
     synagoguesMarkers = new ArrayList<>();
-    SimpleDateFormat format = new SimpleDateFormat("HH:mm");
     for (SynagogueDomain synagogue : synagogues) {
       Marker m = mMap.addMarker(new MarkerOptions().position(
           synagogue.getLocation())
@@ -554,7 +539,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     synagoguesMarkers.get(pos).showInfoWindow();
   }
 
-  public void setMarkerVisible(boolean isVisible) {
+  public void setMarkersVisible(boolean isVisible) {
     for (Marker m : synagoguesMarkers) {
       m.setVisible(isVisible);
     }
