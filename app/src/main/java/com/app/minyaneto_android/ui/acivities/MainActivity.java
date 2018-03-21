@@ -294,12 +294,6 @@ public class MainActivity extends AppCompatActivity implements
                     synagogues.remove(s);
                     continue;
                   }
-//
-//                  for (MinyanScheduleDomain m : new ArrayList<>(s.getMinyans())) {
-//                    if (name != null && m.getPrayType() != name) {
-//                      s.getMinyans().remove(m);
-//                    }
-//                  }
                   if ("".equals(TimeUtility.getTimes(s.getMinyans(), date))) {
                     synagogues.remove(s);
                   }
@@ -312,18 +306,12 @@ public class MainActivity extends AppCompatActivity implements
                       getResources().getString(R.string.no_minyans_found_for_time), date, center);
                 }
               }
-
             }
           });
-    } catch (
-        IOException e)
-
-    {
+    } catch (IOException e) {
       e.printStackTrace();
     }
-
   }
-
 
   @Override
   public void onMarkerClick(int position) {
