@@ -102,52 +102,6 @@ public class ZmanimFragment extends Fragment implements ZmanimContract.View {
     adapter.notifyItemChanged(position);
   }
 
-  public static class ViewHolder extends RecyclerView.ViewHolder {
-
-    public TextView zman;
-    public TextView title;
-    public TextView description;
-
-    public ViewHolder(LayoutInflater inflater, ViewGroup parent) {
-      super(inflater.inflate(R.layout.item_zmanim_recycler_view, parent, false));
-      zman = itemView.findViewById(R.id.item_zmanim_zman);
-      title = itemView.findViewById(R.id.item_zmanim_title);
-      description = itemView.findViewById(R.id.item_zmanim_description);
-    }
-  }
-
-  public static class ContentAdapter extends RecyclerView.Adapter<ViewHolder> {
-
-    private String[] zmanim;
-    private String[] titles;
-    private String[] descriptions;
-
-    public ContentAdapter(Context context) {
-      Resources resources = context.getResources();
-      descriptions = resources.getStringArray(R.array.zmanim_descriptions);
-      titles = resources.getStringArray(R.array.zmanim_titles);
-      zmanim = new String[titles.length];
-    }
-
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-      return new ViewHolder(LayoutInflater.from(parent.getContext()), parent);
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-      holder.zman.setText(zmanim[position]);
-      holder.title.setText(titles[position]);
-      holder.description.setText(descriptions[position]);
-    }
-
-    @Override
-    public int getItemCount() {
-      return zmanim.length;
-    }
-  }
-
-
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
@@ -170,6 +124,46 @@ public class ZmanimFragment extends Fragment implements ZmanimContract.View {
   public interface ZmanimListener {
 
     void onSetActionBarTitle(String title);
+  }
+
+  public static class ViewHolder extends RecyclerView.ViewHolder {
+
+    public TextView zman;
+    public TextView title;
+
+    public ViewHolder(LayoutInflater inflater, ViewGroup parent) {
+      super(inflater.inflate(R.layout.item_zmanim_recycler_view, parent, false));
+      zman = itemView.findViewById(R.id.item_zmanim_zman);
+      title = itemView.findViewById(R.id.item_zmanim_title);
+    }
+  }
+
+  public static class ContentAdapter extends RecyclerView.Adapter<ViewHolder> {
+
+    private String[] zmanim;
+    private String[] titles;
+
+    public ContentAdapter(Context context) {
+      Resources resources = context.getResources();
+      titles = resources.getStringArray(R.array.zmanim_titles);
+      zmanim = new String[titles.length];
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+      return new ViewHolder(LayoutInflater.from(parent.getContext()), parent);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+      holder.zman.setText(zmanim[position]);
+      holder.title.setText(titles[position]);
+    }
+
+    @Override
+    public int getItemCount() {
+      return zmanim.length;
+    }
   }
 
 }
