@@ -65,6 +65,7 @@ public class ZmanimPresenterTest {
     verifyAlos("04:52"); // actually expected 04:53
     verifyMisheyakir("05:36");
     verifyHenez("06:24");
+    verifyHatzotHayom("11:32");
     verifyShkiaa("16:40");
     verifyTzais("17:02");
   }
@@ -89,6 +90,11 @@ public class ZmanimPresenterTest {
 
   private void verifyHenez(String expected) {
     verify(zmanimView).displayHenezHahama(captor.capture());
+    assertEquals(expected, formatter.format(captor.getValue()));
+  }
+
+  private void verifyHatzotHayom(String expected) {
+    verify(zmanimView).displayHatzotHayom(captor.capture());
     assertEquals(expected, formatter.format(captor.getValue()));
   }
 

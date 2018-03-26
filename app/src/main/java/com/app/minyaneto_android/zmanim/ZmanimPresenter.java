@@ -46,6 +46,7 @@ public class ZmanimPresenter implements ZmanimContract.UserActionsListener {
     zmanimView.displayAlosHashahar(czc.getAlos19Point8Degrees());
     zmanimView.displayMisheyakir(czc.getMisheyakir11Degrees());
     zmanimView.displayHenezHahama(czc.getSunrise());
+    zmanimView.displayHatzotHayom(czc.getChatzos());
     zmanimView.displayShkiaa(czc.getSunset());
     zmanimView.displayTzaisHakochavim(czc.getTzaisGeonim5Point95Degrees());
   }

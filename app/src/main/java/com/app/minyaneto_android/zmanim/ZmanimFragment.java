@@ -83,13 +83,18 @@ public class ZmanimFragment extends Fragment implements ZmanimContract.View {
   }
 
   @Override
-  public void displayShkiaa(Date zman) {
+  public void displayHatzotHayom(Date zman) {
     displayZmanInPosition(zman, 3);
   }
 
   @Override
-  public void displayTzaisHakochavim(Date zman) {
+  public void displayShkiaa(Date zman) {
     displayZmanInPosition(zman, 4);
+  }
+
+  @Override
+  public void displayTzaisHakochavim(Date zman) {
+    displayZmanInPosition(zman, 5);
   }
 
   @Override
