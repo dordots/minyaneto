@@ -16,6 +16,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+import com.app.minyaneto_android.BuildConfig;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.data.DataTransformer;
 import com.app.minyaneto_android.location.LocationRepository;
@@ -120,7 +121,8 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
     progress = ProgressDialog.show(getContext(), "og title",
         "dialog message", true);
 
-    SynagoguesSource source = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(),
+    SynagoguesSource source = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(
+        BuildConfig.DEBUG),
         new DataTransformer(), SynagogueCache.getInstance());
     source.addSynagogue(s, new ResponseListener<String>() {
       @Override

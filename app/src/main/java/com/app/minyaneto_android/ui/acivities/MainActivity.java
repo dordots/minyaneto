@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
+import com.app.minyaneto_android.BuildConfig;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.data.DataTransformer;
 import com.app.minyaneto_android.models.domain.Synagogue;
@@ -78,7 +79,8 @@ public class MainActivity extends AppCompatActivity implements
     TestFairyInstaller.install(this);
     Timber.d("onCreate");
 
-    synagoguesSource = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(),
+    synagoguesSource = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(
+        BuildConfig.DEBUG),
         new DataTransformer(), SynagogueCache.getInstance());
     mFragmentHelper = new FragmentHelper(this, new ActivityRunning());
     mNavigationHelper = new NavigationHelper(this, this);

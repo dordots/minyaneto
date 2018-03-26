@@ -19,6 +19,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import com.app.minyaneto_android.BuildConfig;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.data.DataTransformer;
 import com.app.minyaneto_android.models.domain.MinyanSchedule;
@@ -173,7 +174,8 @@ public class AddMinyanFragment extends Fragment implements View.OnClickListener 
             new MinyanSchedule(transformer.transformStringToWeekDay("SATURDAY"), prayType,
                 time));
       }
-      SynagoguesSource source = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(),
+      SynagoguesSource source = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(
+          BuildConfig.DEBUG),
           transformer, SynagogueCache.getInstance());
       source.updateSynagogue(mSynagogue, new ResponseListener<Void>() {
         @Override

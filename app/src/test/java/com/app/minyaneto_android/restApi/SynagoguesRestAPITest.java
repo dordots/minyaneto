@@ -13,30 +13,34 @@ import com.app.minyaneto_android.data.SynagogueToServer;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import org.junit.Ignore;
 import org.junit.Test;
 import retrofit2.Call;
 import retrofit2.Response;
 
 public class SynagoguesRestAPITest {
 
+  public static final String TEST_SYNAGOGUE_ID = "AWJjQfB-XhnPh-4nqCE2";
+  public static final double LAT = 34.024;
+  public static final double LON = 28.168;
+
   @Test
   public void getSynagogues() throws Exception {
-    SynagoguesRestAPI api = RestAPIUtility.createSynagoguesRestAPI();
-    Call<List<SynagogueFromServer>> call = api.getSynagogues(20, "31.786,35.186", "3km");
+    SynagoguesRestAPI api = getAPI();
+    Call<List<SynagogueFromServer>> call = api
+        .getSynagogues(4, String.format("%s,%s", LAT, LON), "3km");
 
     Response<List<SynagogueFromServer>> response = call.execute();
 
     List<SynagogueFromServer> synagogues = response.body();
     assertNotNull(synagogues);
-    assertEquals(9, synagogues.size());
+    assertEquals(4, synagogues.size());
   }
 
   @Test
   public void getSynagogue() throws Exception {
-    SynagoguesRestAPI api = RestAPIUtility.createSynagoguesRestAPI();
+    SynagoguesRestAPI api = getAPI();
     String synagogueName = "test_synagogue";
-    Call<SynagogueFromServer> call = api.getSynagogue("AWG4o-siXhnPh-4nqCDV");
+    Call<SynagogueFromServer> call = api.getSynagogue(TEST_SYNAGOGUE_ID);
 
     Response<SynagogueFromServer> response = call.execute();
 
@@ -46,9 +50,8 @@ public class SynagoguesRestAPITest {
   }
 
   @Test
-  @Ignore
   public void addSynagogue() throws Exception {
-    SynagoguesRestAPI api = RestAPIUtility.createSynagoguesRestAPI();
+    SynagoguesRestAPI api = getAPI();
     String synagogueName = "test_synagogue";
     SynagogueToServer synagogue = generateSynagogueData(synagogueName);
     Call<IdFromServer> call = api.addSynagogue(synagogue);
@@ -67,16 +70,16 @@ public class SynagoguesRestAPITest {
 
   @Test
   public void updateSynagogue() throws Exception {
-    SynagoguesRestAPI api = RestAPIUtility.createSynagoguesRestAPI();
+    SynagoguesRestAPI api = getAPI();
     String synagogueName = String.format("test_synagogue%d", new Random().nextInt(1000));
     SynagogueToServer synagogue = generateSynagogueData(synagogueName);
-    Call<Void> call = api.updateSynagogue("AWG4o-siXhnPh-4nqCDV", synagogue);
+    Call<Void> call = api.updateSynagogue(TEST_SYNAGOGUE_ID, synagogue);
 
     Response<Void> response = call.execute();
 
     assertTrue(response.isSuccessful());
     SynagogueFromServer result = api
-        .getSynagogue("AWG4o-siXhnPh-4nqCDV")
+        .getSynagogue(TEST_SYNAGOGUE_ID)
         .execute()
         .body();
     assertNotNull(result);
@@ -89,7 +92,7 @@ public class SynagoguesRestAPITest {
         "no_where",
         false,
         "no_comments",
-        new LatLngDoubleServer(34.024, 28.168),
+        new LatLngDoubleServer(LAT, LON),
         Collections.<MinyanScheduleFromServer>emptyList(),
         synagogueName,
         "test_nosach",
@@ -98,5 +101,9 @@ public class SynagoguesRestAPITest {
         false
     );
     return synagogue;
+  }
+
+  private SynagoguesRestAPI getAPI() {
+    return RestAPIUtility.createSynagoguesRestAPI(true);
   }
 }
