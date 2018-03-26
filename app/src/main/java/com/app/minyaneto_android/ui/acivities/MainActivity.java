@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements
     Timber.d("onCreate");
 
     synagoguesSource = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(
-        BuildConfig.DEBUG),
+        BuildConfig.FLAVOR),
         new DataTransformer(), SynagogueCache.getInstance());
     mFragmentHelper = new FragmentHelper(this, new ActivityRunning());
     mNavigationHelper = new NavigationHelper(this, this);

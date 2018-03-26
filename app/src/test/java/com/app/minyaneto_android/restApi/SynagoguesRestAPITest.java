@@ -104,6 +104,6 @@ public class SynagoguesRestAPITest {
   }
 
   private SynagoguesRestAPI getAPI() {
-    return RestAPIUtility.createSynagoguesRestAPI(true);
+    return RestAPIUtility.createSynagoguesRestAPI("staging");
   }
 }

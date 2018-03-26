@@ -16,10 +16,19 @@ android {
         debug {
             applicationIdSuffix ".debug"
         }
-
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    flavorDimensions "default"
+    productFlavors {
+        staging {
+            applicationIdSuffix ".staging"
+            versionNameSuffix "-staging"
+        }
+        production {
+            applicationIdSuffix ".production"
         }
     }
     testOptions {

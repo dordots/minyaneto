@@ -122,7 +122,7 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
         "dialog message", true);
 
     SynagoguesSource source = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(
-        BuildConfig.DEBUG),
+        BuildConfig.FLAVOR),
         new DataTransformer(), SynagogueCache.getInstance());
     source.addSynagogue(s, new ResponseListener<String>() {
       @Override

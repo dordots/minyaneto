@@ -175,7 +175,7 @@ public class AddMinyanFragment extends Fragment implements View.OnClickListener 
                 time));
       }
       SynagoguesSource source = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(
-          BuildConfig.DEBUG),
+          BuildConfig.FLAVOR),
           transformer, SynagogueCache.getInstance());
       source.updateSynagogue(mSynagogue, new ResponseListener<Void>() {
         @Override
