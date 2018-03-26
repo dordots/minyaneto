@@ -65,9 +65,6 @@ public class NavigationHelper implements NavigationView.OnNavigationItemSelected
       case R.id.sidebar_addSynagogue:
         mListener.onMenuSelectAddSynagogue();
         break;
-      case R.id.sidebar_about:
-        mListener.onMenuSelectAbout();
-        break;
       case R.id.sidebar_zmanim:
         mListener.onMenuSelectZmanim();
         break;
@@ -84,8 +81,6 @@ public class NavigationHelper implements NavigationView.OnNavigationItemSelected
     void onMenuSelectSearchSynagogue();
 
     void onMenuSelectSearchMinyan();
-
-    void onMenuSelectAbout();
 
     void onMenuSelectHome();
 

@@ -45,9 +45,6 @@
   <string name="anter_time">הכנס זמן</string>
   <string name="add_minyan">הוסף מניין</string>
 
-  <!-- about -->
-  <string name="about_startach">סטארט-אח הינו ארגון חברתי התנדבותי בלה בלה בלה</string>
-
   <!-- main screen -->
   <string name="name_synagogue">בית כנסת</string>
   <string name="time_of_tfila">שעה</string>
@@ -117,7 +114,6 @@
   <string name="navigation_drawer_close"/>
 
   <!-- Fragments' Names -->
-  <string name="about_fragment">אודות</string>
   <string name="search_synagogue_fragment">חיפוש בית כנסת</string>
   <string name="search_minyan_fragment">חיפוש מניין</string>
   <string name="add_synagogue_fragment">הוספת בית כנסת</string>

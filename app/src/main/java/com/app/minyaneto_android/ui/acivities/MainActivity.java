@@ -25,7 +25,6 @@ import com.app.minyaneto_android.models.time.TimeUtility;
 import com.app.minyaneto_android.monitoring.TestFairyInstaller;
 import com.app.minyaneto_android.restApi.ResponseListener;
 import com.app.minyaneto_android.restApi.RestAPIUtility;
-import com.app.minyaneto_android.ui.fragments.AboutFragment;
 import com.app.minyaneto_android.ui.fragments.AddMinyanFragment;
 import com.app.minyaneto_android.ui.fragments.AddSynagogueFragment;
 import com.app.minyaneto_android.ui.fragments.MapFragment;
@@ -53,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements
     AddSynagogueFragment.AddSynagogueListener,
     SynagogueDetailsFragment.WantCahngeFragmentListener,
     SynagoguesFragment.OnSynagoguesListener,
-    AboutFragment.AboutListener,
     AddMinyanFragment.AddMinyanListener,
     SearchMinyanFragment.SearchListener,
     ZmanimFragment.ZmanimListener,
@@ -109,9 +107,6 @@ public class MainActivity extends AppCompatActivity implements
 
 
   private void returnToMain() {
-    if (mFragmentHelper.isContains(AboutFragment.TAG)) {
-      mFragmentHelper.removeFragment(AboutFragment.TAG, true);
-    }
     if (mFragmentHelper.isContains(ZmanimFragment.TAG)) {
       mFragmentHelper.removeFragment(ZmanimFragment.TAG, true);
     }
@@ -170,14 +165,6 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
-  public void onMenuSelectAbout() {
-    returnToMain();
-    mFragmentHelper
-        .addFragment(R.id.MA_main_container, AboutFragment.getInstance(), AboutFragment.TAG,
-            AboutFragment.TAG);
-  }
-
-  @Override
   public void onAddSynagogue(String id) {
     showSynagogueDetails(id);
   }
@@ -211,8 +198,6 @@ public class MainActivity extends AppCompatActivity implements
       onSetActionBarTitle(getResources().getString(R.string.sidebar_addMinyan));
     } else if (mFragmentHelper.isContains(ZmanimFragment.TAG)) {
       onSetActionBarTitle(getResources().getString(R.string.zmanim_fragment));
-    } else if (mFragmentHelper.isContains(AboutFragment.TAG)) {
-      onSetActionBarTitle(getResources().getString(R.string.about_fragment));
     } else if (mFragmentHelper.isContains(SynagogueDetailsFragment.TAG)) {
       onSetActionBarTitle(getResources().getString(R.string.synagogue_details_fragment));
     }
