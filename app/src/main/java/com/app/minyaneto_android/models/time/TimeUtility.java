@@ -4,7 +4,6 @@ import android.location.Location;
 import android.support.annotation.NonNull;
 import com.app.minyaneto_android.location.LocationRepository;
 import com.app.minyaneto_android.models.domain.MinyanSchedule;
-import com.app.minyaneto_android.zmanim.ZmanimCalendarProvider;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,13 +19,8 @@ import net.sourceforge.zmanim.util.GeoLocation;
 public class TimeUtility {
 
   public static ExactTime extractSpecificTime(PrayTime prayTime, Location location) {
-    return extractSpecificTime(prayTime, new ZmanimCalendarProvider(), location);
-  }
-
-  public static ExactTime extractSpecificTime(PrayTime prayTime, ZmanimCalendarProvider provider,
-      Location location) {
     if (prayTime.isRelative()) {
-      ComplexZmanimCalendar calendar = provider.getCzc(toGeo(location));
+      ComplexZmanimCalendar calendar = new ComplexZmanimCalendar(toGeo(location));
       RelativeTime time = prayTime.getRelativeTime();
       RelativeTimeType type = time.getRelativeTimeType();
       Date date = getDateRelatively(calendar, type);
