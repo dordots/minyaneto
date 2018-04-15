@@ -137,42 +137,55 @@ public class AddMinyanFragment extends Fragment implements View.OnClickListener 
     }
     PrayType prayType = PrayType.values()[spinnerPrayType.getSelectedItemPosition()];
     PrayTime time = getPrayTime();
+    boolean addedMinyan=false;
 
     try {
       if (cbSunday.isChecked()) {
         mSynagogue.addMinyan(
             new MinyanSchedule(transformer.transformStringToWeekDay("SUNDAY"), prayType,
                 time));
+        addedMinyan=true;
       }
       if (cbMonday.isChecked()) {
         mSynagogue.addMinyan(
             new MinyanSchedule(transformer.transformStringToWeekDay("MONDAY"), prayType,
                 time));
+        addedMinyan=true;
       }
       if (cbTuesday.isChecked()) {
         mSynagogue.addMinyan(
             new MinyanSchedule(transformer.transformStringToWeekDay("TUESDAY"), prayType,
                 time));
+        addedMinyan=true;
       }
       if (cbWednesday.isChecked()) {
         mSynagogue.addMinyan(
             new MinyanSchedule(transformer.transformStringToWeekDay("WEDNESDAY"), prayType,
                 time));
+        addedMinyan=true;
       }
       if (cbThursday.isChecked()) {
         mSynagogue.addMinyan(
             new MinyanSchedule(transformer.transformStringToWeekDay("THURSDAY"), prayType,
                 time));
+        addedMinyan=true;
       }
       if (cbFriday.isChecked()) {
         mSynagogue.addMinyan(
             new MinyanSchedule(transformer.transformStringToWeekDay("FRIDAY"), prayType,
                 time));
+        addedMinyan=true;
       }
       if (cbSaturday.isChecked()) {
         mSynagogue.addMinyan(
             new MinyanSchedule(transformer.transformStringToWeekDay("SATURDAY"), prayType,
                 time));
+        addedMinyan=true;
+      }
+      if(! addedMinyan){
+        Toast.makeText(getContext(), getResources().getString(R.string.check), Toast.LENGTH_SHORT)
+            .show();
+        return;
       }
       SynagoguesSource source = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(
           BuildConfig.FLAVOR),
