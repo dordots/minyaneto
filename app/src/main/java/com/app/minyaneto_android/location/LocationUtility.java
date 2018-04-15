@@ -5,12 +5,10 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class LocationUtility {
 
-  public static long getDistance(Synagogue synagogue) {
-    LatLng latLng = LocationRepository.getInstance().getLastKnownLatLng();
-    return calculateDistance(synagogue.getLocation(), latLng);
-  }
-
   public static long calculateDistance(LatLng location1, LatLng location2) {
+    if(null==location1 || null==location2){
+      return -1;
+    }
     double dLat = Math.toRadians(location1.latitude - location2.latitude);
     double dLon = Math.toRadians(location1.longitude - location2.longitude);
     double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)

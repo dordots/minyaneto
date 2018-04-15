@@ -116,4 +116,30 @@ public class SynagoguesSource {
       Timber.w(e, "Couldn't parse synagogue data for update server: " + synagogue.toString());
     }
   }
+
+  public void getSynagogue(String id, final ResponseListener<Synagogue> listener) {
+    Callback<SynagogueFromServer> callback = new Callback<SynagogueFromServer>() {
+      @Override
+      public void onResponse(Call<SynagogueFromServer> call,
+          Response<SynagogueFromServer> response) {
+        SynagogueFromServer data = response.body();
+        if (data != null) {
+          try {
+            Synagogue synagogue = transformer.transformFromServer(data);
+            cache.putSynagogue(synagogue);
+            listener.onResponse(synagogue);
+          } catch (Exception e) {
+              Timber.w(e, "Couldn't parse synagogue data from server: " + data.toString());
+            }
+        }
+      }
+
+      @Override
+      public void onFailure(Call<SynagogueFromServer> call, Throwable t) {
+        Timber.w(t, "Couldn't get synagogues data, an exception occurred:");
+        listener.onResponse(null);
+      }
+    };
+    api.getSynagogue(id).enqueue(callback);
+  }
 }
