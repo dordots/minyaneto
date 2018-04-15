@@ -25,7 +25,6 @@ import com.app.minyaneto_android.models.time.TimeUtility;
 import com.app.minyaneto_android.monitoring.TestFairyInstaller;
 import com.app.minyaneto_android.restApi.ResponseListener;
 import com.app.minyaneto_android.restApi.RestAPIUtility;
-import com.app.minyaneto_android.ui.fragments.AboutFragment;
 import com.app.minyaneto_android.ui.fragments.AddMinyanFragment;
 import com.app.minyaneto_android.ui.fragments.AddSynagogueFragment;
 import com.app.minyaneto_android.ui.fragments.MapFragment;
@@ -37,7 +36,6 @@ import com.app.minyaneto_android.utilities.LocationHelper;
 import com.app.minyaneto_android.utilities.fragment.ActivityRunning;
 import com.app.minyaneto_android.utilities.fragment.FragmentHelper;
 import com.app.minyaneto_android.utilities.user.Alerts;
-import com.app.minyaneto_android.zmanim.ZmanimFragment;
 import com.google.android.gms.maps.model.LatLng;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,10 +52,8 @@ public class MainActivity extends AppCompatActivity implements
     AddSynagogueFragment.AddSynagogueListener,
     SynagogueDetailsFragment.WantCahngeFragmentListener,
     SynagoguesFragment.OnSynagoguesListener,
-    AboutFragment.AboutListener,
     AddMinyanFragment.AddMinyanListener,
     SearchMinyanFragment.SearchListener,
-    ZmanimFragment.ZmanimListener,
     SearchSynagogueFragment.SearchListener {
 
   public MapFragment mapFragment;
@@ -81,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements
     Timber.d("onCreate");
 
     synagoguesSource = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(
-        BuildConfig.DEBUG),
+        BuildConfig.FLAVOR),
         new DataTransformer(), SynagogueCache.getInstance());
     mFragmentHelper = new FragmentHelper(this, new ActivityRunning());
     mNavigationHelper = new NavigationHelper(this, this);
@@ -110,12 +106,6 @@ public class MainActivity extends AppCompatActivity implements
 
 
   private void returnToMain() {
-    if (mFragmentHelper.isContains(AboutFragment.TAG)) {
-      mFragmentHelper.removeFragment(AboutFragment.TAG, true);
-    }
-    if (mFragmentHelper.isContains(ZmanimFragment.TAG)) {
-      mFragmentHelper.removeFragment(ZmanimFragment.TAG, true);
-    }
     if (mFragmentHelper.isContains(SynagogueDetailsFragment.TAG)) {
       mFragmentHelper.removeFragment(SynagogueDetailsFragment.TAG, true);
     }
@@ -129,13 +119,6 @@ public class MainActivity extends AppCompatActivity implements
     if (mapFragment != null) {
       mapFragment.onRefreshMap();
     }
-  }
-
-  @Override
-  public void onMenuSelectZmanim() {
-    returnToMain();
-    mFragmentHelper.addFragment(R.id.MA_main_container, new ZmanimFragment(), ZmanimFragment.TAG,
-        ZmanimFragment.TAG);
   }
 
   @Override
@@ -171,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
+<<<<<<< HEAD
   public void onMenuSelectAbout() {
     returnToMain();
     mFragmentHelper
@@ -186,6 +170,10 @@ public class MainActivity extends AppCompatActivity implements
         showSynagogueDetails(id);
       }
     });
+=======
+  public void onAddSynagogue(String id) {
+    showSynagogueDetails(id);
+>>>>>>> develop
   }
 
   @Override
@@ -215,10 +203,6 @@ public class MainActivity extends AppCompatActivity implements
       onSetActionBarTitle(getResources().getString(R.string.search_synagogue_fragment));
     } else if (mFragmentHelper.isContains(AddMinyanFragment.TAG)) {
       onSetActionBarTitle(getResources().getString(R.string.sidebar_addMinyan));
-    } else if (mFragmentHelper.isContains(ZmanimFragment.TAG)) {
-      onSetActionBarTitle(getResources().getString(R.string.zmanim_fragment));
-    } else if (mFragmentHelper.isContains(AboutFragment.TAG)) {
-      onSetActionBarTitle(getResources().getString(R.string.about_fragment));
     } else if (mFragmentHelper.isContains(SynagogueDetailsFragment.TAG)) {
       onSetActionBarTitle(getResources().getString(R.string.synagogue_details_fragment));
     }

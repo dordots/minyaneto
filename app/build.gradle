@@ -9,13 +9,26 @@ android {
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
-        versionName "1.0"
+        versionName "0.0.1"
         multiDexEnabled true
     }
     buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    flavorDimensions "default"
+    productFlavors {
+        staging {
+            applicationIdSuffix ".staging"
+            versionNameSuffix "-staging"
+        }
+        production {
+            applicationIdSuffix ".production"
         }
     }
     testOptions {
@@ -58,7 +71,7 @@ dependencies {
     testImplementation "android.arch.core:core-testing:1.0.0"
     testImplementation "org.robolectric:robolectric:3.5.1"
     compile('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
-        transitive = true;
+        transitive = true
     }
 
 }

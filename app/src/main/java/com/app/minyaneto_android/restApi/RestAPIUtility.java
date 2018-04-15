@@ -6,16 +6,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RestAPIUtility {
 
   public static final String BASE_URL = "http://minyaneto.startach.com/";
-  public static final String VERSION_SUFFIX = "v1/";
-  public static final String DEBUG_VERSION_SUFFIX = "test-v1/";
+  public static final String VERSION = "v1/";
+  public static final String STAGING_PREFIX = "test-";
 
-  public static SynagoguesRestAPI createSynagoguesRestAPI(boolean isInDebugMode) {
+  public static SynagoguesRestAPI createSynagoguesRestAPI(String flavor) {
     String baseUrl = BASE_URL;
-    if (isInDebugMode) {
-      baseUrl += DEBUG_VERSION_SUFFIX;
-    } else {
-      baseUrl += VERSION_SUFFIX;
+    if (flavor.equals("staging")) {
+      baseUrl += STAGING_PREFIX;
     }
+    baseUrl += VERSION;
     return new Retrofit.Builder()
         .baseUrl(baseUrl)
         .addConverterFactory(GsonConverterFactory.create())
