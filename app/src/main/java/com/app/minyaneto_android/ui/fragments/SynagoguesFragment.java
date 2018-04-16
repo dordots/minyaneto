@@ -168,8 +168,8 @@ public class SynagoguesFragment extends Fragment implements View.OnClickListener
   private void sortSynagoguesByLocation() {
     Collections.sort(mSynagogues, new Comparator<Synagogue>() {
       public int compare(Synagogue o1, Synagogue o2) {
-        long distance1 = LocationUtility.getDistance(o1);
-        long distance2 = LocationUtility.getDistance(o2);
+        long distance1 = LocationUtility.calculateDistance(o1.getLocation(),mLatLng);
+        long distance2 = LocationUtility.calculateDistance(o2.getLocation(),mLatLng);
         return Long.compare(distance1, distance2);
       }
     });

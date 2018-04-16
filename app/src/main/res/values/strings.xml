@@ -171,4 +171,5 @@
   <string name="seccess_add_minyan">המניין/ים נוסף/ו בהצלחה.</string>
   <string name="default_location">חיפוש באזור הר הבית</string>
   <string name="default_location_msg">לא ניתן למצוא את המיקום שלך.\nמבצע חיפוש באזור הר הבית. \nניתן להדליק את המיקום ולאחר מכן ללחוץ על כפתור רענן.</string>
+  <string name="please_wait">אנא המתן...</string>
 </resources>
