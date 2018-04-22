@@ -30,7 +30,6 @@ public class SynagoguesFragment extends Fragment implements View.OnClickListener
   private SynagogueAdapter mAdapter;
   private View mProgress;
   private TextView mError;
-  private FloatingActionButton searchMinyan;
   private Date mDate;
   private LatLng mLatLng;
 
@@ -68,8 +67,7 @@ public class SynagoguesFragment extends Fragment implements View.OnClickListener
     mSynagoguesView.setAdapter(mAdapter);
     mProgress = view.findViewById(R.id.FS_progress);
     mError = view.findViewById(R.id.FS_error);
-    searchMinyan = view.findViewById(R.id.search_minyan);
-    searchMinyan.setOnClickListener(this);
+    view.<FloatingActionButton>findViewById(R.id.search_minyan).setOnClickListener(this);
   }
 
 

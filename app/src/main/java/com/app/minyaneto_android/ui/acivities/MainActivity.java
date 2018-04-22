@@ -275,9 +275,7 @@ public class MainActivity extends AppCompatActivity implements
                 synagoguesFragment
                     .updateSynagogues(new ArrayList<Synagogue>(0), "החיפוש לא הצליח", date,
                         center);
-              } else
-
-              {
+              } else {
                 List<Synagogue> synagogues = response;
 
                 for (Synagogue s : new ArrayList<>(synagogues)) {
