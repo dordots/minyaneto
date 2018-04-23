@@ -33,7 +33,6 @@ import com.app.minyaneto_android.ui.fragments.SearchSynagogueFragment;
 import com.app.minyaneto_android.ui.fragments.SynagogueDetailsFragment;
 import com.app.minyaneto_android.ui.fragments.SynagoguesFragment;
 import com.app.minyaneto_android.utilities.LocationHelper;
-import com.app.minyaneto_android.utilities.fragment.ActivityRunning;
 import com.app.minyaneto_android.utilities.fragment.FragmentHelper;
 import com.google.android.gms.maps.model.LatLng;
 import java.io.IOException;
@@ -76,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements
     synagoguesSource = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(
         BuildConfig.FLAVOR),
         new DataTransformer(), SynagogueCache.getInstance());
-    mFragmentHelper = new FragmentHelper(this, new ActivityRunning());
+    mFragmentHelper = new FragmentHelper(this);
     mNavigationHelper = new NavigationHelper(this, this);
     initFragments();
   }
@@ -98,13 +97,13 @@ public class MainActivity extends AppCompatActivity implements
     if (mapFragment == null) {
       mapFragment = MapFragment.newInstance();
     }
-    mFragmentHelper.addFragment(R.id.MA_container_map, mapFragment, MapFragment.TAG, null);
+    mFragmentHelper.addFragment(R.id.MA_container_map, mapFragment, MapFragment.TAG);
   }
 
 
   private void returnToMain() {
     if (mFragmentHelper.isContains(SynagogueDetailsFragment.TAG)) {
-      mFragmentHelper.removeFragment(SynagogueDetailsFragment.TAG, true);
+      mFragmentHelper.removeFragment(SynagogueDetailsFragment.TAG);
     }
   }
 
