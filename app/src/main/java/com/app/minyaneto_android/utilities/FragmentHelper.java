@@ -1,4 +1,4 @@
-package com.app.minyaneto_android.utilities.fragment;
+package com.app.minyaneto_android.utilities;
 
 import android.annotation.SuppressLint;
 import android.support.v4.app.Fragment;
