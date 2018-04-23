@@ -35,7 +35,6 @@ import com.app.minyaneto_android.ui.fragments.SynagoguesFragment;
 import com.app.minyaneto_android.utilities.LocationHelper;
 import com.app.minyaneto_android.utilities.fragment.ActivityRunning;
 import com.app.minyaneto_android.utilities.fragment.FragmentHelper;
-import com.app.minyaneto_android.utilities.user.Alerts;
 import com.google.android.gms.maps.model.LatLng;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,7 +43,6 @@ import java.util.List;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements
-    Alerts.OnCancelDialogListener,
     MapFragment.OnFragmentInteractionListener,
     ActivityCompat.OnRequestPermissionsResultCallback,
     NavigationHelper.OnMenuItemSelectListener,
@@ -90,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements
 
   private void initSynagoguesFragment() {
     if (synagoguesFragment == null) {
-      synagoguesFragment = SynagoguesFragment.newInstance();
+      synagoguesFragment = new SynagoguesFragment();
     }
     mFragmentHelper
         .replaceFragment(R.id.MA_container, synagoguesFragment, SynagoguesFragment.TAG, null);
@@ -414,15 +412,5 @@ public class MainActivity extends AppCompatActivity implements
     mFragmentHelper
         .replaceFragment(R.id.MA_main_container, SynagogueDetailsFragment.newInstance(id),
             SynagogueDetailsFragment.TAG, SynagogueDetailsFragment.TAG);
-  }
-
-  @Override
-  public void onCancelAlertDialog() {
-
-  }
-
-  @Override
-  public void onClickOkAlertDialog() {
-
   }
 }

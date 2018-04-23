@@ -34,13 +34,6 @@ public class SynagoguesFragment extends Fragment implements View.OnClickListener
   private LatLng mLatLng;
 
 
-  public static SynagoguesFragment newInstance() {
-    SynagoguesFragment fragment = new SynagoguesFragment();
-    Bundle args = new Bundle();
-    fragment.setArguments(args);
-    return fragment;
-  }
-
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -50,9 +43,7 @@ public class SynagoguesFragment extends Fragment implements View.OnClickListener
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_synagogues, container, false);
-
     init(view);
-
     return view;
   }
 
@@ -60,9 +51,9 @@ public class SynagoguesFragment extends Fragment implements View.OnClickListener
     mSynagogues = new ArrayList<>();
     mSynagoguesView = view.findViewById(R.id.FS_synagogues);
     mSynagoguesView.setHasFixedSize(true);
-    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-    linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-    mSynagoguesView.setLayoutManager(linearLayoutManager);
+    LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+    layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+    mSynagoguesView.setLayoutManager(layoutManager);
     mAdapter = new SynagogueAdapter(mSynagogues, mDate, mLatLng);
     mSynagoguesView.setAdapter(mAdapter);
     mProgress = view.findViewById(R.id.FS_progress);
@@ -114,29 +105,23 @@ public class SynagoguesFragment extends Fragment implements View.OnClickListener
     updateAdapter();
   }
 
-
   public void scrollToSynagoguePosition(int position) {
-
     mSynagoguesView.scrollToPosition(position);
     mAdapter.setSelectedListPosition(position);
   }
 
   private void updateAdapter() {
-
     sortSynagoguesByLocation();
-
     if (mListener != null) {
-
       mListener.onUpdateMarkers(mSynagogues);
     }
+
     mAdapter.setMyClickListener(new SynagogueAdapter.SynagogueClickListener() {
       @Override
       public void onItemClick(int position) {
-
         if (position == -1) {
           return;
         }
-
         mListener.onMoveCamera(mSynagogues.get(position).getLocation(), position);
       }
 
@@ -145,7 +130,6 @@ public class SynagoguesFragment extends Fragment implements View.OnClickListener
         if (position == -1) {
           return;
         }
-
         mListener.onOpenRoute(mSynagogues.get(position).getLocation());
       }
 
@@ -154,9 +138,7 @@ public class SynagoguesFragment extends Fragment implements View.OnClickListener
         if (position == -1) {
           return;
         }
-
         mListener.onShowSynagogueDetails(mSynagogues.get(position).getId());
-
       }
     });
 
@@ -166,8 +148,8 @@ public class SynagoguesFragment extends Fragment implements View.OnClickListener
   private void sortSynagoguesByLocation() {
     Collections.sort(mSynagogues, new Comparator<Synagogue>() {
       public int compare(Synagogue o1, Synagogue o2) {
-        long distance1 = LocationUtility.calculateDistance(o1.getLocation(),mLatLng);
-        long distance2 = LocationUtility.calculateDistance(o2.getLocation(),mLatLng);
+        long distance1 = LocationUtility.calculateDistance(o1.getLocation(), mLatLng);
+        long distance2 = LocationUtility.calculateDistance(o2.getLocation(), mLatLng);
         return Long.compare(distance1, distance2);
       }
     });
@@ -176,7 +158,6 @@ public class SynagoguesFragment extends Fragment implements View.OnClickListener
   @Override
   public void onClick(View view) {
     if (mListener != null) {
-
       mListener.onSearchMinyan();
     }
   }
