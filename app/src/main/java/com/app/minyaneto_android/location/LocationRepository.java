@@ -1,7 +1,6 @@
 package com.app.minyaneto_android.location;
 
 import android.location.Location;
-import com.google.android.gms.maps.model.LatLng;
 
 public class LocationRepository {
 
@@ -21,13 +20,5 @@ public class LocationRepository {
 
   public void setLastKnownLocation(Location lastKnownLocation) {
     this.lastKnownLocation = lastKnownLocation;
-  }
-
-  public LatLng getLastKnownLatLng() {
-    Location location = getLastKnownLocation();
-    if (null == location) {
-      return null;
-    }
-    return new LatLng(location.getLatitude(), location.getLongitude());
   }
 }

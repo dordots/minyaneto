@@ -33,7 +33,6 @@ public class SynagogueDetailsFragment extends DialogFragment {
   FloatingActionButton btnAddMinyan;
   private Synagogue mSynagogue;
   private WantCahngeFragmentListener mListener;
-  private RecyclerView mRecyclerViewMinyans;
 
   public static SynagogueDetailsFragment newInstance(String id) {
     SynagogueDetailsFragment fragment = new SynagogueDetailsFragment();
@@ -74,11 +73,11 @@ public class SynagogueDetailsFragment extends DialogFragment {
     cbWheelchair_accessible = view.findViewById(R.id.synagogoe_details_accessible);
     cbLessons = view.findViewById(R.id.synagogoe_details_lessons);
     btnAddMinyan = view.findViewById(R.id.synagogoe_details_add_minyan);
-    mRecyclerViewMinyans = view.findViewById(R.id.synagogoe_details_recycler_minyans);
-    mRecyclerViewMinyans.setHasFixedSize(true);
+    RecyclerView recyclerView = view.findViewById(R.id.synagogoe_details_recycler_minyans);
+    recyclerView.setHasFixedSize(true);
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
     linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-    mRecyclerViewMinyans.setLayoutManager(linearLayoutManager);
+    recyclerView.setLayoutManager(linearLayoutManager);
     if (mSynagogue == null) {
       return;
     }
@@ -93,7 +92,7 @@ public class SynagogueDetailsFragment extends DialogFragment {
     cbWheelchair_accessible.setChecked(
         mSynagogue.getWheelchairAccessible() != null ? mSynagogue.getWheelchairAccessible()
             : false);
-    mRecyclerViewMinyans.setAdapter(new MinyanAdapter(mSynagogue.getMinyans()));
+    recyclerView.setAdapter(new MinyanAdapter(mSynagogue.getMinyans()));
     btnAddMinyan.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {

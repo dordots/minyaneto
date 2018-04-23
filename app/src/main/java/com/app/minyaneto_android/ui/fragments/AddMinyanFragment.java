@@ -46,7 +46,6 @@ public class AddMinyanFragment extends Fragment implements View.OnClickListener 
   private Spinner spinnerPrayType;
   private EditText etMinutes;
   private Spinner spinnerRelativeTimeType;
-  private Button btnAddMinyan;
   private TimePicker timePicker;
   private CheckBox cbSunday;
   private CheckBox cbMonday;
@@ -80,10 +79,9 @@ public class AddMinyanFragment extends Fragment implements View.OnClickListener 
     cbThursday = view.findViewById(R.id.add_minyan_thursday);
     cbFriday = view.findViewById(R.id.add_minyan_friday);
     cbSaturday = view.findViewById(R.id.add_minyan_saterday);
-    btnAddMinyan = view.findViewById(R.id.add_minyan_btn);
     timePicker = view.findViewById(R.id.timePicker);
     linearLayoutRelativeTime = view.findViewById(R.id.liner_layout_relative_time);
-
+    view.<Button>findViewById(R.id.add_minyan_btn).setOnClickListener(this);
     timePicker.setVisibility(View.INVISIBLE);
     timePicker.setIs24HourView(true);
     linearLayoutRelativeTime.setVisibility(View.INVISIBLE);
@@ -108,7 +106,6 @@ public class AddMinyanFragment extends Fragment implements View.OnClickListener 
       }
     });
     ((RadioButton) view.findViewById(R.id.add_minyan_exact_time)).setChecked(true);
-    btnAddMinyan.setOnClickListener(this);
 
     ArrayList<String> prayTypeNames = new ArrayList<>(PrayType.values().length);
     for (PrayType prayType : PrayType.values()) {
