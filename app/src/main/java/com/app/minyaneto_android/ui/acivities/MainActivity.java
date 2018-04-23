@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
   private void returnToMain() {
-    if (mFragmentHelper.isContains(SynagogueDetailsFragment.TAG)) {
+    if (mFragmentHelper.contains(SynagogueDetailsFragment.TAG)) {
       mFragmentHelper.removeFragment(SynagogueDetailsFragment.TAG);
     }
   }
@@ -176,17 +176,17 @@ public class MainActivity extends AppCompatActivity implements
   public void onSetActionBarTitle(String title) {
     if (title != null && getSupportActionBar() != null) {
       getSupportActionBar().setTitle(title);
-    } else if (mFragmentHelper.isContains(SynagoguesFragment.TAG)) {
+    } else if (mFragmentHelper.contains(SynagoguesFragment.TAG)) {
       onSetActionBarTitle(getResources().getString(R.string.main_screen_fragment));
-    } else if (mFragmentHelper.isContains(AddSynagogueFragment.TAG)) {
+    } else if (mFragmentHelper.contains(AddSynagogueFragment.TAG)) {
       onSetActionBarTitle(getResources().getString(R.string.add_synagogue_fragment));
-    } else if (mFragmentHelper.isContains(SearchMinyanFragment.TAG)) {
+    } else if (mFragmentHelper.contains(SearchMinyanFragment.TAG)) {
       onSetActionBarTitle(getResources().getString(R.string.search_minyan_fragment));
-    } else if (mFragmentHelper.isContains(SearchSynagogueFragment.TAG)) {
+    } else if (mFragmentHelper.contains(SearchSynagogueFragment.TAG)) {
       onSetActionBarTitle(getResources().getString(R.string.search_synagogue_fragment));
-    } else if (mFragmentHelper.isContains(AddMinyanFragment.TAG)) {
+    } else if (mFragmentHelper.contains(AddMinyanFragment.TAG)) {
       onSetActionBarTitle(getResources().getString(R.string.sidebar_addMinyan));
-    } else if (mFragmentHelper.isContains(SynagogueDetailsFragment.TAG)) {
+    } else if (mFragmentHelper.contains(SynagogueDetailsFragment.TAG)) {
       onSetActionBarTitle(getResources().getString(R.string.synagogue_details_fragment));
     }
   }
@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements
   @Override
   public void onUpdateSynagogues(final LatLng latLngCenter) {
     //TODO- choose the name of Tfila - according to this time
-    if (mFragmentHelper.isContains(SynagoguesFragment.TAG) && null != mapFragment
+    if (mFragmentHelper.contains(SynagoguesFragment.TAG) && null != mapFragment
         && isShowSynagoguesFragment) {
       updateSynagogues(latLngCenter, new Date(), null, null);
     }
@@ -288,14 +288,14 @@ public class MainActivity extends AppCompatActivity implements
 
   @Override
   public void onMarkerClick(int position) {
-    if (mFragmentHelper.isContains(SynagoguesFragment.TAG)) {
+    if (mFragmentHelper.contains(SynagoguesFragment.TAG)) {
       synagoguesFragment.scrollToSynagoguePosition(position);
     }
   }
 
   @Override
   public void onMapLongClick(LatLng latLng) {
-    if (!mFragmentHelper.isContains(AddSynagogueFragment.TAG)) {
+    if (!mFragmentHelper.contains(AddSynagogueFragment.TAG)) {
       return;
     }
 
@@ -318,9 +318,9 @@ public class MainActivity extends AppCompatActivity implements
     if (!mNavigationHelper.closeDrawer()) {
       if (mFragmentHelper.getFragmentsSize() > 2) {
         super.onBackPressed();
-      } else if (mFragmentHelper.isContains(AddSynagogueFragment.TAG) ||
-          mFragmentHelper.isContains(SearchSynagogueFragment.TAG) ||
-          mFragmentHelper.isContains(SearchMinyanFragment.TAG)) {
+      } else if (mFragmentHelper.contains(AddSynagogueFragment.TAG) ||
+          mFragmentHelper.contains(SearchSynagogueFragment.TAG) ||
+          mFragmentHelper.contains(SearchMinyanFragment.TAG)) {
         mapFragment.stopSearchMode();
         super.onBackPressed();
       } else {

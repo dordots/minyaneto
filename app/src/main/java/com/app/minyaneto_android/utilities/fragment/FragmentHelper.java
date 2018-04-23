@@ -57,7 +57,7 @@ public class FragmentHelper {
   }
 
 
-  public boolean isContains(String tag) {
+  public boolean contains(String tag) {
     if (mFragmentActivity.getSupportFragmentManager().getFragments() != null) {
       for (Fragment fragment : mFragmentActivity.getSupportFragmentManager().getFragments()) {
         if (fragment != null && fragment.getTag() != null && fragment.getTag().equals(tag)) {
