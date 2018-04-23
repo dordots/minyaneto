@@ -41,7 +41,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import retrofit2.Call;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements
@@ -154,15 +153,6 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
-<<<<<<< HEAD
-  public void onMenuSelectAbout() {
-    returnToMain();
-    mFragmentHelper
-        .addFragment(R.id.MA_main_container, AboutFragment.getInstance(), AboutFragment.TAG,
-            AboutFragment.TAG);
-  }
-
-  @Override
   public void onAddSynagogue(final String id) {
     synagoguesSource.getSynagogue(id, new ResponseListener<Synagogue>() {
       @Override
@@ -170,10 +160,6 @@ public class MainActivity extends AppCompatActivity implements
         showSynagogueDetails(id);
       }
     });
-=======
-  public void onAddSynagogue(String id) {
-    showSynagogueDetails(id);
->>>>>>> develop
   }
 
   @Override
