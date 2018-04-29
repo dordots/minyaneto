@@ -7,7 +7,7 @@ import static junit.framework.Assert.assertTrue;
 import android.support.annotation.NonNull;
 import com.app.minyaneto_android.data.IdFromServer;
 import com.app.minyaneto_android.data.LatLngDoubleServer;
-import com.app.minyaneto_android.data.MinyanScheduleFromServer;
+import com.app.minyaneto_android.data.MinyanScheduleServer;
 import com.app.minyaneto_android.data.SynagogueFromServer;
 import com.app.minyaneto_android.data.SynagogueToServer;
 import java.util.Collections;
@@ -93,7 +93,7 @@ public class SynagoguesRestAPITest {
         false,
         "no_comments",
         new LatLngDoubleServer(LAT, LON),
-        Collections.<MinyanScheduleFromServer>emptyList(),
+        Collections.<MinyanScheduleServer>emptyList(),
         synagogueName,
         "test_nosach",
         false,
