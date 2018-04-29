@@ -1,5 +1,9 @@
 package com.app.minyaneto_android.utilities;
 
+import static com.app.minyaneto_android.models.time.RelativeTimeType.DAWN;
+import static com.app.minyaneto_android.models.time.RelativeTimeType.STARS_OUT;
+import static com.app.minyaneto_android.models.time.RelativeTimeType.SUNRISE;
+import static com.app.minyaneto_android.models.time.RelativeTimeType.SUNSET;
 import static java.util.Calendar.FRIDAY;
 import static java.util.Calendar.MONDAY;
 import static java.util.Calendar.SATURDAY;
@@ -9,6 +13,7 @@ import static java.util.Calendar.TUESDAY;
 import static java.util.Calendar.WEDNESDAY;
 
 import android.content.Context;
+import com.app.minyaneto_android.BuildConfig;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.models.domain.WeekDay;
 import com.app.minyaneto_android.models.minyan.PrayType;
@@ -61,5 +66,23 @@ public class SynagogueUtils {
         return context.getResources().getString(R.string.relative_time_stars_out);
     }
     return "";
+  }
+
+  public static RelativeTimeType getRelativeTimeTypeFromText(Context context, String type) {
+    if (type.equals(context.getResources().getString(R.string.relative_time_dawn))) {
+      return DAWN;
+    } else if (type.equals(context.getResources().getString(R.string.relative_time_sunset))) {
+      return SUNSET;
+    } else if (type.equals(context.getResources().getString(R.string.relative_time_sunrise))) {
+      return SUNRISE;
+    } else if (type.equals(context.getResources().getString(R.string.relative_time_stars_out))) {
+      return STARS_OUT;
+    } else {
+      if (BuildConfig.DEBUG) {
+        throw new RuntimeException("Couldn't recognise RelativeTimeType: " + type);
+      } else {
+        return DAWN;
+      }
+    }
   }
 }

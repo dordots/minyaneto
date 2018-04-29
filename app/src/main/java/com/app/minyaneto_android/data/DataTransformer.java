@@ -27,9 +27,9 @@ public class DataTransformer {
     return synagogues;
   }
 
-  public List<MinyanSchedule> transformMinyansFromServer(List<MinyanScheduleFromServer> dataList) {
+  public List<MinyanSchedule> transformMinyansFromServer(List<MinyanScheduleServer> dataList) {
     ArrayList<MinyanSchedule> minyans = new ArrayList<>();
-    for (MinyanScheduleFromServer data : dataList) {
+    for (MinyanScheduleServer data : dataList) {
       try {
         MinyanSchedule model = transformFromServer(data);
         minyans.add(model);
@@ -70,24 +70,24 @@ public class DataTransformer {
         synagogue.getWheelchairAccessible());
   }
 
-  private List<MinyanScheduleFromServer> transformMinyansToServer(List<MinyanSchedule> minyans)
+  private List<MinyanScheduleServer> transformMinyansToServer(List<MinyanSchedule> minyans)
       throws Exception {
-    List<MinyanScheduleFromServer> list = new ArrayList<>();
+    List<MinyanScheduleServer> list = new ArrayList<>();
     for (MinyanSchedule minyan : minyans) {
       list.add(transformToServer(minyan));
     }
     return list;
   }
 
-  private MinyanSchedule transformFromServer(MinyanScheduleFromServer data) throws Exception {
+  private MinyanSchedule transformFromServer(MinyanScheduleServer data) throws Exception {
     return new MinyanSchedule(
         transformStringToWeekDay(data.getWeekDay().toUpperCase()),
         transformStringToPrayType(data.getPrayType()),
         transformStringToTime(data.getStringTime()));
   }
 
-  private MinyanScheduleFromServer transformToServer(MinyanSchedule minyan) throws Exception {
-    return new MinyanScheduleFromServer(
+  private MinyanScheduleServer transformToServer(MinyanSchedule minyan) throws Exception {
+    return new MinyanScheduleServer(
         transformWeekDayToString(minyan.getWeekDay()),
         transformPrayTypeToString(minyan.getPrayType()),
         transformTimeToString(minyan.getPrayTime()));
