@@ -236,7 +236,8 @@ public class AddMinyanFragment extends Fragment implements View.OnClickListener 
     PrayTime time;
     if (inRelativeTimeMode) {
       time = new PrayTime(new RelativeTime(
-          (RelativeTimeType) spinnerRelativeTimeType.getSelectedItem(),
+          SynagogueUtils.getRelativeTimeTypeFromText(getContext(),
+              spinnerRelativeTimeType.getSelectedItem().toString()),
           Integer.parseInt(etMinutes.getText().toString())));
     } else if (Build.VERSION.SDK_INT >= 23) {
       time = new PrayTime(new ExactTime(timePicker.getHour(), timePicker.getMinute()));
