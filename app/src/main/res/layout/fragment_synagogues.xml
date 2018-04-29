@@ -4,7 +4,6 @@
   android:layout_height="match_parent"
   tools:context="com.app.minyaneto_android.ui.fragments.SynagoguesFragment">
 
-
   <ProgressBar
     android:id="@+id/FS_progress"
     android:layout_width="wrap_content"
@@ -30,6 +29,7 @@
     android:layout_marginLeft="16dp"
     android:layout_gravity="bottom|left"
     android:clickable="true"
-    android:src="@drawable/places_ic_search"/>
+    android:focusable="true"
+    android:src="@drawable/ic_search_black_24dp"/>
 
 </FrameLayout>
