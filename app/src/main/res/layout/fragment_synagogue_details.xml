@@ -115,6 +115,7 @@
     android:layout_alignParentBottom="true"
     android:layout_alignParentLeft="true"
     android:clickable="true"
+    android:tint="@color/white"
     app:srcCompat="@drawable/ic_plus_one_black_24dp"/>
 
 </RelativeLayout>
