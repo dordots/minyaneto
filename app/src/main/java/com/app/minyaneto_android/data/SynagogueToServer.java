@@ -24,7 +24,7 @@ public class SynagogueToServer {
 
   @SerializedName("minyans")
   @Expose
-  private List<MinyanScheduleFromServer> minyans;
+  private List<MinyanScheduleServer> minyans;
 
   @SerializedName("name")
   @Expose
@@ -51,7 +51,7 @@ public class SynagogueToServer {
       Boolean classes,
       String comments,
       LatLngDoubleServer latLngDoubleServer,
-      List<MinyanScheduleFromServer> minyans,
+      List<MinyanScheduleServer> minyans,
       String name,
       String nosach,
       Boolean parking,
@@ -90,7 +90,7 @@ public class SynagogueToServer {
     return latLngDoubleServer;
   }
 
-  public List<MinyanScheduleFromServer> getMinyans() {
+  public List<MinyanScheduleServer> getMinyans() {
     return minyans;
   }
 

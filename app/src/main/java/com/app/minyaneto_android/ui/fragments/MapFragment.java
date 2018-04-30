@@ -20,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.app.minyaneto_android.R;
 import com.app.minyaneto_android.location.LocationRepository;
-import com.app.minyaneto_android.location.LocationUtility;
 import com.app.minyaneto_android.models.domain.Synagogue;
 import com.app.minyaneto_android.utilities.Permissions;
 import com.google.android.gms.common.ConnectionResult;
@@ -57,7 +56,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
   public static final String TAG = MapFragment.class.getSimpleName();
   private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
   private static final int PERMISSIONS_REQUEST_RESOLUTION_REQUIRED = 123;
-  private static final int MAX_DISTANCE_FROM_LAST_LOCATION = 2000;
   private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
   // Location updates intervals in sec
   private static final int UPDATE_INTERVAL = 60000; // 10 sec
@@ -185,21 +183,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     if (mGoogleApiClient != null) {
       mGoogleApiClient.connect();
     }
-    checkPermissions(true);
+    checkPermissions();
 
   }
 
-  public boolean checkPermissions(boolean askIfNotGranted) {
+  public void checkPermissions() {
     if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
         != PackageManager.PERMISSION_GRANTED) {
-      if (askIfNotGranted) {
-        ActivityCompat.requestPermissions(getActivity(), new String[]
-                {Manifest.permission.ACCESS_FINE_LOCATION},
-            PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-      }
-      return false;
+      ActivityCompat.requestPermissions(getActivity(), new String[]
+              {Manifest.permission.ACCESS_FINE_LOCATION},
+          PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
     }
-    return true;
   }
 
   @Override
@@ -246,14 +240,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
           }
         }
         lastZoom = cameraPosition.zoom;
-        if (lastZoom < 13.0) {
-          return;
-        }
-        LatLng pos = mMap.getCameraPosition().target;
-        if (lastLatLng != null && LocationUtility.calculateDistance(lastLatLng, pos)
-            > MAX_DISTANCE_FROM_LAST_LOCATION) {
-
-        }
       }
 
     });
@@ -297,9 +283,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         if (grantResults.length > 0
             && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
           handleLocationSetting();
-        } else {
-          // permission denied, boo! Disable the
-          // functionality that depends on this permission.
         }
         return;
       }
@@ -478,21 +461,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     return true;
   }
 
-  protected boolean startLocationUpdates() {
+  protected void startLocationUpdates() {
     if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
         != PackageManager.PERMISSION_GRANTED &&
         ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
             != PackageManager.PERMISSION_GRANTED) {
-      return false;
+      return;
     }
     if (mGoogleApiClient == null || !mGoogleApiClient.isConnected()
         || mCurrentlyRequestingLocationUpdates || searchMode) {
-      return false;
+      return;
     }
     LocationServices.FusedLocationApi
         .requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
     mCurrentlyRequestingLocationUpdates = true;
-    return true;
   }
 
   protected void stopLocationUpdates() {

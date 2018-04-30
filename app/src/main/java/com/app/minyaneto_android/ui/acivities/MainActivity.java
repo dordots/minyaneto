@@ -32,11 +32,8 @@ import com.app.minyaneto_android.ui.fragments.SearchMinyanFragment;
 import com.app.minyaneto_android.ui.fragments.SearchSynagogueFragment;
 import com.app.minyaneto_android.ui.fragments.SynagogueDetailsFragment;
 import com.app.minyaneto_android.ui.fragments.SynagoguesFragment;
+import com.app.minyaneto_android.utilities.FragmentHelper;
 import com.app.minyaneto_android.utilities.LocationHelper;
-import com.app.minyaneto_android.utilities.fragment.ActivityRunning;
-import com.app.minyaneto_android.utilities.fragment.FragmentHelper;
-import com.app.minyaneto_android.utilities.user.Alerts;
-import com.app.minyaneto_android.zmanim.ZmanimFragment;
 import com.google.android.gms.maps.model.LatLng;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,7 +42,6 @@ import java.util.List;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements
-    Alerts.OnCancelDialogListener,
     MapFragment.OnFragmentInteractionListener,
     ActivityCompat.OnRequestPermissionsResultCallback,
     NavigationHelper.OnMenuItemSelectListener,
@@ -54,7 +50,6 @@ public class MainActivity extends AppCompatActivity implements
     SynagoguesFragment.OnSynagoguesListener,
     AddMinyanFragment.AddMinyanListener,
     SearchMinyanFragment.SearchListener,
-    ZmanimFragment.ZmanimListener,
     SearchSynagogueFragment.SearchListener {
 
   public MapFragment mapFragment;
@@ -80,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements
     synagoguesSource = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(
         BuildConfig.FLAVOR),
         new DataTransformer(), SynagogueCache.getInstance());
-    mFragmentHelper = new FragmentHelper(this, new ActivityRunning());
+    mFragmentHelper = new FragmentHelper(this);
     mNavigationHelper = new NavigationHelper(this, this);
     initFragments();
   }
@@ -92,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements
 
   private void initSynagoguesFragment() {
     if (synagoguesFragment == null) {
-      synagoguesFragment = SynagoguesFragment.newInstance();
+      synagoguesFragment = new SynagoguesFragment();
     }
     mFragmentHelper
         .replaceFragment(R.id.MA_container, synagoguesFragment, SynagoguesFragment.TAG, null);
@@ -102,16 +97,13 @@ public class MainActivity extends AppCompatActivity implements
     if (mapFragment == null) {
       mapFragment = MapFragment.newInstance();
     }
-    mFragmentHelper.addFragment(R.id.MA_container_map, mapFragment, MapFragment.TAG, null);
+    mFragmentHelper.addFragment(R.id.MA_container_map, mapFragment, MapFragment.TAG);
   }
 
 
   private void returnToMain() {
-    if (mFragmentHelper.isContains(ZmanimFragment.TAG)) {
-      mFragmentHelper.removeFragment(ZmanimFragment.TAG, true);
-    }
-    if (mFragmentHelper.isContains(SynagogueDetailsFragment.TAG)) {
-      mFragmentHelper.removeFragment(SynagogueDetailsFragment.TAG, true);
+    if (mFragmentHelper.contains(SynagogueDetailsFragment.TAG)) {
+      mFragmentHelper.removeFragment(SynagogueDetailsFragment.TAG);
     }
   }
 
@@ -123,13 +115,6 @@ public class MainActivity extends AppCompatActivity implements
     if (mapFragment != null) {
       mapFragment.onRefreshMap();
     }
-  }
-
-  @Override
-  public void onMenuSelectZmanim() {
-    returnToMain();
-    mFragmentHelper.addFragment(R.id.MA_main_container, new ZmanimFragment(), ZmanimFragment.TAG,
-        ZmanimFragment.TAG);
   }
 
   @Override
@@ -165,8 +150,13 @@ public class MainActivity extends AppCompatActivity implements
   }
 
   @Override
-  public void onAddSynagogue(String id) {
-    showSynagogueDetails(id);
+  public void onAddSynagogue(final String id) {
+    synagoguesSource.getSynagogue(id, new ResponseListener<Synagogue>() {
+      @Override
+      public void onResponse(Synagogue response) {
+        showSynagogueDetails(id);
+      }
+    });
   }
 
   @Override
@@ -186,19 +176,17 @@ public class MainActivity extends AppCompatActivity implements
   public void onSetActionBarTitle(String title) {
     if (title != null && getSupportActionBar() != null) {
       getSupportActionBar().setTitle(title);
-    } else if (mFragmentHelper.isContains(SynagoguesFragment.TAG)) {
+    } else if (mFragmentHelper.contains(SynagoguesFragment.TAG)) {
       onSetActionBarTitle(getResources().getString(R.string.main_screen_fragment));
-    } else if (mFragmentHelper.isContains(AddSynagogueFragment.TAG)) {
+    } else if (mFragmentHelper.contains(AddSynagogueFragment.TAG)) {
       onSetActionBarTitle(getResources().getString(R.string.add_synagogue_fragment));
-    } else if (mFragmentHelper.isContains(SearchMinyanFragment.TAG)) {
+    } else if (mFragmentHelper.contains(SearchMinyanFragment.TAG)) {
       onSetActionBarTitle(getResources().getString(R.string.search_minyan_fragment));
-    } else if (mFragmentHelper.isContains(SearchSynagogueFragment.TAG)) {
+    } else if (mFragmentHelper.contains(SearchSynagogueFragment.TAG)) {
       onSetActionBarTitle(getResources().getString(R.string.search_synagogue_fragment));
-    } else if (mFragmentHelper.isContains(AddMinyanFragment.TAG)) {
+    } else if (mFragmentHelper.contains(AddMinyanFragment.TAG)) {
       onSetActionBarTitle(getResources().getString(R.string.sidebar_addMinyan));
-    } else if (mFragmentHelper.isContains(ZmanimFragment.TAG)) {
-      onSetActionBarTitle(getResources().getString(R.string.zmanim_fragment));
-    } else if (mFragmentHelper.isContains(SynagogueDetailsFragment.TAG)) {
+    } else if (mFragmentHelper.contains(SynagogueDetailsFragment.TAG)) {
       onSetActionBarTitle(getResources().getString(R.string.synagogue_details_fragment));
     }
   }
@@ -252,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements
   @Override
   public void onUpdateSynagogues(final LatLng latLngCenter) {
     //TODO- choose the name of Tfila - according to this time
-    if (mFragmentHelper.isContains(SynagoguesFragment.TAG) && null != mapFragment
+    if (mFragmentHelper.contains(SynagoguesFragment.TAG) && null != mapFragment
         && isShowSynagoguesFragment) {
       updateSynagogues(latLngCenter, new Date(), null, null);
     }
@@ -270,9 +258,7 @@ public class MainActivity extends AppCompatActivity implements
                 synagoguesFragment
                     .updateSynagogues(new ArrayList<Synagogue>(0), "החיפוש לא הצליח", date,
                         center);
-              } else
-
-              {
+              } else {
                 List<Synagogue> synagogues = response;
 
                 for (Synagogue s : new ArrayList<>(synagogues)) {
@@ -302,14 +288,14 @@ public class MainActivity extends AppCompatActivity implements
 
   @Override
   public void onMarkerClick(int position) {
-    if (mFragmentHelper.isContains(SynagoguesFragment.TAG)) {
+    if (mFragmentHelper.contains(SynagoguesFragment.TAG)) {
       synagoguesFragment.scrollToSynagoguePosition(position);
     }
   }
 
   @Override
   public void onMapLongClick(LatLng latLng) {
-    if (!mFragmentHelper.isContains(AddSynagogueFragment.TAG)) {
+    if (!mFragmentHelper.contains(AddSynagogueFragment.TAG)) {
       return;
     }
 
@@ -332,9 +318,9 @@ public class MainActivity extends AppCompatActivity implements
     if (!mNavigationHelper.closeDrawer()) {
       if (mFragmentHelper.getFragmentsSize() > 2) {
         super.onBackPressed();
-      } else if (mFragmentHelper.isContains(AddSynagogueFragment.TAG) ||
-          mFragmentHelper.isContains(SearchSynagogueFragment.TAG) ||
-          mFragmentHelper.isContains(SearchMinyanFragment.TAG)) {
+      } else if (mFragmentHelper.contains(AddSynagogueFragment.TAG) ||
+          mFragmentHelper.contains(SearchSynagogueFragment.TAG) ||
+          mFragmentHelper.contains(SearchMinyanFragment.TAG)) {
         mapFragment.stopSearchMode();
         super.onBackPressed();
       } else {
@@ -425,15 +411,5 @@ public class MainActivity extends AppCompatActivity implements
     mFragmentHelper
         .replaceFragment(R.id.MA_main_container, SynagogueDetailsFragment.newInstance(id),
             SynagogueDetailsFragment.TAG, SynagogueDetailsFragment.TAG);
-  }
-
-  @Override
-  public void onCancelAlertDialog() {
-
-  }
-
-  @Override
-  public void onClickOkAlertDialog() {
-
   }
 }

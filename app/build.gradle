@@ -8,8 +8,8 @@ android {
         applicationId "com.app.minyaneto_android"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 1
-        versionName "0.0.1"
+        versionCode 2
+        versionName "0.0.2"
         multiDexEnabled true
     }
     buildTypes {
@@ -44,7 +44,7 @@ android {
 
 dependencies {
     implementation "com.android.support:appcompat-v7:$rootProject.ext.supportLibVersion"
-    implementation "com.android.support.constraint:constraint-layout:1.0.2"
+    implementation "com.android.support.constraint:constraint-layout:1.1.0"
     implementation "com.android.support:design:$rootProject.ext.supportLibVersion"
     implementation "com.android.support:support-v4:$rootProject.ext.supportLibVersion"
     implementation "com.android.support:cardview-v7:$rootProject.ext.supportLibVersion"
@@ -60,7 +60,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.7.3'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.7.3'
     implementation files('libs/zmanim-1.4.0alpha.jar')
-    implementation 'android.arch.lifecycle:extensions:1.0.0'
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
     implementation 'testfairy:testfairy-android-sdk:1.5.7@aar'
     implementation 'com.jakewharton.timber:timber:4.5.1'
 
@@ -68,9 +68,15 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation "org.mockito:mockito-core:$rootProject.ext.mockitoVersion"
     testImplementation "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
+<<<<<<< HEAD
     testImplementation "android.arch.core:core-testing:1.0.0"
     testImplementation "org.robolectric:robolectric:3.5.1"
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
+=======
+    testImplementation "android.arch.core:core-testing:1.1.1"
+    testImplementation "org.robolectric:robolectric:3.6.1"
+    compile('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
+>>>>>>> ea01383b33168c6b83d3528624fcd7aa739f7d69
         transitive = true
     }
 

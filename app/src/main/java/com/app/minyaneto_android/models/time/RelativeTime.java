@@ -1,5 +1,7 @@
 package com.app.minyaneto_android.models.time;
 
+import java.util.Locale;
+
 public class RelativeTime {
 
   private RelativeTimeType relativeTimeType;
@@ -27,8 +29,10 @@ public class RelativeTime {
     if (offset == 0) {
       return String.format("%s%s", nounAt, relativeTimeType.toString());
     }
-    return String.format("%d %s %s %s %s", offset, nounMinutes, nounAfterOrBefore, nounThe,
-        relativeTimeType.toString());
+    return String
+        .format(Locale.getDefault(), "%d %s %s %s %s", offset, nounMinutes, nounAfterOrBefore,
+            nounThe,
+            relativeTimeType.toString());
   }
 
 }

@@ -158,7 +158,5 @@ public class SearchSynagogueFragment extends Fragment implements
     void onSetActionBarTitle(String title);
 
     void onUpdateMarker(LatLng latLng, String address);
-
   }
-
 }

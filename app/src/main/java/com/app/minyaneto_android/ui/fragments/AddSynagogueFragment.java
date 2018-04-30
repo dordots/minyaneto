@@ -118,8 +118,8 @@ public class AddSynagogueFragment extends Fragment implements View.OnClickListen
         cbWheelchair_accessible.isChecked(),
         mLatLng
     );
-    progress = ProgressDialog.show(getContext(), "og title",
-        "dialog message", true);
+    progress = ProgressDialog.show(getContext(), "",
+        getString(R.string.please_wait), true);
 
     SynagoguesSource source = new SynagoguesSource(RestAPIUtility.createSynagoguesRestAPI(
         BuildConfig.FLAVOR),

@@ -4,8 +4,8 @@ import java.util.Locale;
 
 public class ExactTime {
 
-  private int hour;
-  private int minutes;
+  private final int hour;
+  private final int minutes;
 
   public ExactTime(int hour, int minutes) {
     this.hour = hour;

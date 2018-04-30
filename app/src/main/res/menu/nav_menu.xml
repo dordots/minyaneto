@@ -3,28 +3,23 @@
   <group android:menuCategory="container">
     <item
       android:id="@+id/sidebar_home"
-      android:icon="@drawable/ic_sidebar_home"
+      android:icon="@drawable/ic_home_black_24dp"
       android:title="@string/sidebar_home"
       />
     <item
       android:id="@+id/sidebar_searchMinyan"
-      android:icon="@drawable/ic_sidebar_add_minyan"
+      android:icon="@drawable/ic_search_black_24dp"
       android:title="@string/sidebar_searchMinyan"
       />
     <item
       android:id="@+id/sidebar_searchSynagogue"
-      android:icon="@drawable/ic_sidebar_add_minyan"
+      android:icon="@drawable/ic_search_black_24dp"
       android:title="@string/sidebar_searchSynagogue"
       />
     <item
       android:id="@+id/sidebar_addSynagogue"
-      android:icon="@drawable/ic_sidebar_add_minyan"
+      android:icon="@drawable/ic_add_black_24dp"
       android:title="@string/sidebar_addSynagogue"
-      />
-    <item
-      android:id="@+id/sidebar_zmanim"
-      android:icon="@drawable/ic_zmanim_black_24px"
-      android:title="@string/sidebar_zmanim"
       />
   </group>
 </menu>
